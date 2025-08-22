@@ -8,4 +8,9 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="CDatos\" />
+    <Folder Include="CLogica\" />
+  </ItemGroup>
+
 </Project>
