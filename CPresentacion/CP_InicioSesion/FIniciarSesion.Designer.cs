@@ -66,7 +66,6 @@
             BIngresar.TabIndex = 5;
             BIngresar.Text = "INGRESAR";
             BIngresar.UseVisualStyleBackColor = false;
-            BIngresar.Click += BIngresar_Click;
             // 
             // TBContrasenia
             // 
