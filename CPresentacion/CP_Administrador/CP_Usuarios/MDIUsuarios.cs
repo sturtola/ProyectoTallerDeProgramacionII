@@ -8,14 +8,13 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-
-namespace AurenPadelStore.CPresentacion
+namespace AurenPadelStore.CPresentacion.CP_Administrador.CP_Usuarios
 {
-    public partial class FMenuPrincipal : Form
+    public partial class MDIUsuarios : Form
     {
         private int childFormNumber = 0;
 
-        public FMenuPrincipal()
+        public MDIUsuarios()
         {
             InitializeComponent();
         }

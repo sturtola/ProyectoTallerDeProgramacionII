@@ -9,8 +9,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="CDatos\" />
-    <Folder Include="CLogica\" />
+    <Compile Remove="CDatos\**" />
+    <Compile Remove="CLogica\**" />
+    <EmbeddedResource Remove="CDatos\**" />
+    <EmbeddedResource Remove="CLogica\**" />
+    <None Remove="CDatos\**" />
+    <None Remove="CLogica\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -26,6 +30,15 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="CPresentacion\CP_Clientes\" />
+    <Folder Include="CPresentacion\CP_Encargado\" />
+    <Folder Include="CPresentacion\CP_Vendedor\" />
+    <Folder Include="CPresentacion\CP_Productos\" />
+    <Folder Include="CPresentacion\CP_Facturas\" />
+    <Folder Include="CPresentacion\CP_Ventas\" />
   </ItemGroup>
 
 </Project>

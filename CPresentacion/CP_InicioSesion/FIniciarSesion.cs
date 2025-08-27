@@ -17,15 +17,7 @@ namespace AurenPadelStore.CPresentacion
             InitializeComponent();
         }
 
-        private void BIngresar_Click(object sender, EventArgs e)
-        {
-            // Abrir el MDI
-            FMenuPrincipal menu = new FMenuPrincipal();
-            menu.Show();
-
-            // Ocultar el login (no lo cierres porque cierra toda la app)
-            this.Hide();
-        }
+        
 
     }
 
