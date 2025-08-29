@@ -8,17 +8,13 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace AurenPadelStore.CPresentacion
+namespace AurenPadelStore.CPresentacion.Empleados
 {
-    public partial class FIniciarSesion : Form
+    public partial class FMenuEmpleados : Form
     {
-        public FIniciarSesion()
+        public FMenuEmpleados()
         {
             InitializeComponent();
         }
-
-        
-
     }
-
 }
