@@ -33,8 +33,8 @@
             cerrarSesiónToolStripMenuItem = new ToolStripMenuItem();
             salirToolStripMenuItem = new ToolStripMenuItem();
             usuariosToolStripMenuItem = new ToolStripMenuItem();
-            agregarUsuarioToolStripMenuItem = new ToolStripMenuItem();
             listarUsuariosToolStripMenuItem = new ToolStripMenuItem();
+            agregarUsuarioToolStripMenuItem1 = new ToolStripMenuItem();
             estadísticasToolStripMenuItem = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             SuspendLayout();
@@ -58,33 +58,35 @@
             // cerrarSesiónToolStripMenuItem
             // 
             cerrarSesiónToolStripMenuItem.Name = "cerrarSesiónToolStripMenuItem";
-            cerrarSesiónToolStripMenuItem.Size = new Size(180, 22);
+            cerrarSesiónToolStripMenuItem.Size = new Size(143, 22);
             cerrarSesiónToolStripMenuItem.Text = "Cerrar Sesión";
             // 
             // salirToolStripMenuItem
             // 
             salirToolStripMenuItem.Name = "salirToolStripMenuItem";
-            salirToolStripMenuItem.Size = new Size(180, 22);
+            salirToolStripMenuItem.Size = new Size(143, 22);
             salirToolStripMenuItem.Text = "Salir";
             // 
             // usuariosToolStripMenuItem
             // 
-            usuariosToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { agregarUsuarioToolStripMenuItem, listarUsuariosToolStripMenuItem });
+            usuariosToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { listarUsuariosToolStripMenuItem, agregarUsuarioToolStripMenuItem1 });
             usuariosToolStripMenuItem.Name = "usuariosToolStripMenuItem";
             usuariosToolStripMenuItem.Size = new Size(64, 20);
             usuariosToolStripMenuItem.Text = "Usuarios";
             // 
-            // agregarUsuarioToolStripMenuItem
-            // 
-            agregarUsuarioToolStripMenuItem.Name = "agregarUsuarioToolStripMenuItem";
-            agregarUsuarioToolStripMenuItem.Size = new Size(180, 22);
-            agregarUsuarioToolStripMenuItem.Text = "Agregar Usuario";
-            // 
             // listarUsuariosToolStripMenuItem
             // 
             listarUsuariosToolStripMenuItem.Name = "listarUsuariosToolStripMenuItem";
-            listarUsuariosToolStripMenuItem.Size = new Size(180, 22);
+            listarUsuariosToolStripMenuItem.Size = new Size(159, 22);
             listarUsuariosToolStripMenuItem.Text = "Listar Usuarios";
+            listarUsuariosToolStripMenuItem.Click += listarUsuariosToolStripMenuItem_Click;
+            // 
+            // agregarUsuarioToolStripMenuItem1
+            // 
+            agregarUsuarioToolStripMenuItem1.Name = "agregarUsuarioToolStripMenuItem1";
+            agregarUsuarioToolStripMenuItem1.Size = new Size(159, 22);
+            agregarUsuarioToolStripMenuItem1.Text = "Agregar Usuario";
+            agregarUsuarioToolStripMenuItem1.Click += agregarUsuarioToolStripMenuItem1_Click;
             // 
             // estadísticasToolStripMenuItem
             // 
@@ -101,7 +103,8 @@
             IsMdiContainer = true;
             MainMenuStrip = menuStrip1;
             Name = "FMenuGerente";
-            Text = "Form1";
+            StartPosition = FormStartPosition.CenterScreen;
+            Text = "Gerente";
             menuStrip1.ResumeLayout(false);
             menuStrip1.PerformLayout();
             ResumeLayout(false);
@@ -115,8 +118,8 @@
         private ToolStripMenuItem cerrarSesiónToolStripMenuItem;
         private ToolStripMenuItem salirToolStripMenuItem;
         private ToolStripMenuItem usuariosToolStripMenuItem;
-        private ToolStripMenuItem agregarUsuarioToolStripMenuItem;
         private ToolStripMenuItem listarUsuariosToolStripMenuItem;
         private ToolStripMenuItem estadísticasToolStripMenuItem;
+        private ToolStripMenuItem agregarUsuarioToolStripMenuItem1;
     }
 }
