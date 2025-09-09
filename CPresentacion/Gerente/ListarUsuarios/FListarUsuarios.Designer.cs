@@ -2,15 +2,10 @@
 {
     partial class FListarUsuarios
     {
-        /// <summary>
-        /// Required designer variable.
-        /// </summary>
         private System.ComponentModel.IContainer components = null;
+        private System.Windows.Forms.Panel PListaUsuarios;
+        private System.Windows.Forms.DataGridView DGVListaUs;
 
-        /// <summary>
-        /// Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -20,27 +15,175 @@
             base.Dispose(disposing);
         }
 
-        #region Windows Form Designer generated code
-
-        /// <summary>
-        /// Required method for Designer support - do not modify
-        /// the contents of this method with the code editor.
-        /// </summary>
         private void InitializeComponent()
         {
+            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FListarUsuarios));
+            PListaUsuarios = new Panel();
+            DGVListaUs = new DataGridView();
+            CDocumento = new DataGridViewTextBoxColumn();
+            CNombre = new DataGridViewTextBoxColumn();
+            CApellido = new DataGridViewTextBoxColumn();
+            CRol = new DataGridViewTextBoxColumn();
+            CEditar = new DataGridViewButtonColumn();
+            CEliminar = new DataGridViewButtonColumn();
+            LListadeUsuarios = new Label();
+            PListaUsuarios.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)DGVListaUs).BeginInit();
             SuspendLayout();
+            // 
+            // PListaUsuarios
+            // 
+            PListaUsuarios.BackColor = Color.Transparent;
+            PListaUsuarios.Controls.Add(DGVListaUs);
+            PListaUsuarios.Location = new Point(34, 96);
+            PListaUsuarios.Margin = new Padding(3, 2, 3, 2);
+            PListaUsuarios.Name = "PListaUsuarios";
+            PListaUsuarios.Size = new Size(687, 275);
+            PListaUsuarios.TabIndex = 0;
+            // 
+            // DGVListaUs
+            // 
+            DGVListaUs.AllowUserToAddRows = false;
+            DGVListaUs.AllowUserToDeleteRows = false;
+            DGVListaUs.Anchor = AnchorStyles.None;
+            DGVListaUs.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            DGVListaUs.BackgroundColor = Color.FromArgb(64, 64, 64);
+            DGVListaUs.BorderStyle = BorderStyle.None;
+            DGVListaUs.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single;
+            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle1.BackColor = Color.FromArgb(64, 64, 64);
+            dataGridViewCellStyle1.Font = new Font("Century Gothic", 12F);
+            dataGridViewCellStyle1.ForeColor = Color.LightGray;
+            dataGridViewCellStyle1.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = DataGridViewTriState.True;
+            DGVListaUs.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            DGVListaUs.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            DGVListaUs.Columns.AddRange(new DataGridViewColumn[] { CDocumento, CNombre, CApellido, CRol, CEditar, CEliminar });
+            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle2.BackColor = Color.FromArgb(80, 80, 80);
+            dataGridViewCellStyle2.Font = new Font("Century Gothic", 10F);
+            dataGridViewCellStyle2.ForeColor = Color.LightGray;
+            dataGridViewCellStyle2.SelectionBackColor = Color.SteelBlue;
+            dataGridViewCellStyle2.SelectionForeColor = Color.White;
+            dataGridViewCellStyle2.WrapMode = DataGridViewTriState.False;
+            DGVListaUs.DefaultCellStyle = dataGridViewCellStyle2;
+            DGVListaUs.EnableHeadersVisualStyles = false;
+            DGVListaUs.GridColor = Color.Black;
+            DGVListaUs.Location = new Point(0, 0);
+            DGVListaUs.Margin = new Padding(3, 2, 3, 2);
+            DGVListaUs.MultiSelect = false;
+            DGVListaUs.Name = "DGVListaUs";
+            DGVListaUs.ReadOnly = true;
+            dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle3.BackColor = SystemColors.Control;
+            dataGridViewCellStyle3.Font = new Font("Segoe UI", 9F);
+            dataGridViewCellStyle3.ForeColor = SystemColors.WindowText;
+            dataGridViewCellStyle3.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle3.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle3.WrapMode = DataGridViewTriState.True;
+            DGVListaUs.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
+            DGVListaUs.RowHeadersVisible = false;
+            dataGridViewCellStyle4.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle4.BackColor = Color.FromArgb(80, 80, 80);
+            dataGridViewCellStyle4.ForeColor = Color.LightGray;
+            DGVListaUs.RowsDefaultCellStyle = dataGridViewCellStyle4;
+            DGVListaUs.RowTemplate.Height = 28;
+            DGVListaUs.Size = new Size(687, 275);
+            DGVListaUs.TabIndex = 0;
+            // 
+            // CDocumento
+            // 
+            CDocumento.FillWeight = 137.055847F;
+            CDocumento.HeaderText = "Documento";
+            CDocumento.Name = "CDocumento";
+            CDocumento.ReadOnly = true;
+            // 
+            // CNombre
+            // 
+            CNombre.FillWeight = 110.419518F;
+            CNombre.HeaderText = "Nombre";
+            CNombre.Name = "CNombre";
+            CNombre.ReadOnly = true;
+            // 
+            // CApellido
+            // 
+            CApellido.FillWeight = 121.480148F;
+            CApellido.HeaderText = "Apellido";
+            CApellido.Name = "CApellido";
+            CApellido.ReadOnly = true;
+            // 
+            // CRol
+            // 
+            CRol.FillWeight = 115.939911F;
+            CRol.HeaderText = "Rol";
+            CRol.Name = "CRol";
+            CRol.ReadOnly = true;
+            // 
+            // CEditar
+            // 
+            CEditar.FillWeight = 58.1089859F;
+            CEditar.HeaderText = "E";
+            CEditar.Name = "CEditar";
+            CEditar.ReadOnly = true;
+            CEditar.Text = "Editar";
+            CEditar.UseColumnTextForButtonValue = true;
+            // 
+            // CEliminar
+            // 
+            CEliminar.FillWeight = 56.9955635F;
+            CEliminar.HeaderText = "X";
+            CEliminar.Name = "CEliminar";
+            CEliminar.ReadOnly = true;
+            CEliminar.Text = "Eliminar";
+            CEliminar.UseColumnTextForButtonValue = true;
+            // 
+            // LListadeUsuarios
+            // 
+            LListadeUsuarios.Anchor = AnchorStyles.None;
+            LListadeUsuarios.AutoSize = true;
+            LListadeUsuarios.BackColor = Color.Transparent;
+            LListadeUsuarios.Font = new Font("Century Gothic", 18F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            LListadeUsuarios.ForeColor = Color.LightGray;
+            LListadeUsuarios.Location = new Point(282, 25);
+            LListadeUsuarios.Name = "LListadeUsuarios";
+            LListadeUsuarios.Size = new Size(206, 30);
+            LListadeUsuarios.TabIndex = 1;
+            LListadeUsuarios.Text = "Lista de Usuarios";
             // 
             // FListarUsuarios
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(800, 450);
+            BackgroundImage = (Image)resources.GetObject("$this.BackgroundImage");
+            BackgroundImageLayout = ImageLayout.Stretch;
+            ClientSize = new Size(758, 382);
+            Controls.Add(LListadeUsuarios);
+            Controls.Add(PListaUsuarios);
+            Margin = new Padding(3, 2, 3, 2);
             Name = "FListarUsuarios";
-            StartPosition = FormStartPosition.CenterScreen;
-            Text = "Lista de Usuarios";
+            Text = "Listar Usuarios";
+            PListaUsuarios.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)DGVListaUs).EndInit();
             ResumeLayout(false);
-        }
+            PerformLayout();
 
-        #endregion
+            DGVListaUs.Rows.Add("45772345", "Juan", "Pérez", "Vendedor");
+            DGVListaUs.Rows.Add("32769445", "María", "López", "Vendedor");
+            DGVListaUs.Rows.Add("27553655", "Carlos", "Gómez", "Gerente");
+            DGVListaUs.Rows.Add("36988325", "Ana", "Martínez", "Administrador");
+
+        }
+        private DataGridViewTextBoxColumn CDocumento;
+        private DataGridViewTextBoxColumn CNombre;
+        private DataGridViewTextBoxColumn CApellido;
+        private DataGridViewTextBoxColumn CRol;
+        private DataGridViewButtonColumn CEditar;
+        private DataGridViewButtonColumn CEliminar;
+        private Label LListadeUsuarios;
     }
 }
