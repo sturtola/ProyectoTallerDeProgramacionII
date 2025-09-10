@@ -17,12 +17,16 @@
 
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FListarUsuarios));
             DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
             DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
             DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
             DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FListarUsuarios));
             PListaUsuarios = new Panel();
+            LFiltroUs = new Label();
+            CBFiltroUs = new ComboBox();
+            button1 = new Button();
+            TBBuscar = new TextBox();
             DGVListaUs = new DataGridView();
             CDocumento = new DataGridViewTextBoxColumn();
             CNombre = new DataGridViewTextBoxColumn();
@@ -38,12 +42,66 @@
             // PListaUsuarios
             // 
             PListaUsuarios.BackColor = Color.Transparent;
+            PListaUsuarios.Controls.Add(LFiltroUs);
+            PListaUsuarios.Controls.Add(CBFiltroUs);
+            PListaUsuarios.Controls.Add(button1);
+            PListaUsuarios.Controls.Add(TBBuscar);
             PListaUsuarios.Controls.Add(DGVListaUs);
             PListaUsuarios.Location = new Point(34, 96);
             PListaUsuarios.Margin = new Padding(3, 2, 3, 2);
             PListaUsuarios.Name = "PListaUsuarios";
             PListaUsuarios.Size = new Size(687, 275);
             PListaUsuarios.TabIndex = 0;
+            // 
+            // LFiltroUs
+            // 
+            LFiltroUs.AutoSize = true;
+            LFiltroUs.Font = new Font("Century Gothic", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            LFiltroUs.ForeColor = Color.LightGray;
+            LFiltroUs.Location = new Point(495, 8);
+            LFiltroUs.Name = "LFiltroUs";
+            LFiltroUs.Size = new Size(62, 22);
+            LFiltroUs.TabIndex = 3;
+            LFiltroUs.Text = "Filtrar:";
+            // 
+            // CBFiltroUs
+            // 
+            CBFiltroUs.BackColor = Color.FromArgb(224, 224, 224);
+            CBFiltroUs.FlatStyle = FlatStyle.Popup;
+            CBFiltroUs.Font = new Font("Century Gothic", 11.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            CBFiltroUs.ForeColor = Color.FromArgb(64, 64, 64);
+            CBFiltroUs.FormattingEnabled = true;
+            CBFiltroUs.Items.AddRange(new object[] { "Vendedor", "Gerente", "Administrador" });
+            CBFiltroUs.Location = new Point(563, 4);
+            CBFiltroUs.Name = "CBFiltroUs";
+            CBFiltroUs.Size = new Size(121, 28);
+            CBFiltroUs.TabIndex = 2;
+            CBFiltroUs.Tag = "";
+            // 
+            // button1
+            // 
+            button1.BackgroundImage = (Image)resources.GetObject("button1.BackgroundImage");
+            button1.BackgroundImageLayout = ImageLayout.Stretch;
+            button1.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            button1.Location = new Point(141, 3);
+            button1.Name = "button1";
+            button1.Size = new Size(32, 27);
+            button1.TabIndex = 2;
+            button1.UseVisualStyleBackColor = true;
+            // 
+            // TBBuscar
+            // 
+            TBBuscar.Anchor = AnchorStyles.Right;
+            TBBuscar.BackColor = Color.FromArgb(64, 64, 64);
+            TBBuscar.BorderStyle = BorderStyle.FixedSingle;
+            TBBuscar.Cursor = Cursors.IBeam;
+            TBBuscar.Font = new Font("Century Gothic", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            TBBuscar.ForeColor = Color.LightGray;
+            TBBuscar.Location = new Point(3, 3);
+            TBBuscar.Name = "TBBuscar";
+            TBBuscar.PlaceholderText = "  Buscar...";
+            TBBuscar.Size = new Size(132, 27);
+            TBBuscar.TabIndex = 1;
             // 
             // DGVListaUs
             // 
@@ -74,7 +132,7 @@
             DGVListaUs.DefaultCellStyle = dataGridViewCellStyle2;
             DGVListaUs.EnableHeadersVisualStyles = false;
             DGVListaUs.GridColor = Color.Black;
-            DGVListaUs.Location = new Point(0, 0);
+            DGVListaUs.Location = new Point(0, 38);
             DGVListaUs.Margin = new Padding(3, 2, 3, 2);
             DGVListaUs.MultiSelect = false;
             DGVListaUs.Name = "DGVListaUs";
@@ -93,7 +151,7 @@
             dataGridViewCellStyle4.ForeColor = Color.LightGray;
             DGVListaUs.RowsDefaultCellStyle = dataGridViewCellStyle4;
             DGVListaUs.RowTemplate.Height = 28;
-            DGVListaUs.Size = new Size(687, 275);
+            DGVListaUs.Size = new Size(687, 237);
             DGVListaUs.TabIndex = 0;
             // 
             // CDocumento
@@ -147,11 +205,11 @@
             LListadeUsuarios.Anchor = AnchorStyles.None;
             LListadeUsuarios.AutoSize = true;
             LListadeUsuarios.BackColor = Color.Transparent;
-            LListadeUsuarios.Font = new Font("Century Gothic", 18F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            LListadeUsuarios.Font = new Font("Century Gothic", 21.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
             LListadeUsuarios.ForeColor = Color.LightGray;
-            LListadeUsuarios.Location = new Point(282, 25);
+            LListadeUsuarios.Location = new Point(260, 30);
             LListadeUsuarios.Name = "LListadeUsuarios";
-            LListadeUsuarios.Size = new Size(206, 30);
+            LListadeUsuarios.Size = new Size(246, 36);
             LListadeUsuarios.TabIndex = 1;
             LListadeUsuarios.Text = "Lista de Usuarios";
             // 
@@ -168,14 +226,10 @@
             Name = "FListarUsuarios";
             Text = "Listar Usuarios";
             PListaUsuarios.ResumeLayout(false);
+            PListaUsuarios.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)DGVListaUs).EndInit();
             ResumeLayout(false);
             PerformLayout();
-
-            DGVListaUs.Rows.Add("45772345", "Juan", "Pérez", "Vendedor");
-            DGVListaUs.Rows.Add("32769445", "María", "López", "Vendedor");
-            DGVListaUs.Rows.Add("27553655", "Carlos", "Gómez", "Gerente");
-            DGVListaUs.Rows.Add("36988325", "Ana", "Martínez", "Administrador");
 
         }
         private DataGridViewTextBoxColumn CDocumento;
@@ -185,5 +239,9 @@
         private DataGridViewButtonColumn CEditar;
         private DataGridViewButtonColumn CEliminar;
         private Label LListadeUsuarios;
+        private TextBox TBBuscar;
+        private Button button1;
+        private ComboBox CBFiltroUs;
+        private Label LFiltroUs;
     }
 }

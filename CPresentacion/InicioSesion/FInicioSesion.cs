@@ -29,6 +29,7 @@ namespace AurenPadelStore.CPresentacion.InicioSesion
             this.Hide();
         }
 
+        
     }
-    }
+}
     
