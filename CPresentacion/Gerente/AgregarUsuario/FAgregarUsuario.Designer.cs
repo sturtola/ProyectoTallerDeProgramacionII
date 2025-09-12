@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FAgregarUsuario));
             PAgregarUsuario = new Panel();
             BAgregarUsuario = new Button();
             LRol = new Label();
@@ -70,10 +71,10 @@
             BAgregarUsuario.BackColor = Color.GreenYellow;
             BAgregarUsuario.Cursor = Cursors.Hand;
             BAgregarUsuario.FlatStyle = FlatStyle.Flat;
-            BAgregarUsuario.Font = new Font("Century Gothic", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            BAgregarUsuario.Location = new Point(211, 282);
+            BAgregarUsuario.Font = new Font("Century Gothic", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            BAgregarUsuario.Location = new Point(123, 307);
             BAgregarUsuario.Name = "BAgregarUsuario";
-            BAgregarUsuario.Size = new Size(148, 34);
+            BAgregarUsuario.Size = new Size(276, 34);
             BAgregarUsuario.TabIndex = 11;
             BAgregarUsuario.Text = "Agregar Usuario";
             BAgregarUsuario.UseVisualStyleBackColor = false;
@@ -83,7 +84,7 @@
             LRol.AutoSize = true;
             LRol.Font = new Font("Century Gothic", 15.75F);
             LRol.ForeColor = Color.LightGray;
-            LRol.Location = new Point(211, 237);
+            LRol.Location = new Point(211, 242);
             LRol.Name = "LRol";
             LRol.Size = new Size(47, 24);
             LRol.TabIndex = 10;
@@ -91,12 +92,12 @@
             // 
             // CRol
             // 
-            CRol.Font = new Font("Century Gothic", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            CRol.Font = new Font("Century Gothic", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
             CRol.FormattingEnabled = true;
             CRol.Items.AddRange(new object[] { "Vendedor", "Gerente", "Administrador" });
             CRol.Location = new Point(271, 242);
             CRol.Name = "CRol";
-            CRol.Size = new Size(121, 24);
+            CRol.Size = new Size(121, 29);
             CRol.TabIndex = 9;
             // 
             // TContraseña
@@ -132,7 +133,7 @@
             LContraseña.AutoSize = true;
             LContraseña.Font = new Font("Century Gothic", 15.75F);
             LContraseña.ForeColor = Color.LightGray;
-            LContraseña.Location = new Point(123, 202);
+            LContraseña.Location = new Point(123, 206);
             LContraseña.Name = "LContraseña";
             LContraseña.Size = new Size(135, 24);
             LContraseña.TabIndex = 4;
@@ -143,7 +144,7 @@
             LDni.AutoSize = true;
             LDni.Font = new Font("Century Gothic", 15.75F);
             LDni.ForeColor = Color.LightGray;
-            LDni.Location = new Point(192, 168);
+            LDni.Location = new Point(193, 170);
             LDni.Name = "LDni";
             LDni.Size = new Size(62, 24);
             LDni.TabIndex = 3;
@@ -174,11 +175,11 @@
             // LAgregarUsuario
             // 
             LAgregarUsuario.AutoSize = true;
-            LAgregarUsuario.Font = new Font("Century Gothic", 24F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            LAgregarUsuario.Font = new Font("Century Gothic", 21.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
             LAgregarUsuario.ForeColor = Color.LightGray;
-            LAgregarUsuario.Location = new Point(147, 27);
+            LAgregarUsuario.Location = new Point(158, 28);
             LAgregarUsuario.Name = "LAgregarUsuario";
-            LAgregarUsuario.Size = new Size(265, 38);
+            LAgregarUsuario.Size = new Size(241, 36);
             LAgregarUsuario.TabIndex = 0;
             LAgregarUsuario.Text = "Agregar Usuario";
             // 
@@ -186,12 +187,14 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            BackgroundImage = Properties.Resources.Fondo;
-            BackgroundImageLayout = ImageLayout.Zoom;
+            BackgroundImage = (Image)resources.GetObject("$this.BackgroundImage");
+            BackgroundImageLayout = ImageLayout.Stretch;
             ClientSize = new Size(800, 450);
             Controls.Add(PAgregarUsuario);
             Name = "FAgregarUsuario";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "Agregar Usuario";
+            WindowState = FormWindowState.Maximized;
             Load += FAgregarUsuario_Load;
             PAgregarUsuario.ResumeLayout(false);
             PAgregarUsuario.PerformLayout();

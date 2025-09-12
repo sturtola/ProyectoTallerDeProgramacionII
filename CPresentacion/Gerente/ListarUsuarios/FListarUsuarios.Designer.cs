@@ -47,10 +47,10 @@
             PListaUsuarios.Controls.Add(button1);
             PListaUsuarios.Controls.Add(TBBuscar);
             PListaUsuarios.Controls.Add(DGVListaUs);
-            PListaUsuarios.Location = new Point(34, 96);
+            PListaUsuarios.Location = new Point(58, 100);
             PListaUsuarios.Margin = new Padding(3, 2, 3, 2);
             PListaUsuarios.Name = "PListaUsuarios";
-            PListaUsuarios.Size = new Size(687, 275);
+            PListaUsuarios.Size = new Size(687, 300);
             PListaUsuarios.TabIndex = 0;
             // 
             // LFiltroUs
@@ -58,7 +58,7 @@
             LFiltroUs.AutoSize = true;
             LFiltroUs.Font = new Font("Century Gothic", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
             LFiltroUs.ForeColor = Color.LightGray;
-            LFiltroUs.Location = new Point(495, 8);
+            LFiltroUs.Location = new Point(479, 22);
             LFiltroUs.Name = "LFiltroUs";
             LFiltroUs.Size = new Size(62, 22);
             LFiltroUs.TabIndex = 3;
@@ -72,9 +72,9 @@
             CBFiltroUs.ForeColor = Color.FromArgb(64, 64, 64);
             CBFiltroUs.FormattingEnabled = true;
             CBFiltroUs.Items.AddRange(new object[] { "Vendedor", "Gerente", "Administrador" });
-            CBFiltroUs.Location = new Point(563, 4);
+            CBFiltroUs.Location = new Point(547, 17);
             CBFiltroUs.Name = "CBFiltroUs";
-            CBFiltroUs.Size = new Size(121, 28);
+            CBFiltroUs.Size = new Size(137, 28);
             CBFiltroUs.TabIndex = 2;
             CBFiltroUs.Tag = "";
             // 
@@ -83,7 +83,7 @@
             button1.BackgroundImage = (Image)resources.GetObject("button1.BackgroundImage");
             button1.BackgroundImageLayout = ImageLayout.Stretch;
             button1.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            button1.Location = new Point(141, 3);
+            button1.Location = new Point(153, 17);
             button1.Name = "button1";
             button1.Size = new Size(32, 27);
             button1.TabIndex = 2;
@@ -97,7 +97,7 @@
             TBBuscar.Cursor = Cursors.IBeam;
             TBBuscar.Font = new Font("Century Gothic", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
             TBBuscar.ForeColor = Color.LightGray;
-            TBBuscar.Location = new Point(3, 3);
+            TBBuscar.Location = new Point(3, 17);
             TBBuscar.Name = "TBBuscar";
             TBBuscar.PlaceholderText = "  Buscar...";
             TBBuscar.Size = new Size(132, 27);
@@ -132,7 +132,7 @@
             DGVListaUs.DefaultCellStyle = dataGridViewCellStyle2;
             DGVListaUs.EnableHeadersVisualStyles = false;
             DGVListaUs.GridColor = Color.Black;
-            DGVListaUs.Location = new Point(0, 38);
+            DGVListaUs.Location = new Point(0, 63);
             DGVListaUs.Margin = new Padding(3, 2, 3, 2);
             DGVListaUs.MultiSelect = false;
             DGVListaUs.Name = "DGVListaUs";
@@ -207,7 +207,7 @@
             LListadeUsuarios.BackColor = Color.Transparent;
             LListadeUsuarios.Font = new Font("Century Gothic", 21.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
             LListadeUsuarios.ForeColor = Color.LightGray;
-            LListadeUsuarios.Location = new Point(260, 30);
+            LListadeUsuarios.Location = new Point(290, 44);
             LListadeUsuarios.Name = "LListadeUsuarios";
             LListadeUsuarios.Size = new Size(246, 36);
             LListadeUsuarios.TabIndex = 1;
@@ -219,12 +219,14 @@
             AutoScaleMode = AutoScaleMode.Font;
             BackgroundImage = (Image)resources.GetObject("$this.BackgroundImage");
             BackgroundImageLayout = ImageLayout.Stretch;
-            ClientSize = new Size(758, 382);
+            ClientSize = new Size(800, 450);
             Controls.Add(LListadeUsuarios);
             Controls.Add(PListaUsuarios);
             Margin = new Padding(3, 2, 3, 2);
             Name = "FListarUsuarios";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "Listar Usuarios";
+            WindowState = FormWindowState.Maximized;
             PListaUsuarios.ResumeLayout(false);
             PListaUsuarios.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)DGVListaUs).EndInit();
