@@ -83,7 +83,7 @@
             button1.BackgroundImage = (Image)resources.GetObject("button1.BackgroundImage");
             button1.BackgroundImageLayout = ImageLayout.Stretch;
             button1.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            button1.Location = new Point(153, 17);
+            button1.Location = new Point(149, 21);
             button1.Name = "button1";
             button1.Size = new Size(32, 27);
             button1.TabIndex = 2;
@@ -97,7 +97,7 @@
             TBBuscar.Cursor = Cursors.IBeam;
             TBBuscar.Font = new Font("Century Gothic", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
             TBBuscar.ForeColor = Color.LightGray;
-            TBBuscar.Location = new Point(3, 17);
+            TBBuscar.Location = new Point(0, 21);
             TBBuscar.Name = "TBBuscar";
             TBBuscar.PlaceholderText = "  Buscar...";
             TBBuscar.Size = new Size(132, 27);

@@ -42,6 +42,6 @@ namespace AurenPadelStore.CPresentacion.Administrador.ListarUsuarios
             }
         }
 
-       
+
     }
 }

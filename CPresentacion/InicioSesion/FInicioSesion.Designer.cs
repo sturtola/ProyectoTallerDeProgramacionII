@@ -51,7 +51,7 @@
             BIngresar.TabIndex = 0;
             BIngresar.Text = "Ingresar";
             BIngresar.UseVisualStyleBackColor = false;
-            BIngresar.Click += button1_Click;
+            BIngresar.Click += btnIngresar_Click;
             // 
             // PIniciarSesion
             // 
@@ -69,6 +69,7 @@
             // 
             // CBUsuarios
             // 
+            CBUsuarios.DropDownStyle = ComboBoxStyle.DropDownList;
             CBUsuarios.Font = new Font("Century Gothic", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
             CBUsuarios.FormattingEnabled = true;
             CBUsuarios.Location = new Point(199, 101);
@@ -78,7 +79,7 @@
             // 
             // TBContraseña
             // 
-            TBContraseña.BackColor = Color.White;
+            TBContraseña.BackColor = Color.Gainsboro;
             TBContraseña.BorderStyle = BorderStyle.FixedSingle;
             TBContraseña.Font = new Font("Century Gothic", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
             TBContraseña.Location = new Point(199, 184);

@@ -10,11 +10,11 @@ namespace AurenPadelStore.CLogica
 
         public void RegistrarUsuario(Usuario u)
         {
-            // Verificar que no exista el DNI en BD
+            // Verificar que no exista el DNI en la BD
             if (datos.ExisteDni(u.DNI))
                 throw new Exception("El DNI ya está registrado.");
 
-            // Aquí podrías agregar más reglas de negocio (password segura, etc.)
+            // Reglas de negocio adicionales (por ej. validar fortaleza de contraseña) pueden ir aquí
             datos.Insertar(u);
         }
     }
