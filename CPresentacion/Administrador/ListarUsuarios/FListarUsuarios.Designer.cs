@@ -1,4 +1,4 @@
-﻿namespace AurenPadelStore.CPresentacion.Gerente.ListarUsuarios
+﻿namespace AurenPadelStore.CPresentacion.Administrador.ListarUsuarios
 {
     partial class FListarUsuarios
     {

@@ -1,4 +1,4 @@
-﻿using AurenPadelStore.CPresentacion.Gerente;
+﻿using AurenPadelStore.CPresentacion.Administrador;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -20,7 +20,7 @@ namespace AurenPadelStore.CPresentacion.InicioSesion
         private void button1_Click(object sender, EventArgs e)
         {
             // Crear una instancia del formulario MDI
-            FMenuGerente menuGerente = new FMenuGerente();
+            FMenuAdmin menuGerente = new FMenuAdmin();
 
             // Mostrar el formulario MDI
             menuGerente.Show();

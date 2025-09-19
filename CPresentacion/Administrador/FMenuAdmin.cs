@@ -1,5 +1,5 @@
-﻿using AurenPadelStore.CPresentacion.Gerente.AgregarUsuario;
-using AurenPadelStore.CPresentacion.Gerente.ListarUsuarios;
+﻿using AurenPadelStore.CPresentacion.Administrador.AgregarUsuario;
+using AurenPadelStore.CPresentacion.Administrador.ListarUsuarios;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -10,11 +10,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace AurenPadelStore.CPresentacion.Gerente
+namespace AurenPadelStore.CPresentacion.Administrador
 {
-    public partial class FMenuGerente : Form
+    public partial class FMenuAdmin : Form
     {
-        public FMenuGerente()
+        public FMenuAdmin()
         {
             InitializeComponent();
         }

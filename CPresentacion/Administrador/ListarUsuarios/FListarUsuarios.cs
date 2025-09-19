@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace AurenPadelStore.CPresentacion.Gerente.ListarUsuarios
+namespace AurenPadelStore.CPresentacion.Administrador.ListarUsuarios
 {
     public partial class FListarUsuarios : Form
     {
