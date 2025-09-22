@@ -17,15 +17,14 @@
 
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FListarUsuarios));
             DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
             DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
             DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
             DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FListarUsuarios));
             PListaUsuarios = new Panel();
             LFiltroUs = new Label();
             CBFiltroUs = new ComboBox();
-            button1 = new Button();
             TBBuscar = new TextBox();
             DGVListaUs = new DataGridView();
             CDocumento = new DataGridViewTextBoxColumn();
@@ -35,6 +34,7 @@
             CEditar = new DataGridViewButtonColumn();
             CEliminar = new DataGridViewButtonColumn();
             LListadeUsuarios = new Label();
+            BBuscarUs = new Button();
             PListaUsuarios.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)DGVListaUs).BeginInit();
             SuspendLayout();
@@ -42,9 +42,9 @@
             // PListaUsuarios
             // 
             PListaUsuarios.BackColor = Color.Transparent;
+            PListaUsuarios.Controls.Add(BBuscarUs);
             PListaUsuarios.Controls.Add(LFiltroUs);
             PListaUsuarios.Controls.Add(CBFiltroUs);
-            PListaUsuarios.Controls.Add(button1);
             PListaUsuarios.Controls.Add(TBBuscar);
             PListaUsuarios.Controls.Add(DGVListaUs);
             PListaUsuarios.Location = new Point(58, 100);
@@ -77,17 +77,6 @@
             CBFiltroUs.Size = new Size(137, 28);
             CBFiltroUs.TabIndex = 2;
             CBFiltroUs.Tag = "";
-            // 
-            // button1
-            // 
-            button1.BackgroundImage = (Image)resources.GetObject("button1.BackgroundImage");
-            button1.BackgroundImageLayout = ImageLayout.Stretch;
-            button1.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            button1.Location = new Point(149, 21);
-            button1.Name = "button1";
-            button1.Size = new Size(32, 27);
-            button1.TabIndex = 2;
-            button1.UseVisualStyleBackColor = true;
             // 
             // TBBuscar
             // 
@@ -213,6 +202,18 @@
             LListadeUsuarios.TabIndex = 1;
             LListadeUsuarios.Text = "Lista de Usuarios";
             // 
+            // BBuscarUs
+            // 
+            BBuscarUs.BackColor = Color.LightGray;
+            BBuscarUs.BackgroundImage = (Image)resources.GetObject("BBuscarUs.BackgroundImage");
+            BBuscarUs.BackgroundImageLayout = ImageLayout.Stretch;
+            BBuscarUs.FlatStyle = FlatStyle.Popup;
+            BBuscarUs.Location = new Point(151, 21);
+            BBuscarUs.Name = "BBuscarUs";
+            BBuscarUs.Size = new Size(39, 27);
+            BBuscarUs.TabIndex = 4;
+            BBuscarUs.UseVisualStyleBackColor = false;
+            // 
             // FListarUsuarios
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -242,8 +243,8 @@
         private DataGridViewButtonColumn CEliminar;
         private Label LListadeUsuarios;
         private TextBox TBBuscar;
-        private Button button1;
         private ComboBox CBFiltroUs;
         private Label LFiltroUs;
+        private Button BBuscarUs;
     }
 }

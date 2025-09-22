@@ -40,8 +40,6 @@
             registrarClienteToolStripMenuItem = new ToolStripMenuItem();
             listarClientesToolStripMenuItem = new ToolStripMenuItem();
             productosToolStripMenuItem = new ToolStripMenuItem();
-            agregarProductoToolStripMenuItem = new ToolStripMenuItem();
-            listaDeProductosToolStripMenuItem = new ToolStripMenuItem();
             facturasToolStripMenuItem = new ToolStripMenuItem();
             generarFacturaToolStripMenuItem = new ToolStripMenuItem();
             listaDeFacturasToolStripMenuItem = new ToolStripMenuItem();
@@ -53,7 +51,7 @@
             menuStrip1.Items.AddRange(new ToolStripItem[] { inicioToolStripMenuItem, ventasToolStripMenuItem, clientesToolStripMenuItem, productosToolStripMenuItem, facturasToolStripMenuItem });
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
-            menuStrip1.Size = new Size(800, 24);
+            menuStrip1.Size = new Size(1012, 24);
             menuStrip1.TabIndex = 0;
             menuStrip1.Text = "menuStrip1";
             // 
@@ -67,13 +65,13 @@
             // salirToolStripMenuItem
             // 
             salirToolStripMenuItem.Name = "salirToolStripMenuItem";
-            salirToolStripMenuItem.Size = new Size(180, 22);
+            salirToolStripMenuItem.Size = new Size(143, 22);
             salirToolStripMenuItem.Text = "Salir";
             // 
             // cerrarSesiónToolStripMenuItem
             // 
             cerrarSesiónToolStripMenuItem.Name = "cerrarSesiónToolStripMenuItem";
-            cerrarSesiónToolStripMenuItem.Size = new Size(180, 22);
+            cerrarSesiónToolStripMenuItem.Size = new Size(143, 22);
             cerrarSesiónToolStripMenuItem.Text = "Cerrar Sesión";
             // 
             // ventasToolStripMenuItem
@@ -86,13 +84,13 @@
             // generarVentaToolStripMenuItem
             // 
             generarVentaToolStripMenuItem.Name = "generarVentaToolStripMenuItem";
-            generarVentaToolStripMenuItem.Size = new Size(180, 22);
+            generarVentaToolStripMenuItem.Size = new Size(151, 22);
             generarVentaToolStripMenuItem.Text = "Generar Venta";
             // 
             // listarVentasToolStripMenuItem
             // 
             listarVentasToolStripMenuItem.Name = "listarVentasToolStripMenuItem";
-            listarVentasToolStripMenuItem.Size = new Size(180, 22);
+            listarVentasToolStripMenuItem.Size = new Size(151, 22);
             listarVentasToolStripMenuItem.Text = "Lista de Ventas";
             // 
             // clientesToolStripMenuItem
@@ -105,33 +103,21 @@
             // registrarClienteToolStripMenuItem
             // 
             registrarClienteToolStripMenuItem.Name = "registrarClienteToolStripMenuItem";
-            registrarClienteToolStripMenuItem.Size = new Size(180, 22);
+            registrarClienteToolStripMenuItem.Size = new Size(160, 22);
             registrarClienteToolStripMenuItem.Text = "Registrar Cliente";
             // 
             // listarClientesToolStripMenuItem
             // 
             listarClientesToolStripMenuItem.Name = "listarClientesToolStripMenuItem";
-            listarClientesToolStripMenuItem.Size = new Size(180, 22);
+            listarClientesToolStripMenuItem.Size = new Size(160, 22);
             listarClientesToolStripMenuItem.Text = "Lista de Clientes";
             // 
             // productosToolStripMenuItem
             // 
-            productosToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { agregarProductoToolStripMenuItem, listaDeProductosToolStripMenuItem });
             productosToolStripMenuItem.Name = "productosToolStripMenuItem";
             productosToolStripMenuItem.Size = new Size(73, 20);
             productosToolStripMenuItem.Text = "Productos";
-            // 
-            // agregarProductoToolStripMenuItem
-            // 
-            agregarProductoToolStripMenuItem.Name = "agregarProductoToolStripMenuItem";
-            agregarProductoToolStripMenuItem.Size = new Size(180, 22);
-            agregarProductoToolStripMenuItem.Text = "Agregar Producto";
-            // 
-            // listaDeProductosToolStripMenuItem
-            // 
-            listaDeProductosToolStripMenuItem.Name = "listaDeProductosToolStripMenuItem";
-            listaDeProductosToolStripMenuItem.Size = new Size(180, 22);
-            listaDeProductosToolStripMenuItem.Text = "Lista de Productos";
+            productosToolStripMenuItem.Click += productosToolStripMenuItem_Click;
             // 
             // facturasToolStripMenuItem
             // 
@@ -143,13 +129,13 @@
             // generarFacturaToolStripMenuItem
             // 
             generarFacturaToolStripMenuItem.Name = "generarFacturaToolStripMenuItem";
-            generarFacturaToolStripMenuItem.Size = new Size(180, 22);
+            generarFacturaToolStripMenuItem.Size = new Size(161, 22);
             generarFacturaToolStripMenuItem.Text = "Generar Factura";
             // 
             // listaDeFacturasToolStripMenuItem
             // 
             listaDeFacturasToolStripMenuItem.Name = "listaDeFacturasToolStripMenuItem";
-            listaDeFacturasToolStripMenuItem.Size = new Size(180, 22);
+            listaDeFacturasToolStripMenuItem.Size = new Size(161, 22);
             listaDeFacturasToolStripMenuItem.Text = "Lista de Facturas";
             // 
             // FMenuEmpleados
@@ -158,12 +144,14 @@
             AutoScaleMode = AutoScaleMode.Font;
             BackgroundImage = (Image)resources.GetObject("$this.BackgroundImage");
             BackgroundImageLayout = ImageLayout.Stretch;
-            ClientSize = new Size(800, 450);
+            ClientSize = new Size(1012, 540);
             Controls.Add(menuStrip1);
             Font = new Font("Century Gothic", 11.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            IsMdiContainer = true;
             MainMenuStrip = menuStrip1;
             Margin = new Padding(4);
             Name = "FMenuEmpleados";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "Empleados";
             menuStrip1.ResumeLayout(false);
             menuStrip1.PerformLayout();
@@ -184,8 +172,6 @@
         private ToolStripMenuItem registrarClienteToolStripMenuItem;
         private ToolStripMenuItem listarClientesToolStripMenuItem;
         private ToolStripMenuItem productosToolStripMenuItem;
-        private ToolStripMenuItem agregarProductoToolStripMenuItem;
-        private ToolStripMenuItem listaDeProductosToolStripMenuItem;
         private ToolStripMenuItem facturasToolStripMenuItem;
         private ToolStripMenuItem generarFacturaToolStripMenuItem;
         private ToolStripMenuItem listaDeFacturasToolStripMenuItem;
