@@ -37,8 +37,6 @@
             generarVentaToolStripMenuItem = new ToolStripMenuItem();
             listarVentasToolStripMenuItem = new ToolStripMenuItem();
             clientesToolStripMenuItem = new ToolStripMenuItem();
-            registrarClienteToolStripMenuItem = new ToolStripMenuItem();
-            listarClientesToolStripMenuItem = new ToolStripMenuItem();
             productosToolStripMenuItem = new ToolStripMenuItem();
             facturasToolStripMenuItem = new ToolStripMenuItem();
             generarFacturaToolStripMenuItem = new ToolStripMenuItem();
@@ -65,14 +63,16 @@
             // salirToolStripMenuItem
             // 
             salirToolStripMenuItem.Name = "salirToolStripMenuItem";
-            salirToolStripMenuItem.Size = new Size(143, 22);
+            salirToolStripMenuItem.Size = new Size(180, 22);
             salirToolStripMenuItem.Text = "Salir";
+            salirToolStripMenuItem.Click += salirToolStripMenuItem_Click;
             // 
             // cerrarSesiónToolStripMenuItem
             // 
             cerrarSesiónToolStripMenuItem.Name = "cerrarSesiónToolStripMenuItem";
-            cerrarSesiónToolStripMenuItem.Size = new Size(143, 22);
+            cerrarSesiónToolStripMenuItem.Size = new Size(180, 22);
             cerrarSesiónToolStripMenuItem.Text = "Cerrar Sesión";
+            cerrarSesiónToolStripMenuItem.Click += cerrarSesiónToolStripMenuItem_Click;
             // 
             // ventasToolStripMenuItem
             // 
@@ -95,22 +95,10 @@
             // 
             // clientesToolStripMenuItem
             // 
-            clientesToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { registrarClienteToolStripMenuItem, listarClientesToolStripMenuItem });
             clientesToolStripMenuItem.Name = "clientesToolStripMenuItem";
             clientesToolStripMenuItem.Size = new Size(61, 20);
             clientesToolStripMenuItem.Text = "Clientes";
-            // 
-            // registrarClienteToolStripMenuItem
-            // 
-            registrarClienteToolStripMenuItem.Name = "registrarClienteToolStripMenuItem";
-            registrarClienteToolStripMenuItem.Size = new Size(160, 22);
-            registrarClienteToolStripMenuItem.Text = "Registrar Cliente";
-            // 
-            // listarClientesToolStripMenuItem
-            // 
-            listarClientesToolStripMenuItem.Name = "listarClientesToolStripMenuItem";
-            listarClientesToolStripMenuItem.Size = new Size(160, 22);
-            listarClientesToolStripMenuItem.Text = "Lista de Clientes";
+            clientesToolStripMenuItem.Click += clientesToolStripMenuItem_Click;
             // 
             // productosToolStripMenuItem
             // 
@@ -169,8 +157,6 @@
         private ToolStripMenuItem generarVentaToolStripMenuItem;
         private ToolStripMenuItem listarVentasToolStripMenuItem;
         private ToolStripMenuItem clientesToolStripMenuItem;
-        private ToolStripMenuItem registrarClienteToolStripMenuItem;
-        private ToolStripMenuItem listarClientesToolStripMenuItem;
         private ToolStripMenuItem productosToolStripMenuItem;
         private ToolStripMenuItem facturasToolStripMenuItem;
         private ToolStripMenuItem generarFacturaToolStripMenuItem;

@@ -11,15 +11,63 @@ using System.Windows.Forms;
 
 namespace AurenPadelStore.CPresentacion.Empleados.Productos
 {
-    public partial class FListarProductos : Form
+    public partial class FProductos : Form
     {
-        public FListarProductos()
+        private Panel _scrollHost;
+        // Tamaño “de diseño” de tu contenido. Usá el que ya venís manejando:
+        private readonly Size _designContentSize = new Size(1334, 659);
+        public FProductos()
         {
             InitializeComponent();
             CargarProductoDePrueba();
+            PrepararScrollHost();
+            this.Resize += (_, __) => UpdateScrollbars();
 
         }
 
+        private void PrepararScrollHost()
+        {
+            // 1) Crear el host scrolleable
+            _scrollHost = new Panel
+            {
+                Dock = DockStyle.Fill,
+                AutoScroll = true,
+                BackColor = this.BackColor // mantiene el mismo fondo
+            };
+
+            // 2) Re-ubicar TODOS los controles existentes del form dentro del host
+            //    (esto evita tocar el Designer)
+            while (this.Controls.Count > 0)
+            {
+                Control c = this.Controls[0];
+                this.Controls.RemoveAt(0);
+                _scrollHost.Controls.Add(c);
+            }
+
+            // 3) Agregar el host al form
+            this.Controls.Add(_scrollHost);
+
+            // 4) Setear el tamaño mínimo “de diseño” para que aparezcan barras si el MDI es más chico
+            _scrollHost.AutoScrollMinSize = _designContentSize;
+
+            // 5) Ajuste inicial
+            UpdateScrollbars();
+        }
+
+        private void UpdateScrollbars()
+        {
+            if (this.WindowState == FormWindowState.Maximized)
+            {
+                // Al maximizar, ocultamos scrollbars y reseteamos posición
+                _scrollHost.AutoScrollMinSize = Size.Empty;
+                _scrollHost.AutoScrollPosition = Point.Empty;
+            }
+            else
+            {
+                // En estado normal, forzamos el tamaño mínimo de contenido para habilitar scroll si hace falta
+                _scrollHost.AutoScrollMinSize = _designContentSize;
+            }
+        }
 
         private void CargarProductoDePrueba()
         {

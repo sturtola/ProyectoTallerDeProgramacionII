@@ -45,9 +45,9 @@
             BIngresar.Cursor = Cursors.Hand;
             BIngresar.FlatStyle = FlatStyle.Flat;
             BIngresar.Font = new Font("Century Gothic", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            BIngresar.Location = new Point(62, 261);
+            BIngresar.Location = new Point(25, 261);
             BIngresar.Name = "BIngresar";
-            BIngresar.Size = new Size(248, 35);
+            BIngresar.Size = new Size(338, 35);
             BIngresar.TabIndex = 0;
             BIngresar.Text = "Ingresar";
             BIngresar.UseVisualStyleBackColor = false;
@@ -62,7 +62,7 @@
             PIniciarSesion.Controls.Add(LUsuario);
             PIniciarSesion.Controls.Add(label1);
             PIniciarSesion.Controls.Add(BIngresar);
-            PIniciarSesion.Location = new Point(187, 23);
+            PIniciarSesion.Location = new Point(139, 27);
             PIniciarSesion.Name = "PIniciarSesion";
             PIniciarSesion.Size = new Size(386, 338);
             PIniciarSesion.TabIndex = 1;
@@ -127,7 +127,7 @@
             AutoScaleMode = AutoScaleMode.Font;
             BackgroundImage = (Image)resources.GetObject("$this.BackgroundImage");
             BackgroundImageLayout = ImageLayout.Stretch;
-            ClientSize = new Size(745, 389);
+            ClientSize = new Size(671, 377);
             Controls.Add(PIniciarSesion);
             Font = new Font("Century Gothic", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
             Margin = new Padding(4, 3, 4, 3);

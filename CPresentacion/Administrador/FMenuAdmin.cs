@@ -1,5 +1,4 @@
-﻿using AurenPadelStore.CPresentacion.Administrador.AgregarUsuario;
-using AurenPadelStore.CPresentacion.Administrador.ListarUsuarios;
+﻿using AurenPadelStore.CPresentacion.Administrador.Usuarios;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -19,70 +18,58 @@ namespace AurenPadelStore.CPresentacion.Administrador
             InitializeComponent();
         }
 
-        private void listarUsuariosToolStripMenuItem_Click(object sender, EventArgs e)
+
+        private void usuariosToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Verificar si ya está abierto
             foreach (Form frm in this.MdiChildren)
             {
-                if (frm is FListarUsuarios)
+                if (frm is FUsuarios)
                 {
-                    MessageBox.Show("La ventana se encuentra abierta", "Atención",
-                                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show("La ventana se encuentra abierta", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     frm.Activate();
                     return;
                 }
-                else
-                {
-                    frm.Close(); // Cerrar cualquier otro formulario abierto
-                }
             }
 
-            // Crear instancia del formulario
-            Form listarUsuarios = new FListarUsuarios();
-            listarUsuarios.MdiParent = this;
-
-            // Quitar cascada y centrar
-            listarUsuarios.StartPosition = FormStartPosition.Manual;
-            listarUsuarios.Location = new Point(
-                (this.ClientSize.Width - listarUsuarios.Width) / 2,
-                (this.ClientSize.Height - listarUsuarios.Height) / 2
-            );
-
-            listarUsuarios.Show();
-        }
-
-        private void agregarUsuarioToolStripMenuItem1_Click(object sender, EventArgs e)
-        {
-            // Verificar si ya está abierto
+            // Cerrar todos los demás formularios abiertos
             foreach (Form frm in this.MdiChildren)
             {
-                if (frm is FAgregarUsuario)
-                {
-                    MessageBox.Show("La ventana se encuentra abierta", "Atención",
-                                    MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    frm.Activate();
-                    return;
-                }
-                else
-                {
-                    frm.Close(); // Cerrar cualquier otro formulario abierto
-                }
+                frm.Close();
             }
 
-            // Crear instancia del formulario
-            Form agregarUsuario = new FAgregarUsuario();
-            agregarUsuario.MdiParent = this;
+            // Crear el formulario hijo
+            FUsuarios frmHijo = new FUsuarios()
+            {
+                MdiParent = this,
+                FormBorderStyle = FormBorderStyle.FixedSingle,
+                MaximizeBox = false,
+                MinimizeBox = false,
+                StartPosition = FormStartPosition.Manual,
+                Location = new Point(0, 0),
+                Dock = DockStyle.Fill // ocupa todo el MDI y se ajusta automáticamente al cambiar tamaño
+            };
 
-            // Quitar cascada y centrar
-            agregarUsuario.StartPosition = FormStartPosition.Manual;
-            agregarUsuario.Location = new Point(
-                (this.ClientSize.Width - agregarUsuario.Width) / 2,
-                (this.ClientSize.Height - agregarUsuario.Height) / 2
-            );
-
-            agregarUsuario.Show();
+            frmHijo.Show();
         }
 
+        private void cerrarSesiónToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // Oculto el menú actual
+            this.Hide();
+
+            // Abro el form de inicio de sesión
+            var login = new AurenPadelStore.CPresentacion.InicioSesion.FInicioSesion();
+            login.Show();
+
+            // Cuando se cierre el login, cierro este menú también
+            this.Close();
+        }
+
+        private void salirToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
     }
 }
 

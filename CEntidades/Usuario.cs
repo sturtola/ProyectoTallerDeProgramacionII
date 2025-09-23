@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AurenPadelStore.CEntidades
 {
@@ -14,7 +10,9 @@ namespace AurenPadelStore.CEntidades
         public string Contrasena { get; set; }
         public string Rol { get; set; }
 
-        // Constructor vacío
+        // 👇 Propiedad de solo lectura para mostrar en combos
+        public string NombreMostrar => $"{Nombre} {Apellido}";
+
         public Usuario() { }
 
         public Usuario(string dni, string nombre, string apellido, string contrasena, string rol)
