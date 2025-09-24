@@ -18,10 +18,10 @@ namespace AurenPadelStore.CPresentacion.Administrador.Usuarios
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FUsuarios));
-            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle5 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle8 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle6 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle7 = new DataGridViewCellStyle();
             LListaUsuarios = new Label();
             PAgregarUsuario = new Panel();
             LNombreU = new Label();
@@ -47,10 +47,10 @@ namespace AurenPadelStore.CPresentacion.Administrador.Usuarios
             colUNombre = new DataGridViewTextBoxColumn();
             colUApellido = new DataGridViewTextBoxColumn();
             colUDni = new DataGridViewTextBoxColumn();
-            colUContrasena = new DataGridViewTextBoxColumn();
             colURol = new DataGridViewTextBoxColumn();
+            colUEstado = new DataGridViewTextBoxColumn();
             colUEditar = new DataGridViewButtonColumn();
-            colUEliminar = new DataGridViewButtonColumn();
+            colUAccion = new DataGridViewButtonColumn();
             PAgregarUsuario.SuspendLayout();
             PListaUsuarios.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)DGListaUsuarios).BeginInit();
@@ -102,6 +102,7 @@ namespace AurenPadelStore.CPresentacion.Administrador.Usuarios
             // TBNombreU
             // 
             TBNombreU.BackColor = Color.Gainsboro;
+            TBNombreU.Cursor = Cursors.IBeam;
             TBNombreU.Font = new Font("Century Gothic", 12F);
             TBNombreU.Location = new Point(15, 48);
             TBNombreU.Name = "TBNombreU";
@@ -121,6 +122,7 @@ namespace AurenPadelStore.CPresentacion.Administrador.Usuarios
             // TBApellidoU
             // 
             TBApellidoU.BackColor = Color.Gainsboro;
+            TBApellidoU.Cursor = Cursors.IBeam;
             TBApellidoU.Font = new Font("Century Gothic", 12F);
             TBApellidoU.Location = new Point(15, 108);
             TBApellidoU.Name = "TBApellidoU";
@@ -140,12 +142,12 @@ namespace AurenPadelStore.CPresentacion.Administrador.Usuarios
             // TBDniU
             // 
             TBDniU.BackColor = Color.Gainsboro;
+            TBDniU.Cursor = Cursors.IBeam;
             TBDniU.Font = new Font("Century Gothic", 12F);
             TBDniU.Location = new Point(15, 168);
             TBDniU.Name = "TBDniU";
             TBDniU.Size = new Size(250, 27);
             TBDniU.TabIndex = 5;
-            TBDniU.KeyPress += TBNumerico_KeyPress;
             // 
             // LContrasena
             // 
@@ -160,6 +162,7 @@ namespace AurenPadelStore.CPresentacion.Administrador.Usuarios
             // TBContrasena
             // 
             TBContrasena.BackColor = Color.Gainsboro;
+            TBContrasena.Cursor = Cursors.IBeam;
             TBContrasena.Font = new Font("Century Gothic", 12F);
             TBContrasena.Location = new Point(15, 229);
             TBContrasena.Name = "TBContrasena";
@@ -180,6 +183,7 @@ namespace AurenPadelStore.CPresentacion.Administrador.Usuarios
             // TBRepetirContrasena
             // 
             TBRepetirContrasena.BackColor = Color.Gainsboro;
+            TBRepetirContrasena.Cursor = Cursors.IBeam;
             TBRepetirContrasena.Font = new Font("Century Gothic", 12F);
             TBRepetirContrasena.Location = new Point(15, 289);
             TBRepetirContrasena.Name = "TBRepetirContrasena";
@@ -200,6 +204,7 @@ namespace AurenPadelStore.CPresentacion.Administrador.Usuarios
             // CBRol
             // 
             CBRol.BackColor = Color.LightGray;
+            CBRol.Cursor = Cursors.Hand;
             CBRol.DropDownStyle = ComboBoxStyle.DropDownList;
             CBRol.Font = new Font("Century Gothic", 12F);
             CBRol.Location = new Point(15, 349);
@@ -210,16 +215,16 @@ namespace AurenPadelStore.CPresentacion.Administrador.Usuarios
             // BAgregarUsuario
             // 
             BAgregarUsuario.BackColor = Color.YellowGreen;
+            BAgregarUsuario.Cursor = Cursors.Hand;
             BAgregarUsuario.FlatStyle = FlatStyle.Popup;
             BAgregarUsuario.Font = new Font("Century Gothic", 14.25F);
             BAgregarUsuario.ForeColor = Color.Black;
-            BAgregarUsuario.Location = new Point(10, 409);
+            BAgregarUsuario.Location = new Point(15, 410);
             BAgregarUsuario.Name = "BAgregarUsuario";
-            BAgregarUsuario.Size = new Size(255, 33);
+            BAgregarUsuario.Size = new Size(250, 33);
             BAgregarUsuario.TabIndex = 12;
             BAgregarUsuario.Text = "Agregar Usuario";
             BAgregarUsuario.UseVisualStyleBackColor = false;
-            BAgregarUsuario.Click += BAgregarUsuario_Click;
             // 
             // LAgregarUsuario
             // 
@@ -243,7 +248,7 @@ namespace AurenPadelStore.CPresentacion.Administrador.Usuarios
             PListaUsuarios.Controls.Add(DGListaUsuarios);
             PListaUsuarios.Location = new Point(384, 100);
             PListaUsuarios.Name = "PListaUsuarios";
-            PListaUsuarios.Size = new Size(883, 503);
+            PListaUsuarios.Size = new Size(888, 503);
             PListaUsuarios.TabIndex = 2;
             // 
             // labelFiltro
@@ -251,7 +256,7 @@ namespace AurenPadelStore.CPresentacion.Administrador.Usuarios
             labelFiltro.AutoSize = true;
             labelFiltro.Font = new Font("Century Gothic", 14.25F);
             labelFiltro.ForeColor = Color.LightGray;
-            labelFiltro.Location = new Point(637, 12);
+            labelFiltro.Location = new Point(639, 12);
             labelFiltro.Name = "labelFiltro";
             labelFiltro.Size = new Size(62, 22);
             labelFiltro.TabIndex = 6;
@@ -260,10 +265,12 @@ namespace AurenPadelStore.CPresentacion.Administrador.Usuarios
             // CBFiltroU
             // 
             CBFiltroU.BackColor = Color.LightGray;
+            CBFiltroU.Cursor = Cursors.Hand;
             CBFiltroU.DropDownStyle = ComboBoxStyle.DropDownList;
             CBFiltroU.Font = new Font("Century Gothic", 12F);
             CBFiltroU.FormattingEnabled = true;
-            CBFiltroU.Location = new Point(714, 10);
+            CBFiltroU.Items.AddRange(new object[] { "Nombre A-Z", "Nombre Z-A", "Apellido A-Z", "Apellido Z-A", "Administrador", "Gerente", "Vendedor", "Activos", "Inactivos" });
+            CBFiltroU.Location = new Point(717, 9);
             CBFiltroU.Name = "CBFiltroU";
             CBFiltroU.Size = new Size(168, 29);
             CBFiltroU.TabIndex = 5;
@@ -273,6 +280,7 @@ namespace AurenPadelStore.CPresentacion.Administrador.Usuarios
             BBuscarU.BackColor = Color.LightGray;
             BBuscarU.BackgroundImage = (Image)resources.GetObject("BBuscarU.BackgroundImage");
             BBuscarU.BackgroundImageLayout = ImageLayout.Stretch;
+            BBuscarU.Cursor = Cursors.Hand;
             BBuscarU.FlatStyle = FlatStyle.Popup;
             BBuscarU.Location = new Point(233, 11);
             BBuscarU.Name = "BBuscarU";
@@ -284,6 +292,7 @@ namespace AurenPadelStore.CPresentacion.Administrador.Usuarios
             // 
             TBBuscarU.BackColor = Color.FromArgb(64, 64, 64);
             TBBuscarU.BorderStyle = BorderStyle.FixedSingle;
+            TBBuscarU.Cursor = Cursors.IBeam;
             TBBuscarU.Font = new Font("Century Gothic", 12F);
             TBBuscarU.ForeColor = Color.LightGray;
             TBBuscarU.Location = new Point(3, 11);
@@ -297,66 +306,66 @@ namespace AurenPadelStore.CPresentacion.Administrador.Usuarios
             DGListaUsuarios.BackgroundColor = Color.FromArgb(64, 64, 64);
             DGListaUsuarios.BorderStyle = BorderStyle.None;
             DGListaUsuarios.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single;
-            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle1.BackColor = Color.FromArgb(64, 64, 64);
-            dataGridViewCellStyle1.Font = new Font("Century Gothic", 12F);
-            dataGridViewCellStyle1.ForeColor = Color.LightGray;
-            DGListaUsuarios.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle5.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle5.BackColor = Color.FromArgb(64, 64, 64);
+            dataGridViewCellStyle5.Font = new Font("Century Gothic", 12F);
+            dataGridViewCellStyle5.ForeColor = Color.LightGray;
+            DGListaUsuarios.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle5;
             DGListaUsuarios.ColumnHeadersHeight = 25;
-            DGListaUsuarios.Columns.AddRange(new DataGridViewColumn[] { colUNombre, colUApellido, colUDni, colUContrasena, colURol, colUEditar, colUEliminar });
-            dataGridViewCellStyle4.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle4.BackColor = Color.FromArgb(100, 100, 100);
-            dataGridViewCellStyle4.Font = new Font("Century Gothic", 11F);
-            dataGridViewCellStyle4.ForeColor = Color.LightGray;
-            dataGridViewCellStyle4.SelectionBackColor = Color.DimGray;
-            dataGridViewCellStyle4.SelectionForeColor = Color.White;
-            dataGridViewCellStyle4.WrapMode = DataGridViewTriState.False;
-            DGListaUsuarios.DefaultCellStyle = dataGridViewCellStyle4;
+            DGListaUsuarios.Columns.AddRange(new DataGridViewColumn[] { colUNombre, colUApellido, colUDni, colURol, colUEstado, colUEditar, colUAccion });
+            dataGridViewCellStyle8.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle8.BackColor = Color.FromArgb(100, 100, 100);
+            dataGridViewCellStyle8.Font = new Font("Century Gothic", 11F);
+            dataGridViewCellStyle8.ForeColor = Color.LightGray;
+            dataGridViewCellStyle8.SelectionBackColor = Color.DimGray;
+            dataGridViewCellStyle8.SelectionForeColor = Color.White;
+            dataGridViewCellStyle8.WrapMode = DataGridViewTriState.False;
+            DGListaUsuarios.DefaultCellStyle = dataGridViewCellStyle8;
             DGListaUsuarios.EnableHeadersVisualStyles = false;
             DGListaUsuarios.GridColor = Color.Black;
             DGListaUsuarios.Location = new Point(0, 57);
             DGListaUsuarios.Name = "DGListaUsuarios";
             DGListaUsuarios.RowHeadersVisible = false;
             DGListaUsuarios.RowTemplate.Height = 40;
-            DGListaUsuarios.Size = new Size(882, 446);
+            DGListaUsuarios.Size = new Size(885, 446);
             DGListaUsuarios.TabIndex = 0;
             // 
             // colUNombre
             // 
             colUNombre.HeaderText = "Nombre";
             colUNombre.Name = "colUNombre";
-            colUNombre.Width = 150;
+            colUNombre.Width = 148;
             // 
             // colUApellido
             // 
             colUApellido.HeaderText = "Apellido";
             colUApellido.Name = "colUApellido";
-            colUApellido.Width = 150;
+            colUApellido.Width = 148;
             // 
             // colUDni
             // 
             colUDni.HeaderText = "DNI";
             colUDni.Name = "colUDni";
-            colUDni.Width = 150;
-            // 
-            // colUContrasena
-            // 
-            colUContrasena.HeaderText = "Contraseña";
-            colUContrasena.Name = "colUContrasena";
-            colUContrasena.Width = 150;
+            colUDni.Width = 148;
             // 
             // colURol
             // 
             colURol.HeaderText = "Rol";
             colURol.Name = "colURol";
-            colURol.Width = 150;
+            colURol.Width = 148;
+            // 
+            // colUEstado
+            // 
+            colUEstado.HeaderText = "Estado";
+            colUEstado.Name = "colUEstado";
+            colUEstado.Width = 148;
             // 
             // colUEditar
             // 
-            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle2.BackColor = Color.LightGreen;
-            dataGridViewCellStyle2.ForeColor = Color.Black;
-            colUEditar.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle6.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle6.BackColor = Color.LightGreen;
+            dataGridViewCellStyle6.ForeColor = Color.Black;
+            colUEditar.DefaultCellStyle = dataGridViewCellStyle6;
             colUEditar.FlatStyle = FlatStyle.Flat;
             colUEditar.HeaderText = "E";
             colUEditar.Name = "colUEditar";
@@ -364,18 +373,16 @@ namespace AurenPadelStore.CPresentacion.Administrador.Usuarios
             colUEditar.UseColumnTextForButtonValue = true;
             colUEditar.Width = 65;
             // 
-            // colUEliminar
+            // colUAccion
             // 
-            dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle3.BackColor = Color.LightCoral;
-            dataGridViewCellStyle3.ForeColor = Color.Black;
-            colUEliminar.DefaultCellStyle = dataGridViewCellStyle3;
-            colUEliminar.FlatStyle = FlatStyle.Flat;
-            colUEliminar.HeaderText = "X";
-            colUEliminar.Name = "colUEliminar";
-            colUEliminar.Text = "Eliminar";
-            colUEliminar.UseColumnTextForButtonValue = true;
-            colUEliminar.Width = 65;
+            dataGridViewCellStyle7.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle7.BackColor = Color.LightCoral;
+            dataGridViewCellStyle7.ForeColor = Color.Black;
+            colUAccion.DefaultCellStyle = dataGridViewCellStyle7;
+            colUAccion.FlatStyle = FlatStyle.Flat;
+            colUAccion.HeaderText = "A";
+            colUAccion.Name = "colUAccion";
+            colUAccion.Width = 77;
             // 
             // FUsuarios
             // 
@@ -415,7 +422,7 @@ namespace AurenPadelStore.CPresentacion.Administrador.Usuarios
         private ComboBox CBFiltroU;
         private DataGridView DGListaUsuarios;
 
-        private DataGridViewTextBoxColumn colUNombre, colUApellido, colUDni, colUContrasena, colURol;
-        private DataGridViewButtonColumn colUEditar, colUEliminar;
+        private DataGridViewTextBoxColumn colUNombre, colUApellido, colUDni, colURol, colUEstado;
+        private DataGridViewButtonColumn colUEditar, colUAccion;
     }
 }

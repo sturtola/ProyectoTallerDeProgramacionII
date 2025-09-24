@@ -1,38 +1,58 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using AurenPadelStore.CLogica;
+using AurenPadelStore.CDatos;
 using AurenPadelStore.CEntidades;
 
 namespace AurenPadelStore.CPresentacion.Administrador.Usuarios
 {
     public partial class FUsuarios : Form
     {
-        private readonly UsuarioLogica _logica = new UsuarioLogica();
-
-        // Estado de edición
-        private bool _editMode = false;
-        private string _dniOriginal = null;
+        // Scroll host para barras cuando el MDI es más chico que el diseño
         private Panel _scrollHost;
         private readonly Size _designContentSize = new Size(1334, 659);
 
-        // Cache de usuarios para aplicar búsqueda/filtros/orden
-        private List<Usuario> _usuariosCache = new List<Usuario>();
+        private readonly UsuarioDatos _datos = new UsuarioDatos();
+        private bool _modoEdicion = false;
+        private string _dniOriginalEdicion = null;
 
         public FUsuarios()
         {
             InitializeComponent();
-            CargarRoles();
-            PrepararEventosUI();
-            PoblarComboFiltros();
-            RefrescarGrillaDesdeBD();   // carga cache y pinta grilla
+
+            // Alinear en (0,0) dentro del MDI (cuando se muestra)
+            this.StartPosition = FormStartPosition.Manual;
+            this.Location = new Point(0, 0);
+            this.Shown += (_, __) => this.Location = new Point(0, 0);
+
+            // Scrollbars
             PrepararScrollHost();
             this.Resize += (_, __) => UpdateScrollbars();
+
+            // Eventos
+            this.Load += FUsuarios_Load;
+            BAgregarUsuario.Click += BAgregarUsuario_Click;
+
+            DGListaUsuarios.CellContentClick += DGListaUsuarios_CellContentClick;
+            DGListaUsuarios.CellMouseEnter += DGListaUsuarios_CellMouseEnter;
+            DGListaUsuarios.CellMouseLeave += DGListaUsuarios_CellMouseLeave;
+
+            TBBuscarU.TextChanged += (_, __) => RefrescarGrilla();
+            CBFiltroU.SelectedIndexChanged += (_, __) => RefrescarGrilla();
+            BBuscarU.Click += (_, __) => RefrescarGrilla();
+
+            // Validación de DNI solo números desde código (por si no lo asignaste en el designer)
+            TBDniU.KeyPress += TBNumerico_KeyPress;
+
+            // Combo de Roles
+            CBRol.Items.Clear();
+            CBRol.Items.AddRange(new[] { "Administrador", "Gerente", "Vendedor" });
+            if (CBRol.Items.Count > 0) CBRol.SelectedIndex = 0;
         }
 
+        // ===== Scroll =====
         private void PrepararScrollHost()
         {
             _scrollHost = new Panel
@@ -42,6 +62,7 @@ namespace AurenPadelStore.CPresentacion.Administrador.Usuarios
                 BackColor = this.BackColor
             };
 
+            // mover todo el contenido del form dentro del host
             while (this.Controls.Count > 0)
             {
                 Control c = this.Controls[0];
@@ -50,6 +71,8 @@ namespace AurenPadelStore.CPresentacion.Administrador.Usuarios
             }
 
             this.Controls.Add(_scrollHost);
+
+            // tamaño mínimo de contenido para forzar barras cuando no hay espacio
             _scrollHost.AutoScrollMinSize = _designContentSize;
             UpdateScrollbars();
         }
@@ -58,186 +81,284 @@ namespace AurenPadelStore.CPresentacion.Administrador.Usuarios
         {
             if (this.WindowState == FormWindowState.Maximized)
             {
-                _scrollHost.AutoScrollMinSize = Size.Empty;
-                _scrollHost.AutoScrollPosition = Point.Empty;
+                _scrollHost.AutoScrollMinSize = Size.Empty;     // sin barras
+                _scrollHost.AutoScrollPosition = Point.Empty;   // reset desplazamiento
             }
             else
             {
-                _scrollHost.AutoScrollMinSize = _designContentSize;
+                _scrollHost.AutoScrollMinSize = _designContentSize; // barras si hace falta
+                // opcional: volver al origen
+                _scrollHost.AutoScrollPosition = Point.Empty;
             }
         }
 
-        private void CargarRoles()
+        // ===== Carga inicial =====
+        private void FUsuarios_Load(object sender, EventArgs e)
         {
-            CBRol.Items.Clear();
-            CBRol.Items.AddRange(new object[] { "Administrador", "Gerente", "Vendedor" });
-            if (CBRol.Items.Count > 0) CBRol.SelectedIndex = 0;
+            if (CBFiltroU.Items.Count > 0 && CBFiltroU.SelectedIndex < 0)
+                CBFiltroU.SelectedIndex = 0; // "Nombre A-Z" por ejemplo
+
+            RefrescarGrilla();
+            _scrollHost.AutoScrollPosition = Point.Empty;
         }
 
-        private void PoblarComboFiltros()
+        // ===== Grilla =====
+        private void RefrescarGrilla()
         {
-            CBFiltroU.Items.Clear();
-            CBFiltroU.Items.AddRange(new object[]
+            try
             {
-                "Nombre A-Z",
-                "Nombre Z-A",
-                "Apellido A-Z",
-                "Apellido Z-A",
-                "Vendedor",
-                "Administrador",
-                "Gerente"
-            });
-            CBFiltroU.SelectedIndex = 0; // por defecto ordenar por Nombre A-Z
-        }
+                List<Usuario> lista = _datos.ObtenerTodos();
 
-        private void PrepararEventosUI()
-        {
-            // Grilla
-            DGListaUsuarios.CellContentClick += DGListaUsuarios_CellContentClick;
-
-            // Búsqueda
-            BBuscarU.Click += (_, __) => ApplyFilters();
-            TBBuscarU.KeyDown += (s, e) =>
-            {
-                if (e.KeyCode == Keys.Enter)
+                // Buscar
+                string q = (TBBuscarU.Text ?? "").Trim().ToLower();
+                if (!string.IsNullOrEmpty(q))
                 {
-                    e.Handled = true;
-                    e.SuppressKeyPress = true;
-                    ApplyFilters();
+                    lista = lista.FindAll(u =>
+                        (u.Nombre ?? "").ToLower().Contains(q) ||
+                        (u.Apellido ?? "").ToLower().Contains(q) ||
+                        (u.DNI ?? "").ToLower().Contains(q));
                 }
-            };
 
-            // Filtro/orden
-            CBFiltroU.SelectedIndexChanged += (_, __) => ApplyFilters();
-        }
+                // Filtros
+                string f = CBFiltroU.SelectedItem?.ToString() ?? "";
+                switch (f)
+                {
+                    case "Nombre A-Z":
+                        lista.Sort((a, b) => string.Compare(a.Nombre, b.Nombre, StringComparison.OrdinalIgnoreCase));
+                        break;
+                    case "Nombre Z-A":
+                        lista.Sort((a, b) => -string.Compare(a.Nombre, b.Nombre, StringComparison.OrdinalIgnoreCase));
+                        break;
+                    case "Apellido A-Z":
+                        lista.Sort((a, b) => string.Compare(a.Apellido, b.Apellido, StringComparison.OrdinalIgnoreCase));
+                        break;
+                    case "Apellido Z-A":
+                        lista.Sort((a, b) => -string.Compare(a.Apellido, b.Apellido, StringComparison.OrdinalIgnoreCase));
+                        break;
+                    case "Administrador":
+                        lista = lista.FindAll(u => (u.Rol ?? "").Equals("Administrador", StringComparison.OrdinalIgnoreCase));
+                        break;
+                    case "Gerente":
+                        lista = lista.FindAll(u => (u.Rol ?? "").Equals("Gerente", StringComparison.OrdinalIgnoreCase));
+                        break;
+                    case "Vendedor":
+                        lista = lista.FindAll(u => (u.Rol ?? "").Equals("Vendedor", StringComparison.OrdinalIgnoreCase));
+                        break;
+                    case "Activos":
+                        lista = lista.FindAll(u => u.Estado);
+                        break;
+                    case "Inactivos":
+                        lista = lista.FindAll(u => !u.Estado);
+                        break;
+                }
 
-        // Carga y pintado de grilla
-        private void RefrescarGrillaDesdeBD()
-        {
-            _usuariosCache = _logica.ListarUsuarios() ?? new List<Usuario>();
-            ApplyFilters(); // pinta según búsqueda/filtro actuales
-        }
-
-        private void PintarGrilla(IEnumerable<Usuario> data)
-        {
-            DGListaUsuarios.Rows.Clear();
-            foreach (var u in data)
+                DGListaUsuarios.Rows.Clear();
+                foreach (var u in lista)
+                {
+                    int idx = DGListaUsuarios.Rows.Add(
+                        u.Nombre,
+                        u.Apellido,
+                        u.DNI,
+                        u.Rol,
+                        u.Estado ? "Activo" : "Inactivo",
+                        "Editar",
+                        null // el texto del botón lo setea SetAccionEstadoRow
+                    );
+                    SetAccionEstadoRow(DGListaUsuarios.Rows[idx], u.Estado);
+                }
+            }
+            catch (Exception ex)
             {
-                DGListaUsuarios.Rows.Add(
-                    u.Nombre,
-                    u.Apellido,
-                    u.DNI,
-                    "••••••",   // nunca mostramos contraseña
-                    u.Rol,
-                    "Editar",
-                    "Eliminar"
-                );
+                MessageBox.Show("Error al cargar usuarios: " + ex.Message,
+                                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
-        // Búsqueda + Filtros + Orden
-        private void ApplyFilters()
+        private void SetAccionEstadoRow(DataGridViewRow row, bool activo)
         {
-            IEnumerable<Usuario> query = _usuariosCache;
+            var accion = row.Cells["colUAccion"] as DataGridViewButtonCell;
+            if (accion == null) return;
 
-            // 1) Búsqueda (Nombre / Apellido / DNI contiene)
-            var q = (TBBuscarU.Text ?? string.Empty).Trim();
-            if (!string.IsNullOrEmpty(q))
+            if (activo)
             {
-                query = query.Where(u =>
-                    (u.Nombre ?? "").IndexOf(q, StringComparison.OrdinalIgnoreCase) >= 0 ||
-                    (u.Apellido ?? "").IndexOf(q, StringComparison.OrdinalIgnoreCase) >= 0 ||
-                    (u.DNI ?? "").IndexOf(q, StringComparison.OrdinalIgnoreCase) >= 0
-                );
+                accion.Value = "Inactivar";
+                accion.Style.BackColor = Color.LightCoral;
+                accion.Style.ForeColor = Color.Black;
+                row.Cells["colUEstado"].Value = "Activo";
             }
-
-            // 2) Filtro/Orden según combo
-            string sel = CBFiltroU.SelectedItem?.ToString() ?? "Nombre A-Z";
-            switch (sel)
+            else
             {
-                // Ordenamiento global
-                case "Nombre A-Z":
-                    query = query.OrderBy(u => u.Nombre).ThenBy(u => u.Apellido);
-                    break;
-                case "Nombre Z-A":
-                    query = query.OrderByDescending(u => u.Nombre).ThenByDescending(u => u.Apellido);
-                    break;
-                case "Apellido A-Z":
-                    query = query.OrderBy(u => u.Apellido).ThenBy(u => u.Nombre);
-                    break;
-                case "Apellido Z-A":
-                    query = query.OrderByDescending(u => u.Apellido).ThenByDescending(u => u.Nombre);
-                    break;
-
-                // Filtro por rol (con orden por apellido por defecto)
-                case "Vendedor":
-                case "Administrador":
-                case "Gerente":
-                    query = query
-                        .Where(u => string.Equals(u.Rol, sel, StringComparison.OrdinalIgnoreCase))
-                        .OrderBy(u => u.Apellido).ThenBy(u => u.Nombre);
-                    break;
-
-                default:
-                    // fallback
-                    query = query.OrderBy(u => u.Nombre).ThenBy(u => u.Apellido);
-                    break;
+                accion.Value = "Activar";
+                accion.Style.BackColor = Color.LightSkyBlue;
+                accion.Style.ForeColor = Color.Black;
+                row.Cells["colUEstado"].Value = "Inactivo";
             }
-
-            PintarGrilla(query);
         }
 
-        // Validaciones UI
-        private bool ValidarUI()
+        private void DGListaUsuarios_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
+            if (e.RowIndex < 0 || e.ColumnIndex < 0) return;
+
+            string col = DGListaUsuarios.Columns[e.ColumnIndex].Name;
+
+            if (col == "colUEditar")
+            {
+                var row = DGListaUsuarios.Rows[e.RowIndex];
+
+                TBNombreU.Text = row.Cells["colUNombre"].Value?.ToString() ?? "";
+                TBApellidoU.Text = row.Cells["colUApellido"].Value?.ToString() ?? "";
+                TBDniU.Text = row.Cells["colUDni"].Value?.ToString() ?? "";
+                _dniOriginalEdicion = TBDniU.Text;
+
+                // set rol
+                string rol = row.Cells["colURol"].Value?.ToString() ?? "Vendedor";
+                if (!string.IsNullOrEmpty(rol))
+                    CBRol.SelectedItem = rol;
+
+                // vaciar contraseñas para no mostrar
+                TBContrasena.Clear();
+                TBRepetirContrasena.Clear();
+
+                _modoEdicion = true;
+                BAgregarUsuario.Text = "Guardar Cambios";
+                return;
+            }
+
+            if (col == "colUAccion")
+            {
+                var row = DGListaUsuarios.Rows[e.RowIndex];
+                string dni = row.Cells["colUDni"].Value?.ToString() ?? "";
+                bool actualmenteActivo = string.Equals(row.Cells["colUEstado"].Value?.ToString(), "Activo", StringComparison.OrdinalIgnoreCase);
+
+                string pregunta = actualmenteActivo
+                    ? "¿Está seguro que desea INACTIVAR este usuario?"
+                    : "¿Está seguro que desea ACTIVAR este usuario?";
+
+                var dr = MessageBox.Show(pregunta, "Confirmación", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if (dr != DialogResult.Yes) return;
+
+                try
+                {
+                    _datos.CambiarEstado(dni, !actualmenteActivo);
+                    // Reflejar inmediatamente en la fila
+                    SetAccionEstadoRow(row, !actualmenteActivo);
+                    MessageBox.Show("Estado actualizado correctamente.", "OK",
+                                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error al cambiar estado: " + ex.Message, "Error",
+                                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                return;
+            }
+        }
+
+        private void DGListaUsuarios_CellMouseEnter(object sender, DataGridViewCellEventArgs e)
+        {
+            DGListaUsuarios.Cursor = Cursors.Default;
+        }
+
+        private void DGListaUsuarios_CellMouseLeave(object sender, DataGridViewCellEventArgs e)
+        {
+            DGListaUsuarios.Cursor = Cursors.Default;
+        }
+
+        // ===== Alta / Edición =====
+        private void BAgregarUsuario_Click(object sender, EventArgs e)
+        {
+            // Validaciones
             if (string.IsNullOrWhiteSpace(TBNombreU.Text) ||
                 string.IsNullOrWhiteSpace(TBApellidoU.Text) ||
                 string.IsNullOrWhiteSpace(TBDniU.Text) ||
                 string.IsNullOrWhiteSpace(TBContrasena.Text) ||
-                string.IsNullOrWhiteSpace(TBRepetirContrasena.Text) ||
-                CBRol.SelectedItem == null)
+                string.IsNullOrWhiteSpace(TBRepetirContrasena.Text))
             {
-                MessageBox.Show("Por favor, completá todos los campos.", "Campos incompletos",
+                MessageBox.Show("Complete todos los campos.", "Validación",
                                 MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return false;
+                return;
             }
 
-            var soloLetras = new Regex(@"^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$");
-            if (!soloLetras.IsMatch(TBNombreU.Text))
-            {
-                MessageBox.Show("El nombre solo puede contener letras.", "Dato inválido",
-                                MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                TBNombreU.Focus(); return false;
-            }
-            if (!soloLetras.IsMatch(TBApellidoU.Text))
-            {
-                MessageBox.Show("El apellido solo puede contener letras.", "Dato inválido",
-                                MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                TBApellidoU.Focus(); return false;
-            }
-            // DNI exactamente 8 dígitos
-            if (!Regex.IsMatch(TBDniU.Text, @"^\d{8}$"))
-            {
-                MessageBox.Show("El DNI debe contener exactamente 8 números.",
-                                "Dato inválido", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                TBDniU.Focus(); return false;
-            }
-            if (TBContrasena.Text.Length < 4)
-            {
-                MessageBox.Show("La contraseña debe tener al menos 4 caracteres.", "Dato inválido",
-                                MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                TBContrasena.Focus(); return false;
-            }
             if (TBContrasena.Text != TBRepetirContrasena.Text)
             {
-                MessageBox.Show("Las contraseñas no coinciden.", "Dato inválido",
+                MessageBox.Show("Las contraseñas no coinciden.", "Validación",
                                 MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                TBRepetirContrasena.Focus(); return false;
+                return;
             }
-            return true;
+
+            var dniRegex = new Regex(@"^\d{8}$");
+            if (!dniRegex.IsMatch(TBDniU.Text.Trim()))
+            {
+                MessageBox.Show("El DNI debe tener exactamente 8 números.", "Validación",
+                                MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                TBDniU.Focus();
+                return;
+            }
+
+            try
+            {
+                if (_modoEdicion)
+                {
+                    var dr = MessageBox.Show("¿Confirmar la edición de este usuario?",
+                                             "Confirmación", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                    if (dr != DialogResult.Yes)
+                    {
+                        // Canceló la edición → limpiar y volver a modo alta
+                        LimpiarPanel();
+                        _modoEdicion = false;
+                        _dniOriginalEdicion = null;
+                        BAgregarUsuario.Text = "Agregar Usuario";
+                        return;
+                    }
+
+                    var u = new Usuario
+                    {
+                        DNI = TBDniU.Text.Trim(),
+                        Nombre = TBNombreU.Text.Trim(),
+                        Apellido = TBApellidoU.Text.Trim(),
+                        Contrasena = TBContrasena.Text,
+                        Rol = CBRol.SelectedItem?.ToString() ?? "Vendedor",
+                        Estado = true // no se toca aquí
+                    };
+
+                    _datos.Actualizar(u, _dniOriginalEdicion);
+                    MessageBox.Show("Usuario actualizado correctamente.", "OK",
+                                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                    _modoEdicion = false;
+                    _dniOriginalEdicion = null;
+                    BAgregarUsuario.Text = "Agregar Usuario";
+                    LimpiarPanel();
+                    RefrescarGrilla();
+                }
+                else
+                {
+                    var u = new Usuario
+                    {
+                        DNI = TBDniU.Text.Trim(),
+                        Nombre = TBNombreU.Text.Trim(),
+                        Apellido = TBApellidoU.Text.Trim(),
+                        Contrasena = TBContrasena.Text,
+                        Rol = CBRol.SelectedItem?.ToString() ?? "Vendedor",
+                        Estado = true
+                    };
+
+                    _datos.Insertar(u);
+                    MessageBox.Show("Usuario agregado correctamente.", "OK",
+                                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                    LimpiarPanel();
+                    RefrescarGrilla();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al guardar: " + ex.Message, "Error",
+                                MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
-        private void LimpiarCampos()
+        private void LimpiarPanel()
         {
             TBNombreU.Clear();
             TBApellidoU.Clear();
@@ -245,149 +366,13 @@ namespace AurenPadelStore.CPresentacion.Administrador.Usuarios
             TBContrasena.Clear();
             TBRepetirContrasena.Clear();
             if (CBRol.Items.Count > 0) CBRol.SelectedIndex = 0;
-
-            _editMode = false;
-            _dniOriginal = null;
-            BAgregarUsuario.Text = "Agregar Usuario";
-            BAgregarUsuario.BackColor = Color.YellowGreen;
-            BAgregarUsuario.ForeColor = Color.Black;
         }
 
+        // Sólo números en DNI
         private void TBNumerico_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
                 e.Handled = true;
-        }
-
-        // Alta / Edición con confirmación
-        private void BAgregarUsuario_Click(object sender, EventArgs e)
-        {
-            if (!ValidarUI()) return;
-
-            var u = new Usuario(
-                dni: TBDniU.Text.Trim(),
-                nombre: TBNombreU.Text.Trim(),
-                apellido: TBApellidoU.Text.Trim(),
-                contrasena: TBContrasena.Text,
-                rol: CBRol.SelectedItem?.ToString() ?? ""
-            );
-
-            try
-            {
-                if (_editMode)
-                {
-                    var r = MessageBox.Show(
-                        "¿Confirmás la edición de este usuario?",
-                        "Confirmar edición",
-                        MessageBoxButtons.YesNo,
-                        MessageBoxIcon.Question,
-                        MessageBoxDefaultButton.Button2
-                    );
-
-                    if (r == DialogResult.Yes)
-                    {
-                        _logica.ActualizarUsuario(u, _dniOriginal);
-                        MessageBox.Show("Usuario actualizado correctamente.", "Éxito",
-                                        MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        RefrescarGrillaDesdeBD();
-                        LimpiarCampos();
-                        TBNombreU.Focus();
-                    }
-                    else
-                    {
-                        LimpiarCampos();
-                        MessageBox.Show("Edición cancelada.", "Cancelado",
-                                        MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    }
-                    return;
-                }
-
-                // Alta
-                _logica.RegistrarUsuario(u);
-                MessageBox.Show("Usuario agregado correctamente.", "Éxito",
-                                MessageBoxButtons.OK, MessageBoxIcon.Information);
-                RefrescarGrillaDesdeBD(); // recarga cache y aplica filtros
-                LimpiarCampos();
-                TBNombreU.Focus();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Error",
-                                MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-        // Editar / Eliminar desde la grilla
-        private void DGListaUsuarios_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-            if (e.RowIndex < 0 || e.ColumnIndex < 0) return;
-
-            var grid = DGListaUsuarios;
-            var colName = grid.Columns[e.ColumnIndex].Name;
-
-            if (colName == "colUEditar")
-            {
-                string dni = grid.Rows[e.RowIndex].Cells["colUDni"].Value?.ToString();
-                if (string.IsNullOrWhiteSpace(dni)) return;
-
-                try
-                {
-                    var u = _logica.ObtenerPorDni(dni);
-                    if (u == null)
-                    {
-                        MessageBox.Show("No se encontró el usuario en la base de datos.",
-                                        "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        return;
-                    }
-
-                    TBNombreU.Text = u.Nombre;
-                    TBApellidoU.Text = u.Apellido;
-                    TBDniU.Text = u.DNI;
-                    TBContrasena.Text = u.Contrasena;
-                    TBRepetirContrasena.Text = u.Contrasena;
-                    CBRol.SelectedItem = u.Rol;
-
-                    _editMode = true;
-                    _dniOriginal = u.DNI;
-                    BAgregarUsuario.Text = "Guardar cambios";
-                    BAgregarUsuario.BackColor = Color.SteelBlue;
-                    BAgregarUsuario.ForeColor = Color.White;
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message, "Error",
-                                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-            }
-            else if (colName == "colUEliminar")
-            {
-                string dni = grid.Rows[e.RowIndex].Cells["colUDni"].Value?.ToString();
-                string nombre = grid.Rows[e.RowIndex].Cells["colUNombre"].Value?.ToString();
-                string apellido = grid.Rows[e.RowIndex].Cells["colUApellido"].Value?.ToString();
-                if (string.IsNullOrWhiteSpace(dni)) return;
-
-                var r = MessageBox.Show(
-                    $"¿Seguro que querés eliminar al usuario {nombre} {apellido} (DNI {dni})?",
-                    "Confirmar eliminación",
-                    MessageBoxButtons.YesNo,
-                    MessageBoxIcon.Question
-                );
-                if (r != DialogResult.Yes) return;
-
-                try
-                {
-                    _logica.EliminarUsuario(dni);
-                    if (_editMode && string.Equals(_dniOriginal, dni, StringComparison.Ordinal))
-                        LimpiarCampos();
-
-                    RefrescarGrillaDesdeBD();
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message, "Error",
-                                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-            }
         }
     }
 }

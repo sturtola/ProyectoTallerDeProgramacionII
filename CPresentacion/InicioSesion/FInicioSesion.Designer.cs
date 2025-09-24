@@ -72,9 +72,9 @@
             CBUsuarios.DropDownStyle = ComboBoxStyle.DropDownList;
             CBUsuarios.Font = new Font("Century Gothic", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
             CBUsuarios.FormattingEnabled = true;
-            CBUsuarios.Location = new Point(199, 101);
+            CBUsuarios.Location = new Point(184, 101);
             CBUsuarios.Name = "CBUsuarios";
-            CBUsuarios.Size = new Size(126, 30);
+            CBUsuarios.Size = new Size(164, 30);
             CBUsuarios.TabIndex = 4;
             // 
             // TBContraseña
@@ -82,9 +82,9 @@
             TBContraseña.BackColor = Color.Gainsboro;
             TBContraseña.BorderStyle = BorderStyle.FixedSingle;
             TBContraseña.Font = new Font("Century Gothic", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            TBContraseña.Location = new Point(199, 184);
+            TBContraseña.Location = new Point(184, 177);
             TBContraseña.Name = "TBContraseña";
-            TBContraseña.Size = new Size(126, 31);
+            TBContraseña.Size = new Size(164, 31);
             TBContraseña.TabIndex = 2;
             TBContraseña.UseSystemPasswordChar = true;
             // 
@@ -93,7 +93,7 @@
             LContraseña.AutoSize = true;
             LContraseña.Font = new Font("Century Gothic", 15.75F);
             LContraseña.ForeColor = Color.LightGray;
-            LContraseña.Location = new Point(39, 184);
+            LContraseña.Location = new Point(28, 177);
             LContraseña.Name = "LContraseña";
             LContraseña.Size = new Size(135, 24);
             LContraseña.TabIndex = 3;
@@ -104,7 +104,7 @@
             LUsuario.AutoSize = true;
             LUsuario.Font = new Font("Century Gothic", 15.75F);
             LUsuario.ForeColor = Color.LightGray;
-            LUsuario.Location = new Point(88, 102);
+            LUsuario.Location = new Point(77, 102);
             LUsuario.Name = "LUsuario";
             LUsuario.Size = new Size(86, 24);
             LUsuario.TabIndex = 2;

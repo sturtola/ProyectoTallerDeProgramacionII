@@ -1,13 +1,10 @@
 ﻿using AurenPadelStore.CPresentacion.Empleados.Productos;
 using AurenPadelStore.CPresentacion.Empleados.Clientes;
+using AurenPadelStore.CPresentacion.Empleados.Facturas.ListarFacturas;
+using AurenPadelStore.CPresentacion.Empleados.Ventas.ListarVentas;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace AurenPadelStore.CPresentacion.Empleados
@@ -17,86 +14,81 @@ namespace AurenPadelStore.CPresentacion.Empleados
         public FMenuEmpleados()
         {
             InitializeComponent();
+
+            this.MdiChildActivate += (s, e) => PinChildActivo();
+            this.SizeChanged += (s, e) => PinChildActivo();
         }
 
+        // Para que se abra un solo formulario a al vez
+        private void OpenSingle<T>(Func<T> factory) where T : Form
+        {
+            var anyChild = this.MdiChildren.FirstOrDefault();
+            var same = this.MdiChildren.OfType<T>().FirstOrDefault();
+
+            if (same != null)
+            {
+                MessageBox.Show("La ventana ya está abierta.",
+                                "Atención",
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Information);
+
+                if (same.WindowState == FormWindowState.Minimized)
+                    same.WindowState = FormWindowState.Normal;
+
+                same.Activate();
+                same.BringToFront();
+                same.Location = new Point(0, 0);
+                return;
+            }
+
+            if (anyChild != null)
+                foreach (var c in this.MdiChildren) c.Close();
+
+            var child = factory();
+            child.MdiParent = this;
+            child.StartPosition = FormStartPosition.Manual;
+            child.WindowState = FormWindowState.Normal;
+            child.Show();
+            child.Location = new Point(0, 0);
+        }
+
+        private void PinChildActivo()
+        {
+            if (this.ActiveMdiChild != null &&
+                this.ActiveMdiChild.WindowState == FormWindowState.Normal)
+            {
+                this.ActiveMdiChild.Location = new Point(0, 0);
+            }
+        }
+
+        // ===== Menú =====
         private void productosToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            // Verificar si ya está abierto
-            foreach (Form frm in this.MdiChildren)
-            {
-                if (frm is FProductos)
-                {
-                    MessageBox.Show("La ventana se encuentra abierta", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    frm.Activate();
-                    return;
-                }
-            }
-
-            // Cerrar todos los demás formularios abiertos
-            foreach (Form frm in this.MdiChildren)
-            {
-                frm.Close();
-            }
-
-            // Crear el formulario hijo
-            FProductos frmHijo = new FProductos()
-            {
-                MdiParent = this,
-                FormBorderStyle = FormBorderStyle.FixedSingle,
-                MaximizeBox = false,
-                MinimizeBox = false,
-                StartPosition = FormStartPosition.Manual,
-                Location = new Point(0, 0),
-                Dock = DockStyle.Fill // ocupa todo el MDI y se ajusta automáticamente al cambiar tamaño
-            };
-
-            frmHijo.Show();
+            OpenSingle(() => new FProductos());
         }
 
         private void clientesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            // Verificar si ya está abierto
-            foreach (Form frm in this.MdiChildren)
-            {
-                if (frm is FClientes)
-                {
-                    MessageBox.Show("La ventana se encuentra abierta", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    frm.Activate();
-                    return;
-                }
-            }
+            OpenSingle(() => new FClientes());
+        }
 
-            // Cerrar todos los demás formularios abiertos
-            foreach (Form frm in this.MdiChildren)
-            {
-                frm.Close();
-            }
+        // 👉 LISTA DE FACTURAS (ahora pasa el rol)
+        private void listaDeFacturasToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenSingle(() => new FListarFacturas(AurenPadelStore.SesionActual.Rol));
+        }
 
-            // Crear el formulario hijo
-            FClientes frmHijo = new FClientes()
-            {
-                MdiParent = this,
-                FormBorderStyle = FormBorderStyle.FixedSingle,
-                MaximizeBox = false,
-                MinimizeBox = false,
-                StartPosition = FormStartPosition.Manual,
-                Location = new Point(0, 0),
-                Dock = DockStyle.Fill // ocupa todo el MDI y se ajusta automáticamente al cambiar tamaño
-            };
-
-            frmHijo.Show();
+        // Si también tenés "Generar factura", dejalo igual o crea el form correspondiente
+        private void generarFacturaToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // OpenSingle(() => new FGenerarFactura());
         }
 
         private void cerrarSesiónToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            // Oculto el menú actual
             this.Hide();
-
-            // Abro el form de inicio de sesión
             var login = new AurenPadelStore.CPresentacion.InicioSesion.FInicioSesion();
             login.Show();
-
-            // Cuando se cierre el login, cierro este menú también
             this.Close();
         }
 
@@ -104,5 +96,11 @@ namespace AurenPadelStore.CPresentacion.Empleados
         {
             Application.Exit();
         }
+
+        private void listarVentasToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenSingle(() => new FListarVentas(AurenPadelStore.SesionActual.Rol));
+        }
     }
 }
+

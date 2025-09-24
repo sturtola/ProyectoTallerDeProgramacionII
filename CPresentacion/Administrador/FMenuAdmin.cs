@@ -1,13 +1,8 @@
-﻿using AurenPadelStore.CPresentacion.Administrador.Usuarios;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
+﻿using System;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using AurenPadelStore.CPresentacion.Administrador.Usuarios;
 
 namespace AurenPadelStore.CPresentacion.Administrador
 {
@@ -16,53 +11,82 @@ namespace AurenPadelStore.CPresentacion.Administrador
         public FMenuAdmin()
         {
             InitializeComponent();
+
+            // Mantener child alineado a (0,0) al activar/cambiar tamaño
+            this.MdiChildActivate += (s, e) => PinChildActivo();
+            this.SizeChanged += (s, e) => PinChildActivo();
         }
 
+        // ====== REGLA: un solo child ======
+        // Si ya está abierto el mismo tipo => aviso y foco.
+        // Si hay otro abierto => cerrar y abrir el nuevo.
+        private void OpenSingle<T>(Func<T> factory) where T : Form
+        {
+            // ¿Hay algún child abierto?
+            var anyChild = this.MdiChildren.FirstOrDefault();
 
+            // ¿Hay un child del mismo tipo ya abierto?
+            var same = this.MdiChildren.OfType<T>().FirstOrDefault();
+
+            if (same != null)
+            {
+                // Ya está abierto este mismo form: avisar y activar
+                MessageBox.Show("La ventana ya está abierta.",
+                                "Atención",
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Information);
+
+                if (same.WindowState == FormWindowState.Minimized)
+                    same.WindowState = FormWindowState.Normal;
+
+                same.Activate();
+                same.BringToFront();
+                same.Location = new Point(0, 0);
+                return;
+            }
+
+            // Hay un child abierto pero es de otro tipo → cerrarlo
+            if (anyChild != null)
+            {
+                foreach (var c in this.MdiChildren)
+                    c.Close();
+            }
+
+            // Abrir el nuevo child alineado a (0,0)
+            var child = factory();
+            child.MdiParent = this;
+            child.StartPosition = FormStartPosition.Manual;
+            child.WindowState = FormWindowState.Normal; // no maximizado
+            child.Show();                                // mostrar primero
+            child.Location = new Point(0, 0);            // luego fijar (0,0)
+        }
+
+        // Mantener el hijo activo clavado en (0,0)
+        private void PinChildActivo()
+        {
+            if (this.ActiveMdiChild != null &&
+                this.ActiveMdiChild.WindowState == FormWindowState.Normal)
+            {
+                this.ActiveMdiChild.Location = new Point(0, 0);
+            }
+        }
+
+        // ====== Handlers de Menú ======
         private void usuariosToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            // Verificar si ya está abierto
-            foreach (Form frm in this.MdiChildren)
-            {
-                if (frm is FUsuarios)
-                {
-                    MessageBox.Show("La ventana se encuentra abierta", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    frm.Activate();
-                    return;
-                }
-            }
-
-            // Cerrar todos los demás formularios abiertos
-            foreach (Form frm in this.MdiChildren)
-            {
-                frm.Close();
-            }
-
-            // Crear el formulario hijo
-            FUsuarios frmHijo = new FUsuarios()
-            {
-                MdiParent = this,
-                FormBorderStyle = FormBorderStyle.FixedSingle,
-                MaximizeBox = false,
-                MinimizeBox = false,
-                StartPosition = FormStartPosition.Manual,
-                Location = new Point(0, 0),
-                Dock = DockStyle.Fill // ocupa todo el MDI y se ajusta automáticamente al cambiar tamaño
-            };
-
-            frmHijo.Show();
+            OpenSingle(() => new FUsuarios());
         }
 
         private void cerrarSesiónToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            // Oculto el menú actual
-            this.Hide();
+            // (Opcional) limpiar sesión si la estás usando
+            // SesionActual.DNI = null;
+            // SesionActual.Nombre = null;
+            // SesionActual.Rol = null;
 
-            // Abro el form de inicio de sesión
+            this.Hide();
             var login = new AurenPadelStore.CPresentacion.InicioSesion.FInicioSesion();
             login.Show();
-
-            // Cuando se cierre el login, cierro este menú también
             this.Close();
         }
 
@@ -72,4 +96,3 @@ namespace AurenPadelStore.CPresentacion.Administrador
         }
     }
 }
-

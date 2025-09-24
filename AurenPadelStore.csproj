@@ -27,9 +27,4 @@
     </EmbeddedResource>
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="CPresentacion\Empleados\Facturas\" />
-    <Folder Include="CPresentacion\Empleados\Ventas\" />
-  </ItemGroup>
-
 </Project>

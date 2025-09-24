@@ -103,6 +103,7 @@ namespace AurenPadelStore.CPresentacion.Empleados.Clientes
             // TBNombre
             // 
             TBNombre.BackColor = Color.Gainsboro;
+            TBNombre.Cursor = Cursors.IBeam;
             TBNombre.Font = new Font("Century Gothic", 12F);
             TBNombre.Location = new Point(15, 48);
             TBNombre.Name = "TBNombre";
@@ -122,6 +123,7 @@ namespace AurenPadelStore.CPresentacion.Empleados.Clientes
             // TBApellido
             // 
             TBApellido.BackColor = Color.Gainsboro;
+            TBApellido.Cursor = Cursors.IBeam;
             TBApellido.Font = new Font("Century Gothic", 12F);
             TBApellido.Location = new Point(15, 108);
             TBApellido.Name = "TBApellido";
@@ -141,6 +143,7 @@ namespace AurenPadelStore.CPresentacion.Empleados.Clientes
             // TBDni
             // 
             TBDni.BackColor = Color.Gainsboro;
+            TBDni.Cursor = Cursors.IBeam;
             TBDni.Font = new Font("Century Gothic", 12F);
             TBDni.Location = new Point(15, 168);
             TBDni.Name = "TBDni";
@@ -161,6 +164,7 @@ namespace AurenPadelStore.CPresentacion.Empleados.Clientes
             // TBDireccion
             // 
             TBDireccion.BackColor = Color.Gainsboro;
+            TBDireccion.Cursor = Cursors.IBeam;
             TBDireccion.Font = new Font("Century Gothic", 12F);
             TBDireccion.Location = new Point(15, 229);
             TBDireccion.Name = "TBDireccion";
@@ -180,6 +184,7 @@ namespace AurenPadelStore.CPresentacion.Empleados.Clientes
             // TBCorreo
             // 
             TBCorreo.BackColor = Color.Gainsboro;
+            TBCorreo.Cursor = Cursors.IBeam;
             TBCorreo.Font = new Font("Century Gothic", 12F);
             TBCorreo.Location = new Point(15, 289);
             TBCorreo.Name = "TBCorreo";
@@ -199,6 +204,7 @@ namespace AurenPadelStore.CPresentacion.Empleados.Clientes
             // TBTelefono
             // 
             TBTelefono.BackColor = Color.Gainsboro;
+            TBTelefono.Cursor = Cursors.IBeam;
             TBTelefono.Font = new Font("Century Gothic", 12F);
             TBTelefono.Location = new Point(15, 349);
             TBTelefono.Name = "TBTelefono";
@@ -209,6 +215,7 @@ namespace AurenPadelStore.CPresentacion.Empleados.Clientes
             // BAgregarCliente
             // 
             BAgregarCliente.BackColor = Color.YellowGreen;
+            BAgregarCliente.Cursor = Cursors.Hand;
             BAgregarCliente.FlatStyle = FlatStyle.Popup;
             BAgregarCliente.Font = new Font("Century Gothic", 14.25F);
             BAgregarCliente.ForeColor = Color.Black;
@@ -259,6 +266,7 @@ namespace AurenPadelStore.CPresentacion.Empleados.Clientes
             // CBFiltroC
             // 
             CBFiltroC.BackColor = Color.LightGray;
+            CBFiltroC.Cursor = Cursors.Hand;
             CBFiltroC.DropDownStyle = ComboBoxStyle.DropDownList;
             CBFiltroC.Font = new Font("Century Gothic", 12F);
             CBFiltroC.FormattingEnabled = true;
@@ -272,6 +280,7 @@ namespace AurenPadelStore.CPresentacion.Empleados.Clientes
             BBuscarC.BackColor = Color.LightGray;
             BBuscarC.BackgroundImage = (Image)resources.GetObject("BBuscarC.BackgroundImage");
             BBuscarC.BackgroundImageLayout = ImageLayout.Stretch;
+            BBuscarC.Cursor = Cursors.Hand;
             BBuscarC.FlatStyle = FlatStyle.Popup;
             BBuscarC.Location = new Point(233, 11);
             BBuscarC.Name = "BBuscarC";
@@ -283,6 +292,7 @@ namespace AurenPadelStore.CPresentacion.Empleados.Clientes
             // 
             TBBuscarC.BackColor = Color.FromArgb(64, 64, 64);
             TBBuscarC.BorderStyle = BorderStyle.FixedSingle;
+            TBBuscarC.Cursor = Cursors.IBeam;
             TBBuscarC.Font = new Font("Century Gothic", 12F);
             TBBuscarC.Location = new Point(3, 11);
             TBBuscarC.Name = "TBBuscarC";

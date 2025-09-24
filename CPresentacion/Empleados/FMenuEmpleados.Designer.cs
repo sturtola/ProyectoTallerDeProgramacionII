@@ -63,14 +63,14 @@
             // salirToolStripMenuItem
             // 
             salirToolStripMenuItem.Name = "salirToolStripMenuItem";
-            salirToolStripMenuItem.Size = new Size(180, 22);
+            salirToolStripMenuItem.Size = new Size(143, 22);
             salirToolStripMenuItem.Text = "Salir";
             salirToolStripMenuItem.Click += salirToolStripMenuItem_Click;
             // 
             // cerrarSesiónToolStripMenuItem
             // 
             cerrarSesiónToolStripMenuItem.Name = "cerrarSesiónToolStripMenuItem";
-            cerrarSesiónToolStripMenuItem.Size = new Size(180, 22);
+            cerrarSesiónToolStripMenuItem.Size = new Size(143, 22);
             cerrarSesiónToolStripMenuItem.Text = "Cerrar Sesión";
             cerrarSesiónToolStripMenuItem.Click += cerrarSesiónToolStripMenuItem_Click;
             // 
@@ -84,14 +84,15 @@
             // generarVentaToolStripMenuItem
             // 
             generarVentaToolStripMenuItem.Name = "generarVentaToolStripMenuItem";
-            generarVentaToolStripMenuItem.Size = new Size(151, 22);
+            generarVentaToolStripMenuItem.Size = new Size(180, 22);
             generarVentaToolStripMenuItem.Text = "Generar Venta";
             // 
             // listarVentasToolStripMenuItem
             // 
             listarVentasToolStripMenuItem.Name = "listarVentasToolStripMenuItem";
-            listarVentasToolStripMenuItem.Size = new Size(151, 22);
+            listarVentasToolStripMenuItem.Size = new Size(180, 22);
             listarVentasToolStripMenuItem.Text = "Lista de Ventas";
+            listarVentasToolStripMenuItem.Click += listarVentasToolStripMenuItem_Click;
             // 
             // clientesToolStripMenuItem
             // 
@@ -117,14 +118,15 @@
             // generarFacturaToolStripMenuItem
             // 
             generarFacturaToolStripMenuItem.Name = "generarFacturaToolStripMenuItem";
-            generarFacturaToolStripMenuItem.Size = new Size(161, 22);
+            generarFacturaToolStripMenuItem.Size = new Size(180, 22);
             generarFacturaToolStripMenuItem.Text = "Generar Factura";
             // 
             // listaDeFacturasToolStripMenuItem
             // 
             listaDeFacturasToolStripMenuItem.Name = "listaDeFacturasToolStripMenuItem";
-            listaDeFacturasToolStripMenuItem.Size = new Size(161, 22);
+            listaDeFacturasToolStripMenuItem.Size = new Size(180, 22);
             listaDeFacturasToolStripMenuItem.Text = "Lista de Facturas";
+            listaDeFacturasToolStripMenuItem.Click += listaDeFacturasToolStripMenuItem_Click;
             // 
             // FMenuEmpleados
             // 

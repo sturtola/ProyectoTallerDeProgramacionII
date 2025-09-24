@@ -1,16 +1,18 @@
-﻿using AurenPadelStore.CDatos;
-using AurenPadelStore.CEntidades; // <-- para acceder a Usuario
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Windows.Forms;
+using AurenPadelStore.CDatos;
+using AurenPadelStore.CEntidades;
 using AurenPadelStore.CPresentacion.Administrador;
 using AurenPadelStore.CPresentacion.Empleados;
-using System;
-using System.Collections.Generic;
-using System.Windows.Forms;
 
 namespace AurenPadelStore.CPresentacion.InicioSesion
 {
     public partial class FInicioSesion : Form
     {
-        private readonly UsuarioDatos usuarioDatos = new UsuarioDatos();
+        private readonly UsuarioDatos _usuarioDatos = new UsuarioDatos();
+        private List<Usuario> _usuariosCache = new List<Usuario>();
 
         public FInicioSesion()
         {
@@ -22,21 +24,22 @@ namespace AurenPadelStore.CPresentacion.InicioSesion
         {
             try
             {
-                // Traemos usuarios completos para mostrar nombre y tener el DNI como value
-                List<Usuario> usuarios = usuarioDatos.ObtenerTodos();
+                // Traemos todos para tener nombre, rol y estado en memoria
+                _usuariosCache = _usuarioDatos.ObtenerTodos() ?? new List<Usuario>();
 
-                if (usuarios != null && usuarios.Count > 0)
-                {
-                    CBUsuarios.DataSource = usuarios;
-                    CBUsuarios.DisplayMember = "NombreMostrar"; // lo que se ve
-                    CBUsuarios.ValueMember = "DNI";             // lo que usamos para validar
-                    CBUsuarios.SelectedIndex = 0;
-                }
-                else
+                if (_usuariosCache.Count == 0)
                 {
                     CBUsuarios.DataSource = null;
-                    MessageBox.Show("No se encontraron usuarios.");
+                    MessageBox.Show("No se encontraron usuarios.",
+                                    "Inicio de sesión", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
                 }
+
+                // Enlazamos el combo: muestra Nombre y Apellido, y guarda DNI
+                CBUsuarios.DataSource = _usuariosCache;
+                CBUsuarios.DisplayMember = "NombreMostrar"; // propiedad: $"{Nombre} {Apellido}"
+                CBUsuarios.ValueMember = "DNI";
+                CBUsuarios.SelectedIndex = 0;
             }
             catch (Exception ex)
             {
@@ -47,6 +50,7 @@ namespace AurenPadelStore.CPresentacion.InicioSesion
 
         private void btnIngresar_Click(object sender, EventArgs e)
         {
+            // Validaciones básicas
             if (CBUsuarios.SelectedItem == null)
             {
                 MessageBox.Show("Debe seleccionar un usuario.",
@@ -54,8 +58,7 @@ namespace AurenPadelStore.CPresentacion.InicioSesion
                 return;
             }
 
-            // 👇 Tomamos el DNI desde el ValueMember
-            string dniSeleccionado = CBUsuarios.SelectedValue?.ToString() ?? "";
+            string dni = CBUsuarios.SelectedValue?.ToString() ?? "";
             string contraseña = TBContraseña.Text.Trim();
 
             if (string.IsNullOrWhiteSpace(contraseña))
@@ -65,8 +68,25 @@ namespace AurenPadelStore.CPresentacion.InicioSesion
                 return;
             }
 
-            // Validamos con DNI + contraseña (no cambia tu método)
-            string? rol = usuarioDatos.ValidarUsuario(dniSeleccionado, contraseña);
+            // Buscamos el usuario elegido en el caché para leer Estado, Nombre y Rol
+            var usuario = _usuariosCache.FirstOrDefault(u => u.DNI == dni);
+            if (usuario == null)
+            {
+                MessageBox.Show("El usuario no existe.",
+                                "Inicio de sesión", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            // Si está inactivo, lo avisamos ANTES de validar contraseña
+            if (!usuario.Estado)
+            {
+                MessageBox.Show("El usuario seleccionado está INACTIVO. Consulte con un administrador.",
+                                "Inicio de sesión", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            // Validar credenciales
+            string? rol = _usuarioDatos.ValidarUsuario(dni, contraseña);
 
             if (rol == null)
             {
@@ -81,16 +101,12 @@ namespace AurenPadelStore.CPresentacion.InicioSesion
                 return;
             }
 
-            // Setear sesión con datos reales
-            var usuario = usuarioDatos.ObtenerPorDni(dniSeleccionado);
-            SesionActual.DNI = dniSeleccionado;
-            SesionActual.Nombre = usuario != null ? $"{usuario.Nombre} {usuario.Apellido}" : "";
-            SesionActual.Rol = rol; // "Administrador", "Gerente", "Vendedor"
+            // Guardamos la sesión
+            SesionActual.DNI = usuario.DNI;
+            SesionActual.Nombre = usuario.NombreMostrar; // "Nombre Apellido"
+            SesionActual.Rol = rol; // "Administrador", "Gerente" o "Vendedor"
 
-            // Limpieza visual del login (opcional)
-            TBContraseña.Clear();
-
-            // Login correcto → abrir formulario según rol
+            // Redirección por rol
             this.Hide();
             if (rol.Equals("Administrador", StringComparison.OrdinalIgnoreCase))
             {
@@ -109,7 +125,6 @@ namespace AurenPadelStore.CPresentacion.InicioSesion
                                 "Inicio de sesión", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 this.Show();
             }
-
         }
     }
 }

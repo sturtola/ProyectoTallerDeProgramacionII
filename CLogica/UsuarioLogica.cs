@@ -42,12 +42,6 @@ namespace AurenPadelStore.CLogica
             datos.Actualizar(u, dniOriginal);
         }
 
-        public void EliminarUsuario(string dni)
-        {
-            if (string.IsNullOrWhiteSpace(dni))
-                throw new Exception("DNI inválido.");
-            datos.Eliminar(dni);
-        }
 
         public List<Usuario> ListarUsuarios() => datos.ObtenerTodos();
 
