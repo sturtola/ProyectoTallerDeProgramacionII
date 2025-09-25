@@ -40,45 +40,61 @@
             // 
             // menuStrip1
             // 
+            menuStrip1.BackColor = Color.Black;
             menuStrip1.Items.AddRange(new ToolStripItem[] { inicioToolStripMenuItem, usuariosToolStripMenuItem, estadísticasToolStripMenuItem });
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
-            menuStrip1.Size = new Size(982, 24);
+            menuStrip1.Size = new Size(982, 27);
             menuStrip1.TabIndex = 1;
             menuStrip1.Text = "menuStrip1";
             // 
             // inicioToolStripMenuItem
             // 
+            inicioToolStripMenuItem.BackColor = Color.Black;
             inicioToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { cerrarSesiónToolStripMenuItem, salirToolStripMenuItem });
+            inicioToolStripMenuItem.Font = new Font("Century Gothic", 12F, FontStyle.Bold);
+            inicioToolStripMenuItem.ForeColor = Color.LightGray;
             inicioToolStripMenuItem.Name = "inicioToolStripMenuItem";
-            inicioToolStripMenuItem.Size = new Size(48, 20);
+            inicioToolStripMenuItem.Size = new Size(63, 23);
             inicioToolStripMenuItem.Text = "Inicio";
             // 
             // cerrarSesiónToolStripMenuItem
             // 
+            cerrarSesiónToolStripMenuItem.BackColor = Color.Black;
+            cerrarSesiónToolStripMenuItem.Font = new Font("Century Gothic", 12F, FontStyle.Bold);
+            cerrarSesiónToolStripMenuItem.ForeColor = Color.LightGray;
             cerrarSesiónToolStripMenuItem.Name = "cerrarSesiónToolStripMenuItem";
-            cerrarSesiónToolStripMenuItem.Size = new Size(180, 22);
+            cerrarSesiónToolStripMenuItem.Size = new Size(180, 24);
             cerrarSesiónToolStripMenuItem.Text = "Cerrar Sesión";
             cerrarSesiónToolStripMenuItem.Click += cerrarSesiónToolStripMenuItem_Click;
             // 
             // salirToolStripMenuItem
             // 
+            salirToolStripMenuItem.BackColor = Color.Black;
+            salirToolStripMenuItem.Font = new Font("Century Gothic", 12F, FontStyle.Bold);
+            salirToolStripMenuItem.ForeColor = Color.LightGray;
             salirToolStripMenuItem.Name = "salirToolStripMenuItem";
-            salirToolStripMenuItem.Size = new Size(180, 22);
+            salirToolStripMenuItem.Size = new Size(180, 24);
             salirToolStripMenuItem.Text = "Salir";
             salirToolStripMenuItem.Click += salirToolStripMenuItem_Click;
             // 
             // usuariosToolStripMenuItem
             // 
+            usuariosToolStripMenuItem.BackColor = Color.Black;
+            usuariosToolStripMenuItem.Font = new Font("Century Gothic", 12F, FontStyle.Bold);
+            usuariosToolStripMenuItem.ForeColor = Color.LightGray;
             usuariosToolStripMenuItem.Name = "usuariosToolStripMenuItem";
-            usuariosToolStripMenuItem.Size = new Size(64, 20);
+            usuariosToolStripMenuItem.Size = new Size(83, 23);
             usuariosToolStripMenuItem.Text = "Usuarios";
             usuariosToolStripMenuItem.Click += usuariosToolStripMenuItem_Click;
             // 
             // estadísticasToolStripMenuItem
             // 
+            estadísticasToolStripMenuItem.BackColor = Color.Black;
+            estadísticasToolStripMenuItem.Font = new Font("Century Gothic", 12F, FontStyle.Bold);
+            estadísticasToolStripMenuItem.ForeColor = Color.LightGray;
             estadísticasToolStripMenuItem.Name = "estadísticasToolStripMenuItem";
-            estadísticasToolStripMenuItem.Size = new Size(79, 20);
+            estadísticasToolStripMenuItem.Size = new Size(106, 23);
             estadísticasToolStripMenuItem.Text = "Estadísticas";
             // 
             // FMenuAdmin

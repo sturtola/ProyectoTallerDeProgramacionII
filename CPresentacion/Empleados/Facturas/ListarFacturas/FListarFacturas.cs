@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
+using AurenPadelStore.CPresentacion.Empleados.Facturas.VerFactura;
 
 namespace AurenPadelStore.CPresentacion.Empleados.Facturas.ListarFacturas
 {
@@ -34,7 +35,25 @@ namespace AurenPadelStore.CPresentacion.Empleados.Facturas.ListarFacturas
 
             // 🔒 restricciones por rol
             AplicarRestriccionesPorRol();
+
+            //Boton ver factura
+            DGListaFacturas.CellContentClick += DGListaFacturas_CellContentClick;
+
         }
+
+        private void DGListaFacturas_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex < 0) return;
+
+            // Verificamos si clickeó en la columna del botón
+            if (DGListaFacturas.Columns[e.ColumnIndex].Name == "colVerF")
+            {
+                // 🚀 Abrir el formulario de factura
+                var f = new AurenPadelStore.CPresentacion.Empleados.Facturas.VerFactura.FVerFactura();
+                f.ShowDialog();
+            }
+        }
+
 
         private static string SafeRol()
         {

@@ -27,7 +27,7 @@ namespace AurenPadelStore.CPresentacion.Empleados
             this.SizeChanged += (s, e) => PinChildActivo();
 
             // Para tooltips en items del menu
-            menuStrip1.ShowItemToolTips = true;
+            MSEmpleados.ShowItemToolTips = true;
 
             ConfigurarMenuPorRol();
         }
@@ -109,17 +109,17 @@ namespace AurenPadelStore.CPresentacion.Empleados
         private void GenerarVenta_MouseEnter_Bloqueado(object? sender, EventArgs e)
         {
             // No se puede setear el cursor del item directamente: uso el MenuStrip
-            menuStrip1.Cursor = Cursors.No;
+            MSEmpleados.Cursor = Cursors.No;
         }
 
         private void GenerarVenta_MouseLeave_ResetCursor(object? sender, EventArgs e)
         {
-            menuStrip1.Cursor = Cursors.Default;
+            MSEmpleados.Cursor = Cursors.Default;
         }
 
         private void Ventas_DropDownClosed_ResetCursor(object? sender, EventArgs e)
         {
-            menuStrip1.Cursor = Cursors.Default;
+            MSEmpleados.Cursor = Cursors.Default;
         }
 
         // ===== Menú =====

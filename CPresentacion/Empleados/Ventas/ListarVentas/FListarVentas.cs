@@ -36,6 +36,21 @@ namespace AurenPadelStore.CPresentacion.Empleados.Ventas.ListarVentas
 
             // Restricciones por rol
             AplicarRestriccionesPorRol();
+
+            //Boton ver factura
+            DGListaVentas.CellContentClick += DGListaVentas_CellContentClick;
+        }
+        private void DGListaVentas_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex < 0) return;
+
+            // Verificamos si clickeó en la columna del botón
+            if (DGListaVentas.Columns[e.ColumnIndex].Name == "colVerF")
+            {
+                // 🚀 Abrir el formulario de factura
+                var f = new AurenPadelStore.CPresentacion.Empleados.Facturas.VerFactura.FVerFactura();
+                f.ShowDialog();
+            }
         }
 
         private static string SafeRol()
