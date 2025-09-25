@@ -2,6 +2,7 @@
 using AurenPadelStore.CPresentacion.Empleados.Clientes;
 using AurenPadelStore.CPresentacion.Empleados.Facturas.ListarFacturas;
 using AurenPadelStore.CPresentacion.Empleados.Ventas.ListarVentas;
+using AurenPadelStore.CPresentacion.Empleados.Ventas;
 using System;
 using System.Drawing;
 using System.Linq;
@@ -11,15 +12,30 @@ namespace AurenPadelStore.CPresentacion.Empleados
 {
     public partial class FMenuEmpleados : Form
     {
-        public FMenuEmpleados()
+        // === Rol actual ===
+        private readonly string _rolActual;
+
+        // ✔️ Opción A: te pasan el rol por parámetro
+        public FMenuEmpleados(string rolActual)
         {
             InitializeComponent();
 
+            _rolActual = rolActual ?? AurenPadelStore.SesionActual.Rol;
+
+            // UI: mantener MDI anclado arriba-izquierda
             this.MdiChildActivate += (s, e) => PinChildActivo();
             this.SizeChanged += (s, e) => PinChildActivo();
+
+            // Para tooltips en items del menu
+            menuStrip1.ShowItemToolTips = true;
+
+            ConfigurarMenuPorRol();
         }
 
-        // Para que se abra un solo formulario a al vez
+        // ✔️ Opción B: compatibilidad con tu ctor anterior (toma el rol de SesionActual)
+        public FMenuEmpleados() : this(AurenPadelStore.SesionActual.Rol) { }
+
+        // Para que se abra un solo formulario a la vez
         private void OpenSingle<T>(Func<T> factory) where T : Form
         {
             var anyChild = this.MdiChildren.FirstOrDefault();
@@ -61,6 +77,51 @@ namespace AurenPadelStore.CPresentacion.Empleados
             }
         }
 
+        // ====== Configuración por rol ======
+        private void ConfigurarMenuPorRol()
+        {
+            // Querés: Generar Venta visible pero bloqueado para "Gerente"
+            if (_rolActual.Equals("Gerente", StringComparison.OrdinalIgnoreCase))
+            {
+                // Feedback visual: gris y tooltip
+                generarVentaToolStripMenuItem.ForeColor = Color.Gray;
+                generarVentaToolStripMenuItem.ToolTipText = "Acceso restringido";
+
+                // Cursor “bloqueado” cuando pasás por arriba del subitem
+                generarVentaToolStripMenuItem.MouseEnter += GenerarVenta_MouseEnter_Bloqueado;
+                generarVentaToolStripMenuItem.MouseLeave += GenerarVenta_MouseLeave_ResetCursor;
+
+                // Por seguridad, si se cierra el dropdown, reseteo cursor
+                ventasToolStripMenuItem.DropDownClosed += Ventas_DropDownClosed_ResetCursor;
+            }
+            else
+            {
+                // Rol con permiso: colores por defecto, sin tooltip ni cursor bloqueado
+                generarVentaToolStripMenuItem.ForeColor = SystemColors.ControlText;
+                generarVentaToolStripMenuItem.ToolTipText = string.Empty;
+
+                generarVentaToolStripMenuItem.MouseEnter -= GenerarVenta_MouseEnter_Bloqueado;
+                generarVentaToolStripMenuItem.MouseLeave -= GenerarVenta_MouseLeave_ResetCursor;
+                ventasToolStripMenuItem.DropDownClosed -= Ventas_DropDownClosed_ResetCursor;
+            }
+        }
+
+        private void GenerarVenta_MouseEnter_Bloqueado(object? sender, EventArgs e)
+        {
+            // No se puede setear el cursor del item directamente: uso el MenuStrip
+            menuStrip1.Cursor = Cursors.No;
+        }
+
+        private void GenerarVenta_MouseLeave_ResetCursor(object? sender, EventArgs e)
+        {
+            menuStrip1.Cursor = Cursors.Default;
+        }
+
+        private void Ventas_DropDownClosed_ResetCursor(object? sender, EventArgs e)
+        {
+            menuStrip1.Cursor = Cursors.Default;
+        }
+
         // ===== Menú =====
         private void productosToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -72,13 +133,11 @@ namespace AurenPadelStore.CPresentacion.Empleados
             OpenSingle(() => new FClientes());
         }
 
-        // 👉 LISTA DE FACTURAS (ahora pasa el rol)
         private void listaDeFacturasToolStripMenuItem_Click(object sender, EventArgs e)
         {
             OpenSingle(() => new FListarFacturas(AurenPadelStore.SesionActual.Rol));
         }
 
-        // Si también tenés "Generar factura", dejalo igual o crea el form correspondiente
         private void generarFacturaToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // OpenSingle(() => new FGenerarFactura());
@@ -101,6 +160,22 @@ namespace AurenPadelStore.CPresentacion.Empleados
         {
             OpenSingle(() => new FListarVentas(AurenPadelStore.SesionActual.Rol));
         }
+
+        private void generarVentaToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // 🚫 Bloqueo lógico adicional (por si alguien intenta ejecutar)
+            if (_rolActual.Equals("Gerente", StringComparison.OrdinalIgnoreCase))
+            {
+                MessageBox.Show(
+                    "No tenés permisos para Generar una Venta.",
+                    "Acceso restringido",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning
+                );
+                return;
+            }
+
+            OpenSingle(() => new FGenerarVenta());
+        }
     }
 }
-

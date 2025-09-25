@@ -86,6 +86,7 @@
             generarVentaToolStripMenuItem.Name = "generarVentaToolStripMenuItem";
             generarVentaToolStripMenuItem.Size = new Size(180, 22);
             generarVentaToolStripMenuItem.Text = "Generar Venta";
+            generarVentaToolStripMenuItem.Click += generarVentaToolStripMenuItem_Click;
             // 
             // listarVentasToolStripMenuItem
             // 
@@ -118,13 +119,13 @@
             // generarFacturaToolStripMenuItem
             // 
             generarFacturaToolStripMenuItem.Name = "generarFacturaToolStripMenuItem";
-            generarFacturaToolStripMenuItem.Size = new Size(180, 22);
+            generarFacturaToolStripMenuItem.Size = new Size(161, 22);
             generarFacturaToolStripMenuItem.Text = "Generar Factura";
             // 
             // listaDeFacturasToolStripMenuItem
             // 
             listaDeFacturasToolStripMenuItem.Name = "listaDeFacturasToolStripMenuItem";
-            listaDeFacturasToolStripMenuItem.Size = new Size(180, 22);
+            listaDeFacturasToolStripMenuItem.Size = new Size(161, 22);
             listaDeFacturasToolStripMenuItem.Text = "Lista de Facturas";
             listaDeFacturasToolStripMenuItem.Click += listaDeFacturasToolStripMenuItem_Click;
             // 
