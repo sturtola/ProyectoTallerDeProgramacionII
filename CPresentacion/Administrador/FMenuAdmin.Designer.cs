@@ -33,6 +33,7 @@
             inicioToolStripMenuItem = new ToolStripMenuItem();
             cerrarSesiónToolStripMenuItem = new ToolStripMenuItem();
             salirToolStripMenuItem = new ToolStripMenuItem();
+            backupToolStripMenuItem = new ToolStripMenuItem();
             usuariosToolStripMenuItem = new ToolStripMenuItem();
             estadísticasToolStripMenuItem = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
@@ -40,61 +41,71 @@
             // 
             // menuStrip1
             // 
-            menuStrip1.BackColor = Color.Black;
+            menuStrip1.BackColor = Color.LightGray;
             menuStrip1.Items.AddRange(new ToolStripItem[] { inicioToolStripMenuItem, usuariosToolStripMenuItem, estadísticasToolStripMenuItem });
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
-            menuStrip1.Size = new Size(982, 27);
+            menuStrip1.Size = new Size(982, 29);
             menuStrip1.TabIndex = 1;
-            menuStrip1.Text = "menuStrip1";
+            menuStrip1.Text = "MSAdmin";
             // 
             // inicioToolStripMenuItem
             // 
-            inicioToolStripMenuItem.BackColor = Color.Black;
-            inicioToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { cerrarSesiónToolStripMenuItem, salirToolStripMenuItem });
-            inicioToolStripMenuItem.Font = new Font("Century Gothic", 12F, FontStyle.Bold);
-            inicioToolStripMenuItem.ForeColor = Color.LightGray;
+            inicioToolStripMenuItem.BackColor = Color.LightGray;
+            inicioToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { cerrarSesiónToolStripMenuItem, salirToolStripMenuItem, backupToolStripMenuItem });
+            inicioToolStripMenuItem.Font = new Font("Century Gothic", 12F);
+            inicioToolStripMenuItem.ForeColor = Color.Black;
             inicioToolStripMenuItem.Name = "inicioToolStripMenuItem";
-            inicioToolStripMenuItem.Size = new Size(63, 23);
+            inicioToolStripMenuItem.Size = new Size(63, 25);
             inicioToolStripMenuItem.Text = "Inicio";
             // 
             // cerrarSesiónToolStripMenuItem
             // 
-            cerrarSesiónToolStripMenuItem.BackColor = Color.Black;
-            cerrarSesiónToolStripMenuItem.Font = new Font("Century Gothic", 12F, FontStyle.Bold);
-            cerrarSesiónToolStripMenuItem.ForeColor = Color.LightGray;
+            cerrarSesiónToolStripMenuItem.BackColor = Color.LightGray;
+            cerrarSesiónToolStripMenuItem.Font = new Font("Century Gothic", 12F);
+            cerrarSesiónToolStripMenuItem.ForeColor = Color.Black;
             cerrarSesiónToolStripMenuItem.Name = "cerrarSesiónToolStripMenuItem";
-            cerrarSesiónToolStripMenuItem.Size = new Size(180, 24);
+            cerrarSesiónToolStripMenuItem.Size = new Size(180, 26);
             cerrarSesiónToolStripMenuItem.Text = "Cerrar Sesión";
             cerrarSesiónToolStripMenuItem.Click += cerrarSesiónToolStripMenuItem_Click;
             // 
             // salirToolStripMenuItem
             // 
-            salirToolStripMenuItem.BackColor = Color.Black;
-            salirToolStripMenuItem.Font = new Font("Century Gothic", 12F, FontStyle.Bold);
-            salirToolStripMenuItem.ForeColor = Color.LightGray;
+            salirToolStripMenuItem.BackColor = Color.LightGray;
+            salirToolStripMenuItem.Font = new Font("Century Gothic", 12F);
+            salirToolStripMenuItem.ForeColor = Color.Black;
             salirToolStripMenuItem.Name = "salirToolStripMenuItem";
-            salirToolStripMenuItem.Size = new Size(180, 24);
+            salirToolStripMenuItem.Size = new Size(180, 26);
             salirToolStripMenuItem.Text = "Salir";
             salirToolStripMenuItem.Click += salirToolStripMenuItem_Click;
             // 
+            // backupToolStripMenuItem
+            // 
+            backupToolStripMenuItem.BackColor = Color.LightGray;
+            backupToolStripMenuItem.Font = new Font("Century Gothic", 12F);
+            backupToolStripMenuItem.ForeColor = Color.Black;
+            backupToolStripMenuItem.Name = "backupToolStripMenuItem";
+            backupToolStripMenuItem.Size = new Size(180, 26);
+            backupToolStripMenuItem.Text = "Backup";
+            backupToolStripMenuItem.Click += backupToolStripMenuItem_Click;
+            // 
             // usuariosToolStripMenuItem
             // 
-            usuariosToolStripMenuItem.BackColor = Color.Black;
-            usuariosToolStripMenuItem.Font = new Font("Century Gothic", 12F, FontStyle.Bold);
-            usuariosToolStripMenuItem.ForeColor = Color.LightGray;
+            usuariosToolStripMenuItem.BackColor = Color.LightGray;
+            usuariosToolStripMenuItem.Font = new Font("Century Gothic", 12F);
+            usuariosToolStripMenuItem.ForeColor = Color.Black;
             usuariosToolStripMenuItem.Name = "usuariosToolStripMenuItem";
-            usuariosToolStripMenuItem.Size = new Size(83, 23);
+            usuariosToolStripMenuItem.Size = new Size(84, 25);
             usuariosToolStripMenuItem.Text = "Usuarios";
             usuariosToolStripMenuItem.Click += usuariosToolStripMenuItem_Click;
             // 
             // estadísticasToolStripMenuItem
             // 
-            estadísticasToolStripMenuItem.BackColor = Color.Black;
-            estadísticasToolStripMenuItem.Font = new Font("Century Gothic", 12F, FontStyle.Bold);
-            estadísticasToolStripMenuItem.ForeColor = Color.LightGray;
+            estadísticasToolStripMenuItem.BackColor = Color.LightGray;
+            estadísticasToolStripMenuItem.Font = new Font("Century Gothic", 12F);
+            estadísticasToolStripMenuItem.ForeColor = Color.Black;
             estadísticasToolStripMenuItem.Name = "estadísticasToolStripMenuItem";
-            estadísticasToolStripMenuItem.Size = new Size(106, 23);
+            estadísticasToolStripMenuItem.Size = new Size(112, 25);
             estadísticasToolStripMenuItem.Text = "Estadísticas";
             // 
             // FMenuAdmin
@@ -124,5 +135,6 @@
         private ToolStripMenuItem salirToolStripMenuItem;
         private ToolStripMenuItem usuariosToolStripMenuItem;
         private ToolStripMenuItem estadísticasToolStripMenuItem;
+        private ToolStripMenuItem backupToolStripMenuItem;
     }
 }

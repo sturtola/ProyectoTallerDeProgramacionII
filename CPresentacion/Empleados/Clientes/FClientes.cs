@@ -10,14 +10,12 @@ namespace AurenPadelStore.CPresentacion.Empleados.Clientes
         private Panel _scrollHost;
         private readonly Size _designContentSize = new Size(1334, 659);
 
-        // Bloquea el cambio de estado (Activar/Inactivar) si el rol es Vendedor
         private bool _bloquearEstadoPorRol = false;
 
         public FClientes()
         {
             InitializeComponent();
 
-            // Posicionar el child exactamente en (0,0) del área del MDI
             this.StartPosition = FormStartPosition.Manual;
             this.Location = new Point(0, 0);
             this.Shown += (_, __) => this.Location = new Point(0, 0);
@@ -25,35 +23,28 @@ namespace AurenPadelStore.CPresentacion.Empleados.Clientes
             PrepararScrollHost();
             this.Resize += (_, __) => UpdateScrollbars();
 
-            // Handlers de grilla
             DGListaClientes.CellContentClick += DGListaClientes_CellContentClick;
             DGListaClientes.CellMouseEnter += DGListaClientes_CellMouseEnter;
             DGListaClientes.CellMouseLeave += DGListaClientes_CellMouseLeave;
 
-            // Ejemplos estáticos
             CargarClientesDeEjemplo();
 
-            // Permisos por rol
             this.Load += FClientes_Load;
         }
 
         private void FClientes_Load(object sender, EventArgs e)
         {
-            // GERENTE: ver panel igual, pero no interactuar (solo botón gris)
             if (SesionActual.Rol.Equals("Gerente", StringComparison.OrdinalIgnoreCase))
             {
                 BloquearInteraccionSinCambiarEstilo(PAgregarCliente, BAgregarCliente,
                     "Solo Vendedor/es pueden agregar clientes.");
             }
 
-            // VENDEDOR: no puede activar/inactivar desde la grilla
             _bloquearEstadoPorRol = SesionActual.Rol.Equals("Vendedor", StringComparison.OrdinalIgnoreCase);
 
-            // Asegurar arranque arriba-izquierda
             _scrollHost.AutoScrollPosition = Point.Empty;
         }
 
-        // ===== Scroll host para MDI “chico” =====
         private void PrepararScrollHost()
         {
             _scrollHost = new Panel
@@ -89,25 +80,24 @@ namespace AurenPadelStore.CPresentacion.Empleados.Clientes
             }
         }
 
-        // ===== Bloqueo sin cambiar estilos (solo botón gris) =====
         private void BloquearInteraccionSinCambiarEstilo(Panel panel, Button botonAgregar, string tooltip = "")
         {
             foreach (Control c in panel.Controls)
             {
                 if (c is TextBox tb)
                 {
-                    var color = tb.BackColor;     // conservar color visual
-                    tb.ReadOnly = true;           // evita edición sin “apagar”
-                    tb.BackColor = color;         // mantener look
+                    var color = tb.BackColor;     
+                    tb.ReadOnly = true;           
+                    tb.BackColor = color;         
                     tb.TabStop = false;
                     tb.Cursor = Cursors.No;
-                    tb.GotFocus += (s, e) => DGListaClientes.Focus(); // no dejar caret
-                    tb.ShortcutsEnabled = false;  // opcional: sin Ctrl+V, etc.
+                    tb.GotFocus += (s, e) => DGListaClientes.Focus(); 
+                    tb.ShortcutsEnabled = false;  
                 }
                 else if (c is ComboBox cb)
                 {
-                    // Si algún día agregás combos en el panel: no tienen ReadOnly
-                    cb.Enabled = false;           // se verá gris (evitar usar combos aquí si no hace falta)
+                    
+                    cb.Enabled = false;          
                     cb.TabStop = false;
                 }
                 else if (c is Button b && !ReferenceEquals(b, botonAgregar))
@@ -123,7 +113,7 @@ namespace AurenPadelStore.CPresentacion.Empleados.Clientes
 
             if (botonAgregar != null)
             {
-                botonAgregar.Enabled = false; // se ve gris (único cambio visual)
+                botonAgregar.Enabled = false; 
                 if (!string.IsNullOrWhiteSpace(tooltip))
                 {
                     var tt = new ToolTip();
@@ -141,11 +131,9 @@ namespace AurenPadelStore.CPresentacion.Empleados.Clientes
                 foreach (Control c in panel.Controls) tt.SetToolTip(c, tooltip);
             }
 
-            // Si clickean el panel, pasá foco a la grilla para “simular” no interactivo
             panel.MouseDown += (s, e) => DGListaClientes.Focus();
         }
 
-        // ===== Ejemplos estáticos =====
         private void CargarClientesDeEjemplo()
         {
             int r1 = DGListaClientes.Rows.Add(
@@ -161,7 +149,6 @@ namespace AurenPadelStore.CPresentacion.Empleados.Clientes
             SetAccionSegunEstado(DGListaClientes.Rows[r2]);
         }
 
-        // ===== Alta simulada (validaciones mínimas) =====
         private void BAgregarCliente_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrWhiteSpace(TBNombre.Text) ||
@@ -216,7 +203,6 @@ namespace AurenPadelStore.CPresentacion.Empleados.Clientes
             TBTelefono.Clear();
         }
 
-        // ===== Estado / Acción (activar-inactivar) =====
         private void DGListaClientes_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex < 0 || e.ColumnIndex < 0) return;
@@ -226,7 +212,6 @@ namespace AurenPadelStore.CPresentacion.Empleados.Clientes
 
             if (colName == "colAccion")
             {
-                // ⛔ VENDEDOR no puede cambiar estado
                 if (_bloquearEstadoPorRol)
                 {
                     MessageBox.Show("No tenés permisos para cambiar el estado del cliente.",
@@ -272,13 +257,13 @@ namespace AurenPadelStore.CPresentacion.Empleados.Clientes
             if (string.Equals(estado, "Activo", StringComparison.OrdinalIgnoreCase))
             {
                 accionCell.Value = "Inactivar";
-                accionCell.Style.BackColor = Color.LightCoral;   // rojo claro
+                accionCell.Style.BackColor = Color.LightCoral;   
                 accionCell.Style.ForeColor = Color.Black;
             }
             else
             {
                 accionCell.Value = "Activar";
-                accionCell.Style.BackColor = Color.LightSkyBlue; // azul claro
+                accionCell.Style.BackColor = Color.LightSkyBlue; 
                 accionCell.Style.ForeColor = Color.Black;
             }
         }

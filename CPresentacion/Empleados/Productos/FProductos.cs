@@ -14,10 +14,8 @@ namespace AurenPadelStore.CPresentacion.Empleados.Productos
         {
             InitializeComponent();
 
-            // Datos de ejemplo
             CargarProductoDePrueba();
 
-            // Eventos de grilla
             DGListaProd.CellContentClick += DGListaProd_CellContentClick;
             DGListaProd.RowsAdded += (s, e) =>
             {
@@ -27,26 +25,21 @@ namespace AurenPadelStore.CPresentacion.Empleados.Productos
             DGListaProd.CellMouseMove += DGListaProd_CellMouseMove;
             DGListaProd.CellMouseLeave += (s, e) => DGListaProd.Cursor = Cursors.Default;
 
-            // Scroll host (barras cuando el MDI está chico; sin barras al maximizar)
             PrepararScrollHost();
             this.Resize += (_, __) => UpdateScrollbars();
 
-            // Permisos por rol
             this.Load += FProductos_Load;
         }
 
         private void FProductos_Load(object sender, EventArgs e)
         {
-            // GERENTE: ver panel igual, pero no interactuar (solo botón gris)
             if (SesionActual.Rol != null &&
                 SesionActual.Rol.Equals("Gerente", StringComparison.OrdinalIgnoreCase))
             {
                 BloquearInteraccionSinCambiarEstilo(PAgregarProducto, BAgregarProducto,
-                    "Solo Vendedor/es o Administrador/es pueden agregar productos.");
+                    "No tiene permitido reallizar esta acción.");
             }
         }
-
-        // ====== UI helpers ======
 
         private void PrepararScrollHost()
         {
@@ -82,11 +75,6 @@ namespace AurenPadelStore.CPresentacion.Empleados.Productos
             }
         }
 
-        /// <summary>
-        /// Bloquea la interacción del panel sin modificar su estilo visual.
-        /// TextBox -> ReadOnly conservando BackColor; sin TabStop ni caret.
-        /// Botón principal -> Disabled (gris). Cursor "No" y tooltip opcional.
-        /// </summary>
         private void BloquearInteraccionSinCambiarEstilo(Panel panel, Button botonPrincipal, string tooltip = "")
         {
             foreach (Control c in panel.Controls)
@@ -109,7 +97,7 @@ namespace AurenPadelStore.CPresentacion.Empleados.Productos
 
             if (botonPrincipal != null)
             {
-                botonPrincipal.Enabled = false; // se verá gris por ser Button estándar
+                botonPrincipal.Enabled = false; 
                 if (!string.IsNullOrWhiteSpace(tooltip))
                 {
                     var tt = new ToolTip();
@@ -130,11 +118,9 @@ namespace AurenPadelStore.CPresentacion.Empleados.Productos
             panel.MouseDown += (s, e) => DGListaProd.Focus();
         }
 
-        // ====== Datos de ejemplo ======
 
         private void CargarProductoDePrueba()
         {
-            // Ajustá las rutas si fuese necesario
             Image imgAct = Image.FromFile(@"C:\Proyecto de Escritorio\ProyectoTallerDeProgramacionII\img\bullpadelEliteWoman.png");
             Image imgIna = Image.FromFile(@"C:\Proyecto de Escritorio\ProyectoTallerDeProgramacionII\img\noxEquationLightAdvanced.png");
 
@@ -151,7 +137,6 @@ namespace AurenPadelStore.CPresentacion.Empleados.Productos
             SetAccionSegunEstado(DGListaProd.Rows[r2]);
         }
 
-        // ====== Lógica de estado / acción ======
 
         private void SetAccionSegunEstado(DataGridViewRow row)
         {
@@ -181,7 +166,6 @@ namespace AurenPadelStore.CPresentacion.Empleados.Productos
         {
             if (e.RowIndex < 0 || e.ColumnIndex < 0) return;
 
-            // Si es la columna Acción y el rol es VENDEDOR → cursor de bloqueo
             if (DGListaProd.Columns[e.ColumnIndex].Name == "colAccion" && AccionBloqueadaPorRol)
             {
                 DGListaProd.Cursor = Cursors.No;
@@ -202,7 +186,6 @@ namespace AurenPadelStore.CPresentacion.Empleados.Productos
 
             if (colName == "colAccion")
             {
-                // VENDEDOR: bloquear acción (sin modificar estética)
                 if (AccionBloqueadaPorRol)
                 {
                     System.Media.SystemSounds.Beep.Play();
@@ -214,18 +197,15 @@ namespace AurenPadelStore.CPresentacion.Empleados.Productos
                 var row = DGListaProd.Rows[e.RowIndex];
                 string estado = row.Cells["colEstado"].Value?.ToString() ?? "Activo";
 
-                // Toggle de estado
                 if (string.Equals(estado, "Activo", StringComparison.OrdinalIgnoreCase))
                     row.Cells["colEstado"].Value = "Inactivo";
                 else
                     row.Cells["colEstado"].Value = "Activo";
 
-                // Refrescar texto y color del botón
                 SetAccionSegunEstado(row);
             }
         }
 
-        // ====== Alta (validaciones visuales) ======
 
         private void BAgregarProducto_Click(object sender, EventArgs e)
         {

@@ -14,10 +14,8 @@ namespace AurenPadelStore.CPresentacion.Empleados.Facturas.ListarFacturas
 
         private readonly string rolActual;
 
-        // 👇 Constructor usado en tiempo de diseño y por código viejo sin rol
         public FListarFacturas() : this(SafeRol()) { }
 
-        // 👇 Constructor principal con rol explícito
         public FListarFacturas(string rolUsuario)
         {
             InitializeComponent();
@@ -32,11 +30,9 @@ namespace AurenPadelStore.CPresentacion.Empleados.Facturas.ListarFacturas
 
             FormatearColumnaImporte();
             CargarFacturasDeEjemplo();
-
-            // 🔒 restricciones por rol
+       
             AplicarRestriccionesPorRol();
 
-            //Boton ver factura
             DGListaFacturas.CellContentClick += DGListaFacturas_CellContentClick;
 
         }
@@ -45,10 +41,8 @@ namespace AurenPadelStore.CPresentacion.Empleados.Facturas.ListarFacturas
         {
             if (e.RowIndex < 0) return;
 
-            // Verificamos si clickeó en la columna del botón
             if (DGListaFacturas.Columns[e.ColumnIndex].Name == "colVerF")
             {
-                // 🚀 Abrir el formulario de factura
                 var f = new AurenPadelStore.CPresentacion.Empleados.Facturas.VerFactura.FVerFactura();
                 f.ShowDialog();
             }
@@ -57,7 +51,6 @@ namespace AurenPadelStore.CPresentacion.Empleados.Facturas.ListarFacturas
 
         private static string SafeRol()
         {
-            // Intentamos leer SesionActual.Rol pero sin romper el diseñador
             try
             {
                 return AurenPadelStore.SesionActual.Rol ?? string.Empty;
@@ -78,7 +71,6 @@ namespace AurenPadelStore.CPresentacion.Empleados.Facturas.ListarFacturas
                 col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
             }
 
-            // Encabezados centrados
             DGListaFacturas.ColumnHeadersDefaultCellStyle.Alignment =
                 DataGridViewContentAlignment.MiddleCenter;
         }
@@ -106,7 +98,6 @@ namespace AurenPadelStore.CPresentacion.Empleados.Facturas.ListarFacturas
             );
         }
 
-        // ===== Scroll host =====
         private void PrepararScrollHost()
         {
             _scrollHost = new Panel
@@ -141,7 +132,6 @@ namespace AurenPadelStore.CPresentacion.Empleados.Facturas.ListarFacturas
             }
         }
 
-        // ===== Restricciones por rol =====
         private void AplicarRestriccionesPorRol()
         {
             if (rolActual.Equals("Vendedor", StringComparison.OrdinalIgnoreCase))
@@ -149,7 +139,6 @@ namespace AurenPadelStore.CPresentacion.Empleados.Facturas.ListarFacturas
                 var colEliminar = DGListaFacturas.Columns["colEliminar"] as DataGridViewButtonColumn;
                 if (colEliminar != null)
                 {
-                    // Bloqueamos la acción de clic
                     DGListaFacturas.CellClick += (s, e) =>
                     {
                         if (e.RowIndex >= 0 && e.ColumnIndex == colEliminar.Index)
@@ -161,7 +150,6 @@ namespace AurenPadelStore.CPresentacion.Empleados.Facturas.ListarFacturas
                         }
                     };
 
-                    // Cambiamos el cursor cuando se pasa por encima
                     DGListaFacturas.CellMouseEnter += (s, e) =>
                     {
                         if (e.RowIndex >= 0 && e.ColumnIndex == colEliminar.Index)

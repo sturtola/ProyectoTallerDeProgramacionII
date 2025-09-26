@@ -120,6 +120,7 @@ namespace AurenPadelStore.CPresentacion.Empleados.Ventas.ListarVentas
             // 
             // DGListaVentas
             // 
+            DGListaVentas.AllowUserToAddRows = false;
             DGListaVentas.BackgroundColor = Color.FromArgb(64, 64, 64);
             DGListaVentas.BorderStyle = BorderStyle.None;
             DGListaVentas.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single;

@@ -46,112 +46,117 @@
             // 
             // MSEmpleados
             // 
-            MSEmpleados.BackColor = Color.Black;
+            MSEmpleados.BackColor = Color.LightGray;
             MSEmpleados.Font = new Font("Century Gothic", 11.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
             MSEmpleados.Items.AddRange(new ToolStripItem[] { inicioToolStripMenuItem, ventasToolStripMenuItem, clientesToolStripMenuItem, productosToolStripMenuItem, facturasToolStripMenuItem });
             MSEmpleados.Location = new Point(0, 0);
             MSEmpleados.Name = "MSEmpleados";
-            MSEmpleados.Size = new Size(1012, 27);
+            MSEmpleados.Size = new Size(1012, 29);
             MSEmpleados.TabIndex = 0;
             MSEmpleados.Text = "Empleados";
             // 
             // inicioToolStripMenuItem
             // 
+            inicioToolStripMenuItem.BackColor = Color.LightGray;
             inicioToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { salirToolStripMenuItem, cerrarSesiónToolStripMenuItem });
-            inicioToolStripMenuItem.Font = new Font("Century Gothic", 12F, FontStyle.Bold);
-            inicioToolStripMenuItem.ForeColor = Color.LightGray;
+            inicioToolStripMenuItem.Font = new Font("Century Gothic", 12F);
+            inicioToolStripMenuItem.ForeColor = Color.Black;
             inicioToolStripMenuItem.Name = "inicioToolStripMenuItem";
-            inicioToolStripMenuItem.Size = new Size(63, 23);
+            inicioToolStripMenuItem.Size = new Size(63, 25);
             inicioToolStripMenuItem.Text = "Inicio";
             // 
             // salirToolStripMenuItem
             // 
-            salirToolStripMenuItem.BackColor = Color.Black;
-            salirToolStripMenuItem.ForeColor = Color.LightGray;
+            salirToolStripMenuItem.BackColor = Color.LightGray;
+            salirToolStripMenuItem.Font = new Font("Century Gothic", 12F);
+            salirToolStripMenuItem.ForeColor = Color.Black;
             salirToolStripMenuItem.Name = "salirToolStripMenuItem";
-            salirToolStripMenuItem.Size = new Size(180, 24);
+            salirToolStripMenuItem.Size = new Size(180, 26);
             salirToolStripMenuItem.Text = "Salir";
             salirToolStripMenuItem.Click += salirToolStripMenuItem_Click;
             // 
             // cerrarSesiónToolStripMenuItem
             // 
-            cerrarSesiónToolStripMenuItem.BackColor = Color.Black;
-            cerrarSesiónToolStripMenuItem.ForeColor = Color.LightGray;
+            cerrarSesiónToolStripMenuItem.BackColor = Color.LightGray;
+            cerrarSesiónToolStripMenuItem.Font = new Font("Century Gothic", 12F);
+            cerrarSesiónToolStripMenuItem.ForeColor = Color.Black;
             cerrarSesiónToolStripMenuItem.Name = "cerrarSesiónToolStripMenuItem";
-            cerrarSesiónToolStripMenuItem.Size = new Size(180, 24);
+            cerrarSesiónToolStripMenuItem.Size = new Size(180, 26);
             cerrarSesiónToolStripMenuItem.Text = "Cerrar Sesión";
             cerrarSesiónToolStripMenuItem.Click += cerrarSesiónToolStripMenuItem_Click;
             // 
             // ventasToolStripMenuItem
             // 
-            ventasToolStripMenuItem.BackColor = Color.Black;
+            ventasToolStripMenuItem.BackColor = Color.LightGray;
             ventasToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { generarVentaToolStripMenuItem, listarVentasToolStripMenuItem });
-            ventasToolStripMenuItem.Font = new Font("Century Gothic", 12F, FontStyle.Bold);
-            ventasToolStripMenuItem.ForeColor = Color.LightGray;
+            ventasToolStripMenuItem.Font = new Font("Century Gothic", 12F);
+            ventasToolStripMenuItem.ForeColor = Color.Black;
             ventasToolStripMenuItem.Name = "ventasToolStripMenuItem";
-            ventasToolStripMenuItem.Size = new Size(73, 23);
+            ventasToolStripMenuItem.Size = new Size(77, 25);
             ventasToolStripMenuItem.Text = "Ventas";
             // 
             // generarVentaToolStripMenuItem
             // 
-            generarVentaToolStripMenuItem.BackColor = Color.Black;
-            generarVentaToolStripMenuItem.ForeColor = Color.LightGray;
+            generarVentaToolStripMenuItem.BackColor = Color.LightGray;
+            generarVentaToolStripMenuItem.ForeColor = Color.Black;
             generarVentaToolStripMenuItem.Name = "generarVentaToolStripMenuItem";
-            generarVentaToolStripMenuItem.Size = new Size(192, 24);
+            generarVentaToolStripMenuItem.Size = new Size(198, 26);
             generarVentaToolStripMenuItem.Text = "Generar Venta";
             generarVentaToolStripMenuItem.Click += generarVentaToolStripMenuItem_Click;
             // 
             // listarVentasToolStripMenuItem
             // 
-            listarVentasToolStripMenuItem.BackColor = Color.Black;
-            listarVentasToolStripMenuItem.ForeColor = Color.LightGray;
+            listarVentasToolStripMenuItem.BackColor = Color.LightGray;
+            listarVentasToolStripMenuItem.ForeColor = Color.Black;
             listarVentasToolStripMenuItem.Name = "listarVentasToolStripMenuItem";
-            listarVentasToolStripMenuItem.Size = new Size(192, 24);
+            listarVentasToolStripMenuItem.Size = new Size(198, 26);
             listarVentasToolStripMenuItem.Text = "Lista de Ventas";
             listarVentasToolStripMenuItem.Click += listarVentasToolStripMenuItem_Click;
             // 
             // clientesToolStripMenuItem
             // 
-            clientesToolStripMenuItem.Font = new Font("Century Gothic", 12F, FontStyle.Bold);
-            clientesToolStripMenuItem.ForeColor = Color.LightGray;
+            clientesToolStripMenuItem.BackColor = Color.LightGray;
+            clientesToolStripMenuItem.Font = new Font("Century Gothic", 12F);
+            clientesToolStripMenuItem.ForeColor = Color.Black;
             clientesToolStripMenuItem.Name = "clientesToolStripMenuItem";
-            clientesToolStripMenuItem.Size = new Size(81, 23);
+            clientesToolStripMenuItem.Size = new Size(84, 25);
             clientesToolStripMenuItem.Text = "Clientes";
             clientesToolStripMenuItem.Click += clientesToolStripMenuItem_Click;
             // 
             // productosToolStripMenuItem
             // 
-            productosToolStripMenuItem.Font = new Font("Century Gothic", 12F, FontStyle.Bold);
-            productosToolStripMenuItem.ForeColor = Color.LightGray;
+            productosToolStripMenuItem.BackColor = Color.LightGray;
+            productosToolStripMenuItem.Font = new Font("Century Gothic", 12F);
+            productosToolStripMenuItem.ForeColor = Color.Black;
             productosToolStripMenuItem.Name = "productosToolStripMenuItem";
-            productosToolStripMenuItem.Size = new Size(96, 23);
+            productosToolStripMenuItem.Size = new Size(100, 25);
             productosToolStripMenuItem.Text = "Productos";
             productosToolStripMenuItem.Click += productosToolStripMenuItem_Click;
             // 
             // facturasToolStripMenuItem
             // 
-            facturasToolStripMenuItem.BackColor = Color.Black;
+            facturasToolStripMenuItem.BackColor = Color.LightGray;
             facturasToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { generarFacturaToolStripMenuItem, listaDeFacturasToolStripMenuItem });
-            facturasToolStripMenuItem.Font = new Font("Century Gothic", 12F, FontStyle.Bold);
-            facturasToolStripMenuItem.ForeColor = Color.LightGray;
+            facturasToolStripMenuItem.Font = new Font("Century Gothic", 12F);
+            facturasToolStripMenuItem.ForeColor = Color.Black;
             facturasToolStripMenuItem.Name = "facturasToolStripMenuItem";
-            facturasToolStripMenuItem.Size = new Size(86, 23);
+            facturasToolStripMenuItem.Size = new Size(90, 25);
             facturasToolStripMenuItem.Text = "Facturas";
             // 
             // generarFacturaToolStripMenuItem
             // 
-            generarFacturaToolStripMenuItem.BackColor = Color.Black;
-            generarFacturaToolStripMenuItem.ForeColor = Color.LightGray;
+            generarFacturaToolStripMenuItem.BackColor = Color.LightGray;
+            generarFacturaToolStripMenuItem.ForeColor = Color.Black;
             generarFacturaToolStripMenuItem.Name = "generarFacturaToolStripMenuItem";
-            generarFacturaToolStripMenuItem.Size = new Size(205, 24);
+            generarFacturaToolStripMenuItem.Size = new Size(211, 26);
             generarFacturaToolStripMenuItem.Text = "Generar Factura";
             // 
             // listaDeFacturasToolStripMenuItem
             // 
-            listaDeFacturasToolStripMenuItem.BackColor = Color.Black;
-            listaDeFacturasToolStripMenuItem.ForeColor = Color.LightGray;
+            listaDeFacturasToolStripMenuItem.BackColor = Color.LightGray;
+            listaDeFacturasToolStripMenuItem.ForeColor = Color.Black;
             listaDeFacturasToolStripMenuItem.Name = "listaDeFacturasToolStripMenuItem";
-            listaDeFacturasToolStripMenuItem.Size = new Size(205, 24);
+            listaDeFacturasToolStripMenuItem.Size = new Size(211, 26);
             listaDeFacturasToolStripMenuItem.Text = "Lista de Facturas";
             listaDeFacturasToolStripMenuItem.Click += listaDeFacturasToolStripMenuItem_Click;
             // 

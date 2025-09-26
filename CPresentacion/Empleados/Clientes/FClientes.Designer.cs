@@ -302,6 +302,7 @@ namespace AurenPadelStore.CPresentacion.Empleados.Clientes
             // 
             // DGListaClientes
             // 
+            DGListaClientes.AllowUserToAddRows = false;
             DGListaClientes.BackgroundColor = Color.FromArgb(64, 64, 64);
             DGListaClientes.BorderStyle = BorderStyle.None;
             DGListaClientes.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single;

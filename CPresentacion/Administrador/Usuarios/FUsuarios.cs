@@ -10,7 +10,6 @@ namespace AurenPadelStore.CPresentacion.Administrador.Usuarios
 {
     public partial class FUsuarios : Form
     {
-        // Scroll host para barras cuando el MDI es más chico que el diseño
         private Panel _scrollHost;
         private readonly Size _designContentSize = new Size(1334, 659);
 
@@ -22,7 +21,6 @@ namespace AurenPadelStore.CPresentacion.Administrador.Usuarios
         {
             InitializeComponent();
 
-            // Alinear en (0,0) dentro del MDI (cuando se muestra)
             this.StartPosition = FormStartPosition.Manual;
             this.Location = new Point(0, 0);
             this.Shown += (_, __) => this.Location = new Point(0, 0);
@@ -31,7 +29,6 @@ namespace AurenPadelStore.CPresentacion.Administrador.Usuarios
             PrepararScrollHost();
             this.Resize += (_, __) => UpdateScrollbars();
 
-            // Eventos
             this.Load += FUsuarios_Load;
             BAgregarUsuario.Click += BAgregarUsuario_Click;
 
@@ -43,16 +40,13 @@ namespace AurenPadelStore.CPresentacion.Administrador.Usuarios
             CBFiltroU.SelectedIndexChanged += (_, __) => RefrescarGrilla();
             BBuscarU.Click += (_, __) => RefrescarGrilla();
 
-            // Validación de DNI solo números desde código (por si no lo asignaste en el designer)
             TBDniU.KeyPress += TBNumerico_KeyPress;
 
-            // Combo de Roles
             CBRol.Items.Clear();
             CBRol.Items.AddRange(new[] { "Administrador", "Gerente", "Vendedor" });
             if (CBRol.Items.Count > 0) CBRol.SelectedIndex = 0;
         }
 
-        // ===== Scroll =====
         private void PrepararScrollHost()
         {
             _scrollHost = new Panel
@@ -62,7 +56,6 @@ namespace AurenPadelStore.CPresentacion.Administrador.Usuarios
                 BackColor = this.BackColor
             };
 
-            // mover todo el contenido del form dentro del host
             while (this.Controls.Count > 0)
             {
                 Control c = this.Controls[0];
@@ -72,7 +65,6 @@ namespace AurenPadelStore.CPresentacion.Administrador.Usuarios
 
             this.Controls.Add(_scrollHost);
 
-            // tamaño mínimo de contenido para forzar barras cuando no hay espacio
             _scrollHost.AutoScrollMinSize = _designContentSize;
             UpdateScrollbars();
         }
@@ -81,13 +73,12 @@ namespace AurenPadelStore.CPresentacion.Administrador.Usuarios
         {
             if (this.WindowState == FormWindowState.Maximized)
             {
-                _scrollHost.AutoScrollMinSize = Size.Empty;     // sin barras
-                _scrollHost.AutoScrollPosition = Point.Empty;   // reset desplazamiento
+                _scrollHost.AutoScrollMinSize = Size.Empty;     
+                _scrollHost.AutoScrollPosition = Point.Empty;   
             }
             else
             {
-                _scrollHost.AutoScrollMinSize = _designContentSize; // barras si hace falta
-                // opcional: volver al origen
+                _scrollHost.AutoScrollMinSize = _designContentSize; 
                 _scrollHost.AutoScrollPosition = Point.Empty;
             }
         }
@@ -96,20 +87,20 @@ namespace AurenPadelStore.CPresentacion.Administrador.Usuarios
         private void FUsuarios_Load(object sender, EventArgs e)
         {
             if (CBFiltroU.Items.Count > 0 && CBFiltroU.SelectedIndex < 0)
-                CBFiltroU.SelectedIndex = 0; // "Nombre A-Z" por ejemplo
+                CBFiltroU.SelectedIndex = 0; 
 
             RefrescarGrilla();
             _scrollHost.AutoScrollPosition = Point.Empty;
         }
 
-        // ===== Grilla =====
+        
         private void RefrescarGrilla()
         {
             try
             {
                 List<Usuario> lista = _datos.ObtenerTodos();
 
-                // Buscar
+                
                 string q = (TBBuscarU.Text ?? "").Trim().ToLower();
                 if (!string.IsNullOrEmpty(q))
                 {
@@ -119,7 +110,7 @@ namespace AurenPadelStore.CPresentacion.Administrador.Usuarios
                         (u.DNI ?? "").ToLower().Contains(q));
                 }
 
-                // Filtros
+                
                 string f = CBFiltroU.SelectedItem?.ToString() ?? "";
                 switch (f)
                 {
@@ -162,7 +153,7 @@ namespace AurenPadelStore.CPresentacion.Administrador.Usuarios
                         u.Rol,
                         u.Estado ? "Activo" : "Inactivo",
                         "Editar",
-                        null // el texto del botón lo setea SetAccionEstadoRow
+                        null 
                     );
                     SetAccionEstadoRow(DGListaUsuarios.Rows[idx], u.Estado);
                 }
@@ -210,12 +201,10 @@ namespace AurenPadelStore.CPresentacion.Administrador.Usuarios
                 TBDniU.Text = row.Cells["colUDni"].Value?.ToString() ?? "";
                 _dniOriginalEdicion = TBDniU.Text;
 
-                // set rol
                 string rol = row.Cells["colURol"].Value?.ToString() ?? "Vendedor";
                 if (!string.IsNullOrEmpty(rol))
                     CBRol.SelectedItem = rol;
 
-                // vaciar contraseñas para no mostrar
                 TBContrasena.Clear();
                 TBRepetirContrasena.Clear();
 
@@ -240,7 +229,6 @@ namespace AurenPadelStore.CPresentacion.Administrador.Usuarios
                 try
                 {
                     _datos.CambiarEstado(dni, !actualmenteActivo);
-                    // Reflejar inmediatamente en la fila
                     SetAccionEstadoRow(row, !actualmenteActivo);
                     MessageBox.Show("Estado actualizado correctamente.", "OK",
                                     MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -264,10 +252,8 @@ namespace AurenPadelStore.CPresentacion.Administrador.Usuarios
             DGListaUsuarios.Cursor = Cursors.Default;
         }
 
-        // ===== Alta / Edición =====
         private void BAgregarUsuario_Click(object sender, EventArgs e)
         {
-            // Validaciones
             if (string.IsNullOrWhiteSpace(TBNombreU.Text) ||
                 string.IsNullOrWhiteSpace(TBApellidoU.Text) ||
                 string.IsNullOrWhiteSpace(TBDniU.Text) ||
@@ -303,7 +289,6 @@ namespace AurenPadelStore.CPresentacion.Administrador.Usuarios
                                              "Confirmación", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                     if (dr != DialogResult.Yes)
                     {
-                        // Canceló la edición → limpiar y volver a modo alta
                         LimpiarPanel();
                         _modoEdicion = false;
                         _dniOriginalEdicion = null;
@@ -318,7 +303,7 @@ namespace AurenPadelStore.CPresentacion.Administrador.Usuarios
                         Apellido = TBApellidoU.Text.Trim(),
                         Contrasena = TBContrasena.Text,
                         Rol = CBRol.SelectedItem?.ToString() ?? "Vendedor",
-                        Estado = true // no se toca aquí
+                        Estado = true 
                     };
 
                     _datos.Actualizar(u, _dniOriginalEdicion);
@@ -368,7 +353,6 @@ namespace AurenPadelStore.CPresentacion.Administrador.Usuarios
             if (CBRol.Items.Count > 0) CBRol.SelectedIndex = 0;
         }
 
-        // Sólo números en DNI
         private void TBNumerico_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))

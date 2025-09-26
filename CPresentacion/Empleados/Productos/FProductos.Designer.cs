@@ -335,6 +335,7 @@ namespace AurenPadelStore.CPresentacion.Empleados.Productos
             // DGListaProd
             // 
             DGListaProd.AllowUserToOrderColumns = true;
+            DGListaProd.AllowUserToAddRows = false;
             DGListaProd.Anchor = AnchorStyles.None;
             DGListaProd.BackgroundColor = Color.FromArgb(64, 64, 64);
             DGListaProd.BorderStyle = BorderStyle.None;

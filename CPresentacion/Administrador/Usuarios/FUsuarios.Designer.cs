@@ -18,10 +18,10 @@ namespace AurenPadelStore.CPresentacion.Administrador.Usuarios
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FUsuarios));
-            DataGridViewCellStyle dataGridViewCellStyle5 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle8 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle6 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle7 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
             LListaUsuarios = new Label();
             PAgregarUsuario = new Panel();
             LNombreU = new Label();
@@ -303,24 +303,25 @@ namespace AurenPadelStore.CPresentacion.Administrador.Usuarios
             // 
             // DGListaUsuarios
             // 
+            DGListaUsuarios.AllowUserToAddRows = false;
             DGListaUsuarios.BackgroundColor = Color.FromArgb(64, 64, 64);
             DGListaUsuarios.BorderStyle = BorderStyle.None;
             DGListaUsuarios.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single;
-            dataGridViewCellStyle5.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle5.BackColor = Color.FromArgb(64, 64, 64);
-            dataGridViewCellStyle5.Font = new Font("Century Gothic", 12F);
-            dataGridViewCellStyle5.ForeColor = Color.LightGray;
-            DGListaUsuarios.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle1.BackColor = Color.FromArgb(64, 64, 64);
+            dataGridViewCellStyle1.Font = new Font("Century Gothic", 12F);
+            dataGridViewCellStyle1.ForeColor = Color.LightGray;
+            DGListaUsuarios.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             DGListaUsuarios.ColumnHeadersHeight = 25;
             DGListaUsuarios.Columns.AddRange(new DataGridViewColumn[] { colUNombre, colUApellido, colUDni, colURol, colUEstado, colUEditar, colUAccion });
-            dataGridViewCellStyle8.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle8.BackColor = Color.FromArgb(100, 100, 100);
-            dataGridViewCellStyle8.Font = new Font("Century Gothic", 11F);
-            dataGridViewCellStyle8.ForeColor = Color.LightGray;
-            dataGridViewCellStyle8.SelectionBackColor = Color.DimGray;
-            dataGridViewCellStyle8.SelectionForeColor = Color.White;
-            dataGridViewCellStyle8.WrapMode = DataGridViewTriState.False;
-            DGListaUsuarios.DefaultCellStyle = dataGridViewCellStyle8;
+            dataGridViewCellStyle4.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle4.BackColor = Color.FromArgb(100, 100, 100);
+            dataGridViewCellStyle4.Font = new Font("Century Gothic", 11F);
+            dataGridViewCellStyle4.ForeColor = Color.LightGray;
+            dataGridViewCellStyle4.SelectionBackColor = Color.DimGray;
+            dataGridViewCellStyle4.SelectionForeColor = Color.White;
+            dataGridViewCellStyle4.WrapMode = DataGridViewTriState.False;
+            DGListaUsuarios.DefaultCellStyle = dataGridViewCellStyle4;
             DGListaUsuarios.EnableHeadersVisualStyles = false;
             DGListaUsuarios.GridColor = Color.Black;
             DGListaUsuarios.Location = new Point(0, 57);
@@ -362,10 +363,10 @@ namespace AurenPadelStore.CPresentacion.Administrador.Usuarios
             // 
             // colUEditar
             // 
-            dataGridViewCellStyle6.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle6.BackColor = Color.LightGreen;
-            dataGridViewCellStyle6.ForeColor = Color.Black;
-            colUEditar.DefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle2.BackColor = Color.LightGreen;
+            dataGridViewCellStyle2.ForeColor = Color.Black;
+            colUEditar.DefaultCellStyle = dataGridViewCellStyle2;
             colUEditar.FlatStyle = FlatStyle.Flat;
             colUEditar.HeaderText = "E";
             colUEditar.Name = "colUEditar";
@@ -375,10 +376,10 @@ namespace AurenPadelStore.CPresentacion.Administrador.Usuarios
             // 
             // colUAccion
             // 
-            dataGridViewCellStyle7.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle7.BackColor = Color.LightCoral;
-            dataGridViewCellStyle7.ForeColor = Color.Black;
-            colUAccion.DefaultCellStyle = dataGridViewCellStyle7;
+            dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle3.BackColor = Color.LightCoral;
+            dataGridViewCellStyle3.ForeColor = Color.Black;
+            colUAccion.DefaultCellStyle = dataGridViewCellStyle3;
             colUAccion.FlatStyle = FlatStyle.Flat;
             colUAccion.HeaderText = "A";
             colUAccion.Name = "colUAccion";

@@ -121,6 +121,7 @@ namespace AurenPadelStore.CPresentacion.Empleados.Facturas.ListarFacturas
             // 
             // DGListaFacturas
             // 
+            DGListaFacturas.AllowUserToAddRows = false;
             DGListaFacturas.BackgroundColor = Color.FromArgb(64, 64, 64);
             DGListaFacturas.BorderStyle = BorderStyle.None;
             DGListaFacturas.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single;

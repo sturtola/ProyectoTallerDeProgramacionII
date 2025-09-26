@@ -11,7 +11,6 @@ namespace AurenPadelStore.CPresentacion.Empleados.Ventas
         private Panel? _scrollHost;
         private readonly Size _designContentSize = new Size(1334, 659);
 
-        // ====== Catálogo de productos (demo visual) ======
         private class Prod
         {
             public string Nombre { get; set; } = "";
@@ -29,7 +28,6 @@ namespace AurenPadelStore.CPresentacion.Empleados.Ventas
         {
             InitializeComponent();
 
-            // Host con AutoScroll para el form entero (si reducís ventana)
             PrepararScrollHost();
             this.Resize += (_, __) => UpdateScrollbars();
 
@@ -42,17 +40,14 @@ namespace AurenPadelStore.CPresentacion.Empleados.Ventas
             DGItemsVenta.CurrentCellDirtyStateChanged += DGItemsVenta_CurrentCellDirtyStateChanged;
             DGItemsVenta.EditingControlShowing += DGItemsVenta_EditingControlShowing;
 
-            // Estilo fijo del botón y acción "Ver"
             DGItemsVenta.RowsAdded += DGItemsVenta_RowsAdded;
             DGItemsVenta.CellContentClick += DGItemsVenta_CellContentClick;
 
-            // 🔔 Recalcular total cuando cambie el envío
             CBEnvio.CheckedChanged += (_, __) => ActualizarTotalGeneral();
 
             ActualizarTotalGeneral();
         }
 
-        // ===== Scroll host (para ocultar barras al maximizar) =====
         private void PrepararScrollHost()
         {
             _scrollHost = new Panel
@@ -89,7 +84,6 @@ namespace AurenPadelStore.CPresentacion.Empleados.Ventas
             }
         }
 
-        // ===== UI/Binding =====
         private void CargarClientes()
         {
             var clientes = new[]
@@ -98,11 +92,10 @@ namespace AurenPadelStore.CPresentacion.Empleados.Ventas
                 "Diego Mansilla - 40999888"
             }.ToList();
 
-            CBCliente.DisplayMember = null; // simple string
+            CBCliente.DisplayMember = null; 
             CBCliente.ValueMember = null;
             CBCliente.DataSource = clientes;
 
-            // Combo con búsqueda
             CBCliente.DropDownStyle = ComboBoxStyle.DropDown;
             CBCliente.AutoCompleteSource = AutoCompleteSource.ListItems;
             CBCliente.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
@@ -127,7 +120,6 @@ namespace AurenPadelStore.CPresentacion.Empleados.Ventas
             RecalcularFila(row);
         }
 
-        // ===== Eventos de la grilla =====
         private void DGItemsVenta_CurrentCellDirtyStateChanged(object? sender, EventArgs e)
         {
             if (DGItemsVenta.IsCurrentCellDirty)
@@ -155,7 +147,6 @@ namespace AurenPadelStore.CPresentacion.Empleados.Ventas
 
         private void DGItemsVenta_RowsAdded(object? sender, DataGridViewRowsAddedEventArgs e)
         {
-            // Fijar color del botón "Ver" (evita que lo pise AlternatingRows)
             for (int i = 0; i < e.RowCount; i++)
             {
                 var r = DGItemsVenta.Rows[e.RowIndex + i];
@@ -201,14 +192,12 @@ namespace AurenPadelStore.CPresentacion.Empleados.Ventas
 
             var colName = DGItemsVenta.Columns[DGItemsVenta.CurrentCell.ColumnIndex].Name;
 
-            // Validación numérica en Cantidad
             if (colName == colCantidad.Name && e.Control is TextBox tb)
             {
                 tb.KeyPress -= SoloEnteros_KeyPress;
                 tb.KeyPress += SoloEnteros_KeyPress;
             }
 
-            // Autocompletado en el combo de Producto
             if (colName == colProducto.Name && e.Control is ComboBox cb)
             {
                 cb.DropDownStyle = ComboBoxStyle.DropDown;
@@ -226,7 +215,6 @@ namespace AurenPadelStore.CPresentacion.Empleados.Ventas
                 e.Handled = true;
         }
 
-        // ===== Cálculos =====
         private void RecalcularFila(int rowIndex)
         {
             var row = DGItemsVenta.Rows[rowIndex];
@@ -244,7 +232,6 @@ namespace AurenPadelStore.CPresentacion.Empleados.Ventas
 
         private void ActualizarTotalGeneral()
         {
-            // Subtotal de ítems
             decimal subtotal = 0m;
             foreach (DataGridViewRow r in DGItemsVenta.Rows)
             {
@@ -252,8 +239,6 @@ namespace AurenPadelStore.CPresentacion.Empleados.Ventas
                 if (decimal.TryParse(r.Cells[colPrecioTotal.Name].Value?.ToString(), out var t))
                     subtotal += t;
             }
-
-            // Costo de envío (si está marcado)
             decimal envio = CBEnvio.Checked ? 5000m : 0m;
             decimal total = subtotal + envio;
 

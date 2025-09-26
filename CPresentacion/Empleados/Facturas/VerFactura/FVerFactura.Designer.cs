@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FVerFactura));
-            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
             PDatosFact = new Panel();
             TBFechaFact = new TextBox();
             TBNroFact = new TextBox();
@@ -70,6 +70,8 @@
             ColCantidad = new DataGridViewTextBoxColumn();
             ColSubtotal = new DataGridViewTextBoxColumn();
             BImprimiFact = new Button();
+            LMetodoPago = new Label();
+            textBox1 = new TextBox();
             PDatosFact.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)PBLogoAuren).BeginInit();
             PDatosC.SuspendLayout();
@@ -244,6 +246,8 @@
             // PImportes
             // 
             PImportes.BorderStyle = BorderStyle.FixedSingle;
+            PImportes.Controls.Add(textBox1);
+            PImportes.Controls.Add(LMetodoPago);
             PImportes.Controls.Add(TBSubtotal);
             PImportes.Controls.Add(TBEnvio);
             PImportes.Controls.Add(TBImporteT);
@@ -252,13 +256,13 @@
             PImportes.Controls.Add(LSubtotal);
             PImportes.Location = new Point(12, 602);
             PImportes.Name = "PImportes";
-            PImportes.Size = new Size(533, 100);
+            PImportes.Size = new Size(533, 115);
             PImportes.TabIndex = 0;
             // 
             // TBSubtotal
             // 
             TBSubtotal.Font = new Font("Arial", 9.75F);
-            TBSubtotal.Location = new Point(358, 7);
+            TBSubtotal.Location = new Point(358, 22);
             TBSubtotal.Name = "TBSubtotal";
             TBSubtotal.Size = new Size(153, 22);
             TBSubtotal.TabIndex = 9;
@@ -266,7 +270,7 @@
             // TBEnvio
             // 
             TBEnvio.Font = new Font("Arial", 9.75F);
-            TBEnvio.Location = new Point(411, 37);
+            TBEnvio.Location = new Point(411, 52);
             TBEnvio.Name = "TBEnvio";
             TBEnvio.Size = new Size(100, 22);
             TBEnvio.TabIndex = 8;
@@ -274,7 +278,7 @@
             // TBImporteT
             // 
             TBImporteT.Font = new Font("Arial", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            TBImporteT.Location = new Point(358, 65);
+            TBImporteT.Location = new Point(358, 80);
             TBImporteT.Name = "TBImporteT";
             TBImporteT.Size = new Size(153, 26);
             TBImporteT.TabIndex = 7;
@@ -283,7 +287,7 @@
             // 
             LImporteT.AutoSize = true;
             LImporteT.Font = new Font("Arial", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            LImporteT.Location = new Point(11, 65);
+            LImporteT.Location = new Point(11, 80);
             LImporteT.Name = "LImporteT";
             LImporteT.Size = new Size(114, 19);
             LImporteT.TabIndex = 6;
@@ -293,7 +297,7 @@
             // 
             LEnvio.AutoSize = true;
             LEnvio.Font = new Font("Arial", 11.25F);
-            LEnvio.Location = new Point(11, 39);
+            LEnvio.Location = new Point(11, 54);
             LEnvio.Name = "LEnvio";
             LEnvio.Size = new Size(109, 17);
             LEnvio.TabIndex = 5;
@@ -303,7 +307,7 @@
             // 
             LSubtotal.AutoSize = true;
             LSubtotal.Font = new Font("Arial", 11.25F);
-            LSubtotal.Location = new Point(11, 12);
+            LSubtotal.Location = new Point(11, 27);
             LSubtotal.Name = "LSubtotal";
             LSubtotal.Size = new Size(65, 17);
             LSubtotal.TabIndex = 4;
@@ -435,7 +439,7 @@
             DGProdFact.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
             DGProdFact.BackgroundColor = Color.White;
             DGProdFact.BorderStyle = BorderStyle.None;
-            DGProdFact.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            DGProdFact.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
             DGProdFact.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             DGProdFact.Columns.AddRange(new DataGridViewColumn[] { ColNombre, ColPrecioUnitario, ColCantidad, ColSubtotal });
             DGProdFact.Dock = DockStyle.Fill;
@@ -484,18 +488,36 @@
             // BImprimiFact
             // 
             BImprimiFact.Font = new Font("Arial", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            BImprimiFact.Location = new Point(470, 708);
+            BImprimiFact.Location = new Point(470, 723);
             BImprimiFact.Name = "BImprimiFact";
             BImprimiFact.Size = new Size(75, 23);
             BImprimiFact.TabIndex = 1;
             BImprimiFact.Text = "Imprimir";
             BImprimiFact.UseVisualStyleBackColor = true;
             // 
+            // LMetodoPago
+            // 
+            LMetodoPago.AutoSize = true;
+            LMetodoPago.Font = new Font("Arial", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            LMetodoPago.Location = new Point(11, 8);
+            LMetodoPago.Name = "LMetodoPago";
+            LMetodoPago.Size = new Size(98, 15);
+            LMetodoPago.TabIndex = 10;
+            LMetodoPago.Text = "Método de pago:";
+            // 
+            // textBox1
+            // 
+            textBox1.Font = new Font("Arial", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            textBox1.Location = new Point(115, 3);
+            textBox1.Name = "textBox1";
+            textBox1.Size = new Size(100, 21);
+            textBox1.TabIndex = 11;
+            // 
             // FVerFactura
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(557, 734);
+            ClientSize = new Size(557, 749);
             Controls.Add(BImprimiFact);
             Controls.Add(PDatosC);
             Controls.Add(PImportes);
@@ -560,6 +582,7 @@
         private DataGridViewTextBoxColumn ColPrecioUnitario;
         private DataGridViewTextBoxColumn ColCantidad;
         private DataGridViewTextBoxColumn ColSubtotal;
-
+        private TextBox textBox1;
+        private Label LMetodoPago;
     }
 }
