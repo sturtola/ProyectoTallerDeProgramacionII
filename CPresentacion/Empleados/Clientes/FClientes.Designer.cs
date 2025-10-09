@@ -17,7 +17,6 @@ namespace AurenPadelStore.CPresentacion.Empleados.Clientes
         #region Windows Form Designer generated code
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FClientes));
             DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
             DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
             DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
@@ -40,7 +39,6 @@ namespace AurenPadelStore.CPresentacion.Empleados.Clientes
             PListaClientes = new Panel();
             label1 = new Label();
             CBFiltroC = new ComboBox();
-            BBuscarC = new Button();
             TBBuscarC = new TextBox();
             DGListaClientes = new DataGridView();
             colNombre = new DataGridViewTextBoxColumn();
@@ -52,6 +50,7 @@ namespace AurenPadelStore.CPresentacion.Empleados.Clientes
             colEstado = new DataGridViewTextBoxColumn();
             colEditar = new DataGridViewButtonColumn();
             colAccion = new DataGridViewButtonColumn();
+            LBuscarC = new Label();
             PAgregarCliente.SuspendLayout();
             PListaClientes.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)DGListaClientes).BeginInit();
@@ -242,9 +241,9 @@ namespace AurenPadelStore.CPresentacion.Empleados.Clientes
             // PListaClientes
             // 
             PListaClientes.BackColor = Color.Transparent;
+            PListaClientes.Controls.Add(LBuscarC);
             PListaClientes.Controls.Add(label1);
             PListaClientes.Controls.Add(CBFiltroC);
-            PListaClientes.Controls.Add(BBuscarC);
             PListaClientes.Controls.Add(TBBuscarC);
             PListaClientes.Controls.Add(DGListaClientes);
             PListaClientes.Location = new Point(384, 100);
@@ -275,28 +274,15 @@ namespace AurenPadelStore.CPresentacion.Empleados.Clientes
             CBFiltroC.Size = new Size(168, 29);
             CBFiltroC.TabIndex = 5;
             // 
-            // BBuscarC
-            // 
-            BBuscarC.BackColor = Color.LightGray;
-            BBuscarC.BackgroundImage = (Image)resources.GetObject("BBuscarC.BackgroundImage");
-            BBuscarC.BackgroundImageLayout = ImageLayout.Stretch;
-            BBuscarC.Cursor = Cursors.Hand;
-            BBuscarC.FlatStyle = FlatStyle.Popup;
-            BBuscarC.Location = new Point(233, 11);
-            BBuscarC.Name = "BBuscarC";
-            BBuscarC.Size = new Size(34, 29);
-            BBuscarC.TabIndex = 4;
-            BBuscarC.UseVisualStyleBackColor = false;
-            // 
             // TBBuscarC
             // 
             TBBuscarC.BackColor = Color.FromArgb(64, 64, 64);
             TBBuscarC.BorderStyle = BorderStyle.FixedSingle;
             TBBuscarC.Cursor = Cursors.IBeam;
             TBBuscarC.Font = new Font("Century Gothic", 12F);
-            TBBuscarC.Location = new Point(3, 11);
+            TBBuscarC.Location = new Point(105, 11);
             TBBuscarC.Name = "TBBuscarC";
-            TBBuscarC.PlaceholderText = "  Buscar Cliente...";
+            TBBuscarC.PlaceholderText = "  Cliente...";
             TBBuscarC.Size = new Size(213, 27);
             TBBuscarC.TabIndex = 4;
             // 
@@ -391,6 +377,17 @@ namespace AurenPadelStore.CPresentacion.Empleados.Clientes
             colAccion.Name = "colAccion";
             colAccion.Width = 75;
             // 
+            // LBuscarC
+            // 
+            LBuscarC.AutoSize = true;
+            LBuscarC.Font = new Font("Century Gothic", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            LBuscarC.ForeColor = Color.LightGray;
+            LBuscarC.Location = new Point(18, 14);
+            LBuscarC.Name = "LBuscarC";
+            LBuscarC.Size = new Size(81, 22);
+            LBuscarC.TabIndex = 7;
+            LBuscarC.Text = "Buscar: ";
+            // 
             // FClientes
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -423,9 +420,9 @@ namespace AurenPadelStore.CPresentacion.Empleados.Clientes
         private DataGridView DGListaClientes;
         private DataGridViewTextBoxColumn colNombre, colApellido, colDni, colDireccion, colCorreo, colTelefono, colEstado;
         private DataGridViewButtonColumn colEditar, colAccion;
-        private Button BBuscarC;
         private TextBox TBBuscarC;
         private Label label1;
         private ComboBox CBFiltroC;
+        private Label LBuscarC;
     }
 }

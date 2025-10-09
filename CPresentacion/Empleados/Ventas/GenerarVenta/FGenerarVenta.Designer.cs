@@ -17,15 +17,18 @@ namespace AurenPadelStore.CPresentacion.Empleados.Ventas
 
         private void InitializeComponent()
         {
-            DataGridViewCellStyle dataGridViewCellStyle9 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle10 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle16 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle11 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle12 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle13 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle14 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle15 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle8 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle5 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle6 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle7 = new DataGridViewCellStyle();
             PVenta = new Panel();
+            CBEfectivo = new CheckBox();
+            CBTarjeta = new CheckBox();
+            CBTransf = new CheckBox();
             PDatosCliente = new Panel();
             LCliente = new Label();
             CBCliente = new ComboBox();
@@ -43,9 +46,6 @@ namespace AurenPadelStore.CPresentacion.Empleados.Ventas
             LTotalValor = new Label();
             BRealizarVenta = new Button();
             LTitulo = new Label();
-            CBTransf = new CheckBox();
-            CBTarjeta = new CheckBox();
-            CBEfectivo = new CheckBox();
             PVenta.SuspendLayout();
             PDatosCliente.SuspendLayout();
             PItemsVenta.SuspendLayout();
@@ -68,6 +68,42 @@ namespace AurenPadelStore.CPresentacion.Empleados.Ventas
             PVenta.Name = "PVenta";
             PVenta.Size = new Size(1059, 559);
             PVenta.TabIndex = 0;
+            // 
+            // CBEfectivo
+            // 
+            CBEfectivo.AutoSize = true;
+            CBEfectivo.Font = new Font("Century Gothic", 14.25F);
+            CBEfectivo.ForeColor = Color.LightGray;
+            CBEfectivo.Location = new Point(221, 524);
+            CBEfectivo.Name = "CBEfectivo";
+            CBEfectivo.Size = new Size(104, 26);
+            CBEfectivo.TabIndex = 8;
+            CBEfectivo.Text = "Efectivo";
+            CBEfectivo.UseVisualStyleBackColor = true;
+            // 
+            // CBTarjeta
+            // 
+            CBTarjeta.AutoSize = true;
+            CBTarjeta.Font = new Font("Century Gothic", 14.25F);
+            CBTarjeta.ForeColor = Color.LightGray;
+            CBTarjeta.Location = new Point(221, 492);
+            CBTarjeta.Name = "CBTarjeta";
+            CBTarjeta.Size = new Size(91, 26);
+            CBTarjeta.TabIndex = 7;
+            CBTarjeta.Text = "Tarjeta";
+            CBTarjeta.UseVisualStyleBackColor = true;
+            // 
+            // CBTransf
+            // 
+            CBTransf.AutoSize = true;
+            CBTransf.Font = new Font("Century Gothic", 14.25F);
+            CBTransf.ForeColor = Color.LightGray;
+            CBTransf.Location = new Point(221, 460);
+            CBTransf.Name = "CBTransf";
+            CBTransf.Size = new Size(151, 26);
+            CBTransf.TabIndex = 6;
+            CBTransf.Text = "Transferencia";
+            CBTransf.UseVisualStyleBackColor = true;
             // 
             // PDatosCliente
             // 
@@ -152,28 +188,28 @@ namespace AurenPadelStore.CPresentacion.Empleados.Ventas
             // DGItemsVenta
             // 
             DGItemsVenta.AllowUserToAddRows = false;
-            dataGridViewCellStyle9.BackColor = Color.FromArgb(100, 100, 100);
-            dataGridViewCellStyle9.ForeColor = Color.LightGray;
-            DGItemsVenta.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle9;
+            dataGridViewCellStyle1.BackColor = Color.FromArgb(100, 100, 100);
+            dataGridViewCellStyle1.ForeColor = Color.LightGray;
+            DGItemsVenta.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
             DGItemsVenta.BackgroundColor = Color.FromArgb(64, 64, 64);
             DGItemsVenta.BorderStyle = BorderStyle.None;
             DGItemsVenta.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single;
-            dataGridViewCellStyle10.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle10.BackColor = Color.FromArgb(64, 64, 64);
-            dataGridViewCellStyle10.Font = new Font("Century Gothic", 12F);
-            dataGridViewCellStyle10.ForeColor = Color.LightGray;
-            dataGridViewCellStyle10.WrapMode = DataGridViewTriState.False;
-            DGItemsVenta.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle10;
+            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle2.BackColor = Color.FromArgb(64, 64, 64);
+            dataGridViewCellStyle2.Font = new Font("Century Gothic", 12F);
+            dataGridViewCellStyle2.ForeColor = Color.LightGray;
+            dataGridViewCellStyle2.WrapMode = DataGridViewTriState.False;
+            DGItemsVenta.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
             DGItemsVenta.ColumnHeadersHeight = 32;
             DGItemsVenta.Columns.AddRange(new DataGridViewColumn[] { colVer, colProducto, colPrecioUnitario, colCantidad, colPrecioTotal });
-            dataGridViewCellStyle16.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle16.BackColor = Color.FromArgb(100, 100, 100);
-            dataGridViewCellStyle16.Font = new Font("Segoe UI", 9F);
-            dataGridViewCellStyle16.ForeColor = Color.LightGray;
-            dataGridViewCellStyle16.SelectionBackColor = Color.DimGray;
-            dataGridViewCellStyle16.SelectionForeColor = Color.White;
-            dataGridViewCellStyle16.WrapMode = DataGridViewTriState.False;
-            DGItemsVenta.DefaultCellStyle = dataGridViewCellStyle16;
+            dataGridViewCellStyle8.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle8.BackColor = Color.FromArgb(100, 100, 100);
+            dataGridViewCellStyle8.Font = new Font("Segoe UI", 9F);
+            dataGridViewCellStyle8.ForeColor = Color.LightGray;
+            dataGridViewCellStyle8.SelectionBackColor = Color.DimGray;
+            dataGridViewCellStyle8.SelectionForeColor = Color.White;
+            dataGridViewCellStyle8.WrapMode = DataGridViewTriState.False;
+            DGItemsVenta.DefaultCellStyle = dataGridViewCellStyle8;
             DGItemsVenta.Dock = DockStyle.Fill;
             DGItemsVenta.EnableHeadersVisualStyles = false;
             DGItemsVenta.GridColor = Color.Black;
@@ -188,11 +224,11 @@ namespace AurenPadelStore.CPresentacion.Empleados.Ventas
             // 
             // colVer
             // 
-            dataGridViewCellStyle11.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle11.BackColor = Color.LightSkyBlue;
-            dataGridViewCellStyle11.Font = new Font("Century Gothic", 14F);
-            dataGridViewCellStyle11.ForeColor = Color.Black;
-            colVer.DefaultCellStyle = dataGridViewCellStyle11;
+            dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle3.BackColor = Color.LightSkyBlue;
+            dataGridViewCellStyle3.Font = new Font("Century Gothic", 14F);
+            dataGridViewCellStyle3.ForeColor = Color.Black;
+            colVer.DefaultCellStyle = dataGridViewCellStyle3;
             colVer.FlatStyle = FlatStyle.Flat;
             colVer.HeaderText = "A";
             colVer.Name = "colVer";
@@ -202,8 +238,8 @@ namespace AurenPadelStore.CPresentacion.Empleados.Ventas
             // 
             // colProducto
             // 
-            dataGridViewCellStyle12.Font = new Font("Century Gothic", 14F);
-            colProducto.DefaultCellStyle = dataGridViewCellStyle12;
+            dataGridViewCellStyle4.Font = new Font("Century Gothic", 14F);
+            colProducto.DefaultCellStyle = dataGridViewCellStyle4;
             colProducto.FlatStyle = FlatStyle.Flat;
             colProducto.HeaderText = "Producto";
             colProducto.Name = "colProducto";
@@ -211,10 +247,10 @@ namespace AurenPadelStore.CPresentacion.Empleados.Ventas
             // 
             // colPrecioUnitario
             // 
-            dataGridViewCellStyle13.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle13.Font = new Font("Century Gothic", 14F);
-            dataGridViewCellStyle13.Format = "N2";
-            colPrecioUnitario.DefaultCellStyle = dataGridViewCellStyle13;
+            dataGridViewCellStyle5.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle5.Font = new Font("Century Gothic", 14F);
+            dataGridViewCellStyle5.Format = "N2";
+            colPrecioUnitario.DefaultCellStyle = dataGridViewCellStyle5;
             colPrecioUnitario.HeaderText = "Precio Unitario";
             colPrecioUnitario.Name = "colPrecioUnitario";
             colPrecioUnitario.ReadOnly = true;
@@ -222,19 +258,19 @@ namespace AurenPadelStore.CPresentacion.Empleados.Ventas
             // 
             // colCantidad
             // 
-            dataGridViewCellStyle14.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle14.Font = new Font("Century Gothic", 14F);
-            colCantidad.DefaultCellStyle = dataGridViewCellStyle14;
+            dataGridViewCellStyle6.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle6.Font = new Font("Century Gothic", 14F);
+            colCantidad.DefaultCellStyle = dataGridViewCellStyle6;
             colCantidad.HeaderText = "Cantidad";
             colCantidad.Name = "colCantidad";
             colCantidad.Width = 130;
             // 
             // colPrecioTotal
             // 
-            dataGridViewCellStyle15.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle15.Font = new Font("Century Gothic", 14F);
-            dataGridViewCellStyle15.Format = "N2";
-            colPrecioTotal.DefaultCellStyle = dataGridViewCellStyle15;
+            dataGridViewCellStyle7.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle7.Font = new Font("Century Gothic", 14F);
+            dataGridViewCellStyle7.Format = "N2";
+            colPrecioTotal.DefaultCellStyle = dataGridViewCellStyle7;
             colPrecioTotal.HeaderText = "Precio Total";
             colPrecioTotal.Name = "colPrecioTotal";
             colPrecioTotal.ReadOnly = true;
@@ -287,42 +323,6 @@ namespace AurenPadelStore.CPresentacion.Empleados.Ventas
             LTitulo.Size = new Size(204, 33);
             LTitulo.TabIndex = 1;
             LTitulo.Text = "Realizar Venta";
-            // 
-            // CBTransf
-            // 
-            CBTransf.AutoSize = true;
-            CBTransf.Font = new Font("Century Gothic", 14.25F);
-            CBTransf.ForeColor = Color.LightGray;
-            CBTransf.Location = new Point(221, 460);
-            CBTransf.Name = "CBTransf";
-            CBTransf.Size = new Size(151, 26);
-            CBTransf.TabIndex = 6;
-            CBTransf.Text = "Transferencia";
-            CBTransf.UseVisualStyleBackColor = true;
-            // 
-            // CBTarjeta
-            // 
-            CBTarjeta.AutoSize = true;
-            CBTarjeta.Font = new Font("Century Gothic", 14.25F);
-            CBTarjeta.ForeColor = Color.LightGray;
-            CBTarjeta.Location = new Point(221, 492);
-            CBTarjeta.Name = "CBTarjeta";
-            CBTarjeta.Size = new Size(91, 26);
-            CBTarjeta.TabIndex = 7;
-            CBTarjeta.Text = "Tarjeta";
-            CBTarjeta.UseVisualStyleBackColor = true;
-            // 
-            // CBEfectivo
-            // 
-            CBEfectivo.AutoSize = true;
-            CBEfectivo.Font = new Font("Century Gothic", 14.25F);
-            CBEfectivo.ForeColor = Color.LightGray;
-            CBEfectivo.Location = new Point(221, 524);
-            CBEfectivo.Name = "CBEfectivo";
-            CBEfectivo.Size = new Size(104, 26);
-            CBEfectivo.TabIndex = 8;
-            CBEfectivo.Text = "Efectivo";
-            CBEfectivo.UseVisualStyleBackColor = true;
             // 
             // FGenerarVenta
             // 

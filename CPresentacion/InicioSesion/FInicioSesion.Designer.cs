@@ -45,9 +45,9 @@
             BIngresar.Cursor = Cursors.Hand;
             BIngresar.FlatStyle = FlatStyle.Flat;
             BIngresar.Font = new Font("Century Gothic", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            BIngresar.Location = new Point(25, 261);
+            BIngresar.Location = new Point(73, 289);
             BIngresar.Name = "BIngresar";
-            BIngresar.Size = new Size(338, 35);
+            BIngresar.Size = new Size(269, 35);
             BIngresar.TabIndex = 0;
             BIngresar.Text = "Ingresar";
             BIngresar.UseVisualStyleBackColor = false;
@@ -72,9 +72,9 @@
             CBUsuarios.DropDownStyle = ComboBoxStyle.DropDownList;
             CBUsuarios.Font = new Font("Century Gothic", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
             CBUsuarios.FormattingEnabled = true;
-            CBUsuarios.Location = new Point(184, 101);
+            CBUsuarios.Location = new Point(102, 125);
             CBUsuarios.Name = "CBUsuarios";
-            CBUsuarios.Size = new Size(164, 30);
+            CBUsuarios.Size = new Size(208, 30);
             CBUsuarios.TabIndex = 4;
             // 
             // TBContraseña
@@ -82,9 +82,9 @@
             TBContraseña.BackColor = Color.Gainsboro;
             TBContraseña.BorderStyle = BorderStyle.FixedSingle;
             TBContraseña.Font = new Font("Century Gothic", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            TBContraseña.Location = new Point(184, 177);
+            TBContraseña.Location = new Point(102, 221);
             TBContraseña.Name = "TBContraseña";
-            TBContraseña.Size = new Size(164, 31);
+            TBContraseña.Size = new Size(208, 31);
             TBContraseña.TabIndex = 2;
             TBContraseña.UseSystemPasswordChar = true;
             // 
@@ -93,22 +93,22 @@
             LContraseña.AutoSize = true;
             LContraseña.Font = new Font("Century Gothic", 15.75F);
             LContraseña.ForeColor = Color.LightGray;
-            LContraseña.Location = new Point(28, 177);
+            LContraseña.Location = new Point(102, 184);
             LContraseña.Name = "LContraseña";
-            LContraseña.Size = new Size(135, 24);
+            LContraseña.Size = new Size(130, 24);
             LContraseña.TabIndex = 3;
-            LContraseña.Text = "Contraseña:";
+            LContraseña.Text = "Contraseña";
             // 
             // LUsuario
             // 
             LUsuario.AutoSize = true;
             LUsuario.Font = new Font("Century Gothic", 15.75F);
             LUsuario.ForeColor = Color.LightGray;
-            LUsuario.Location = new Point(77, 102);
+            LUsuario.Location = new Point(102, 86);
             LUsuario.Name = "LUsuario";
-            LUsuario.Size = new Size(86, 24);
+            LUsuario.Size = new Size(81, 24);
             LUsuario.TabIndex = 2;
-            LUsuario.Text = "Usuario:";
+            LUsuario.Text = "Usuario";
             // 
             // label1
             // 

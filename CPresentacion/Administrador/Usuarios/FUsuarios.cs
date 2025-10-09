@@ -38,7 +38,6 @@ namespace AurenPadelStore.CPresentacion.Administrador.Usuarios
 
             TBBuscarU.TextChanged += (_, __) => RefrescarGrilla();
             CBFiltroU.SelectedIndexChanged += (_, __) => RefrescarGrilla();
-            BBuscarU.Click += (_, __) => RefrescarGrilla();
 
             TBDniU.KeyPress += TBNumerico_KeyPress;
 
@@ -73,12 +72,12 @@ namespace AurenPadelStore.CPresentacion.Administrador.Usuarios
         {
             if (this.WindowState == FormWindowState.Maximized)
             {
-                _scrollHost.AutoScrollMinSize = Size.Empty;     
-                _scrollHost.AutoScrollPosition = Point.Empty;   
+                _scrollHost.AutoScrollMinSize = Size.Empty;
+                _scrollHost.AutoScrollPosition = Point.Empty;
             }
             else
             {
-                _scrollHost.AutoScrollMinSize = _designContentSize; 
+                _scrollHost.AutoScrollMinSize = _designContentSize;
                 _scrollHost.AutoScrollPosition = Point.Empty;
             }
         }
@@ -87,59 +86,57 @@ namespace AurenPadelStore.CPresentacion.Administrador.Usuarios
         private void FUsuarios_Load(object sender, EventArgs e)
         {
             if (CBFiltroU.Items.Count > 0 && CBFiltroU.SelectedIndex < 0)
-                CBFiltroU.SelectedIndex = 0; 
+                CBFiltroU.SelectedIndex = 0;
 
             RefrescarGrilla();
             _scrollHost.AutoScrollPosition = Point.Empty;
         }
 
-        
+
         private void RefrescarGrilla()
         {
             try
             {
                 List<Usuario> lista = _datos.ObtenerTodos();
 
-                
                 string q = (TBBuscarU.Text ?? "").Trim().ToLower();
                 if (!string.IsNullOrEmpty(q))
                 {
                     lista = lista.FindAll(u =>
-                        (u.Nombre ?? "").ToLower().Contains(q) ||
-                        (u.Apellido ?? "").ToLower().Contains(q) ||
-                        (u.DNI ?? "").ToLower().Contains(q));
+                        (u.Nombre_Usuario ?? "").ToLower().Contains(q) ||
+                        (u.Apellido_Usuario ?? "").ToLower().Contains(q) ||
+                        u.Dni_Usuario.ToString().Contains(q));
                 }
 
-                
                 string f = CBFiltroU.SelectedItem?.ToString() ?? "";
                 switch (f)
                 {
                     case "Nombre A-Z":
-                        lista.Sort((a, b) => string.Compare(a.Nombre, b.Nombre, StringComparison.OrdinalIgnoreCase));
+                        lista.Sort((a, b) => string.Compare(a.Nombre_Usuario, b.Nombre_Usuario, StringComparison.OrdinalIgnoreCase));
                         break;
                     case "Nombre Z-A":
-                        lista.Sort((a, b) => -string.Compare(a.Nombre, b.Nombre, StringComparison.OrdinalIgnoreCase));
+                        lista.Sort((a, b) => -string.Compare(a.Nombre_Usuario, b.Nombre_Usuario, StringComparison.OrdinalIgnoreCase));
                         break;
                     case "Apellido A-Z":
-                        lista.Sort((a, b) => string.Compare(a.Apellido, b.Apellido, StringComparison.OrdinalIgnoreCase));
+                        lista.Sort((a, b) => string.Compare(a.Apellido_Usuario, b.Apellido_Usuario, StringComparison.OrdinalIgnoreCase));
                         break;
                     case "Apellido Z-A":
-                        lista.Sort((a, b) => -string.Compare(a.Apellido, b.Apellido, StringComparison.OrdinalIgnoreCase));
+                        lista.Sort((a, b) => -string.Compare(a.Apellido_Usuario, b.Apellido_Usuario, StringComparison.OrdinalIgnoreCase));
                         break;
                     case "Administrador":
-                        lista = lista.FindAll(u => (u.Rol ?? "").Equals("Administrador", StringComparison.OrdinalIgnoreCase));
+                        lista = lista.FindAll(u => (u.Rol_Usuario ?? "").Equals("Administrador", StringComparison.OrdinalIgnoreCase));
                         break;
                     case "Gerente":
-                        lista = lista.FindAll(u => (u.Rol ?? "").Equals("Gerente", StringComparison.OrdinalIgnoreCase));
+                        lista = lista.FindAll(u => (u.Rol_Usuario ?? "").Equals("Gerente", StringComparison.OrdinalIgnoreCase));
                         break;
                     case "Vendedor":
-                        lista = lista.FindAll(u => (u.Rol ?? "").Equals("Vendedor", StringComparison.OrdinalIgnoreCase));
+                        lista = lista.FindAll(u => (u.Rol_Usuario ?? "").Equals("Vendedor", StringComparison.OrdinalIgnoreCase));
                         break;
                     case "Activos":
-                        lista = lista.FindAll(u => u.Estado);
+                        lista = lista.FindAll(u => u.Estado_Usuario);
                         break;
                     case "Inactivos":
-                        lista = lista.FindAll(u => !u.Estado);
+                        lista = lista.FindAll(u => !u.Estado_Usuario);
                         break;
                 }
 
@@ -147,15 +144,15 @@ namespace AurenPadelStore.CPresentacion.Administrador.Usuarios
                 foreach (var u in lista)
                 {
                     int idx = DGListaUsuarios.Rows.Add(
-                        u.Nombre,
-                        u.Apellido,
-                        u.DNI,
-                        u.Rol,
-                        u.Estado ? "Activo" : "Inactivo",
+                        u.Nombre_Usuario,
+                        u.Apellido_Usuario,
+                        u.Dni_Usuario.ToString(),
+                        u.Rol_Usuario,
+                        u.Estado_Usuario ? "Activo" : "Inactivo",
                         "Editar",
-                        null 
+                        null
                     );
-                    SetAccionEstadoRow(DGListaUsuarios.Rows[idx], u.Estado);
+                    SetAccionEstadoRow(DGListaUsuarios.Rows[idx], u.Estado_Usuario);
                 }
             }
             catch (Exception ex)
@@ -202,8 +199,10 @@ namespace AurenPadelStore.CPresentacion.Administrador.Usuarios
                 _dniOriginalEdicion = TBDniU.Text;
 
                 string rol = row.Cells["colURol"].Value?.ToString() ?? "Vendedor";
-                if (!string.IsNullOrEmpty(rol))
+                if (!string.IsNullOrEmpty(rol) && CBRol.Items.Contains(rol))
                     CBRol.SelectedItem = rol;
+                else
+                    CBRol.SelectedIndex = 0;
 
                 TBContrasena.Clear();
                 TBRepetirContrasena.Clear();
@@ -216,7 +215,14 @@ namespace AurenPadelStore.CPresentacion.Administrador.Usuarios
             if (col == "colUAccion")
             {
                 var row = DGListaUsuarios.Rows[e.RowIndex];
-                string dni = row.Cells["colUDni"].Value?.ToString() ?? "";
+                string dniStr = row.Cells["colUDni"].Value?.ToString() ?? "";
+                if (!int.TryParse(dniStr, out int dniInt))
+                {
+                    MessageBox.Show("DNI inválido.", "Error",
+                                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
                 bool actualmenteActivo = string.Equals(row.Cells["colUEstado"].Value?.ToString(), "Activo", StringComparison.OrdinalIgnoreCase);
 
                 string pregunta = actualmenteActivo
@@ -228,7 +234,7 @@ namespace AurenPadelStore.CPresentacion.Administrador.Usuarios
 
                 try
                 {
-                    _datos.CambiarEstado(dni, !actualmenteActivo);
+                    _datos.CambiarEstado(dniInt, !actualmenteActivo);
                     SetAccionEstadoRow(row, !actualmenteActivo);
                     MessageBox.Show("Estado actualizado correctamente.", "OK",
                                     MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -283,6 +289,8 @@ namespace AurenPadelStore.CPresentacion.Administrador.Usuarios
 
             try
             {
+                int dniInt = int.Parse(TBDniU.Text.Trim());
+
                 if (_modoEdicion)
                 {
                     var dr = MessageBox.Show("¿Confirmar la edición de este usuario?",
@@ -298,15 +306,22 @@ namespace AurenPadelStore.CPresentacion.Administrador.Usuarios
 
                     var u = new Usuario
                     {
-                        DNI = TBDniU.Text.Trim(),
-                        Nombre = TBNombreU.Text.Trim(),
-                        Apellido = TBApellidoU.Text.Trim(),
-                        Contrasena = TBContrasena.Text,
-                        Rol = CBRol.SelectedItem?.ToString() ?? "Vendedor",
-                        Estado = true 
+                        Dni_Usuario = dniInt,
+                        Nombre_Usuario = TBNombreU.Text.Trim(),
+                        Apellido_Usuario = TBApellidoU.Text.Trim(),
+                        Contraseña_Usuario = TBContrasena.Text,
+                        Rol_Usuario = CBRol.SelectedItem?.ToString() ?? "Vendedor",
+                        Estado_Usuario = true
                     };
 
-                    _datos.Actualizar(u, _dniOriginalEdicion);
+                    if (!int.TryParse(_dniOriginalEdicion, out int dniOriginalInt))
+                    {
+                        MessageBox.Show("DNI original inválido.", "Error",
+                                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+
+                    _datos.Actualizar(u, dniOriginalInt);
                     MessageBox.Show("Usuario actualizado correctamente.", "OK",
                                     MessageBoxButtons.OK, MessageBoxIcon.Information);
 
@@ -320,12 +335,12 @@ namespace AurenPadelStore.CPresentacion.Administrador.Usuarios
                 {
                     var u = new Usuario
                     {
-                        DNI = TBDniU.Text.Trim(),
-                        Nombre = TBNombreU.Text.Trim(),
-                        Apellido = TBApellidoU.Text.Trim(),
-                        Contrasena = TBContrasena.Text,
-                        Rol = CBRol.SelectedItem?.ToString() ?? "Vendedor",
-                        Estado = true
+                        Dni_Usuario = dniInt,
+                        Nombre_Usuario = TBNombreU.Text.Trim(),
+                        Apellido_Usuario = TBApellidoU.Text.Trim(),
+                        Contraseña_Usuario = TBContrasena.Text,
+                        Rol_Usuario = CBRol.SelectedItem?.ToString() ?? "Vendedor",
+                        Estado_Usuario = true
                     };
 
                     _datos.Insertar(u);

@@ -117,4 +117,62 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="adidasMetalboneCarbonControl" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\adidasMetalboneCarbonControl.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="at10" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\at10.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="bullpadelEliteWoman" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\bullpadelEliteWoman.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="bullpadelFlow" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\bullpadelFlow.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="bullpadelVertex" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\bullpadelVertex.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="canasto" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\canasto.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="dunlop" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\dunlop.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="fenix" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\fenix.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="fondocancha" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\730C130F-EDDD-43AB-8805-1B99B1AB04AF.jpeg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="gravity" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\gravity.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="gripadidas" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\gripadidas.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="hesacore" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\hesacore.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="noxEquationLightAdvanced" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\noxEquationLightAdvanced.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="odpro" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\odpro.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="paletero" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\paletero.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="protector" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\protector.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="radical" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\radical.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="resina" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\resina.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="technical" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\technical.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>

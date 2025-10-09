@@ -120,7 +120,7 @@
             MainMenuStrip = menuStrip1;
             Name = "FMenuAdmin";
             StartPosition = FormStartPosition.CenterScreen;
-            Text = "Gerente";
+            Text = "Administrador";
             menuStrip1.ResumeLayout(false);
             menuStrip1.PerformLayout();
             ResumeLayout(false);

@@ -18,7 +18,6 @@ namespace AurenPadelStore.CPresentacion.Empleados.Facturas.ListarFacturas
 
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FListarFacturas));
             DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
             DataGridViewCellStyle dataGridViewCellStyle5 = new DataGridViewCellStyle();
             DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
@@ -26,7 +25,6 @@ namespace AurenPadelStore.CPresentacion.Empleados.Facturas.ListarFacturas
             DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
             LTitulo = new Label();
             PListaFacturas = new Panel();
-            BBuscarF = new Button();
             CBFiltroF = new ComboBox();
             LFiltrar = new Label();
             TBBuscarF = new TextBox();
@@ -40,6 +38,7 @@ namespace AurenPadelStore.CPresentacion.Empleados.Facturas.ListarFacturas
             colImporte = new DataGridViewTextBoxColumn();
             colVerF = new DataGridViewButtonColumn();
             colEliminar = new DataGridViewButtonColumn();
+            LBuscarF = new Label();
             PListaFacturas.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)DGListaFacturas).BeginInit();
             SuspendLayout();
@@ -59,7 +58,7 @@ namespace AurenPadelStore.CPresentacion.Empleados.Facturas.ListarFacturas
             // PListaFacturas
             // 
             PListaFacturas.BackColor = Color.Transparent;
-            PListaFacturas.Controls.Add(BBuscarF);
+            PListaFacturas.Controls.Add(LBuscarF);
             PListaFacturas.Controls.Add(CBFiltroF);
             PListaFacturas.Controls.Add(LFiltrar);
             PListaFacturas.Controls.Add(TBBuscarF);
@@ -68,19 +67,6 @@ namespace AurenPadelStore.CPresentacion.Empleados.Facturas.ListarFacturas
             PListaFacturas.Name = "PListaFacturas";
             PListaFacturas.Size = new Size(1098, 503);
             PListaFacturas.TabIndex = 1;
-            // 
-            // BBuscarF
-            // 
-            BBuscarF.BackColor = Color.LightGray;
-            BBuscarF.BackgroundImage = (Image)resources.GetObject("BBuscarF.BackgroundImage");
-            BBuscarF.BackgroundImageLayout = ImageLayout.Stretch;
-            BBuscarF.Cursor = Cursors.Hand;
-            BBuscarF.FlatStyle = FlatStyle.Popup;
-            BBuscarF.Location = new Point(240, 11);
-            BBuscarF.Name = "BBuscarF";
-            BBuscarF.Size = new Size(33, 29);
-            BBuscarF.TabIndex = 3;
-            BBuscarF.UseVisualStyleBackColor = false;
             // 
             // CBFiltroF
             // 
@@ -113,9 +99,9 @@ namespace AurenPadelStore.CPresentacion.Empleados.Facturas.ListarFacturas
             TBBuscarF.Cursor = Cursors.IBeam;
             TBBuscarF.Font = new Font("Century Gothic", 12F);
             TBBuscarF.ForeColor = Color.LightGray;
-            TBBuscarF.Location = new Point(5, 11);
+            TBBuscarF.Location = new Point(113, 16);
             TBBuscarF.Name = "TBBuscarF";
-            TBBuscarF.PlaceholderText = "  Buscar factura...";
+            TBBuscarF.PlaceholderText = "  Factura...";
             TBBuscarF.Size = new Size(218, 27);
             TBBuscarF.TabIndex = 1;
             // 
@@ -222,6 +208,17 @@ namespace AurenPadelStore.CPresentacion.Empleados.Facturas.ListarFacturas
             colEliminar.UseColumnTextForButtonValue = true;
             colEliminar.Width = 90;
             // 
+            // LBuscarF
+            // 
+            LBuscarF.AutoSize = true;
+            LBuscarF.Font = new Font("Century Gothic", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            LBuscarF.ForeColor = Color.LightGray;
+            LBuscarF.Location = new Point(22, 18);
+            LBuscarF.Name = "LBuscarF";
+            LBuscarF.Size = new Size(76, 22);
+            LBuscarF.TabIndex = 4;
+            LBuscarF.Text = "Buscar:";
+            // 
             // FListarFacturas
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -245,7 +242,6 @@ namespace AurenPadelStore.CPresentacion.Empleados.Facturas.ListarFacturas
 
         private Label LTitulo;
         private Panel PListaFacturas;
-        private Button BBuscarF;
         private ComboBox CBFiltroF;
         private Label LFiltrar;
         private TextBox TBBuscarF;
@@ -260,5 +256,6 @@ namespace AurenPadelStore.CPresentacion.Empleados.Facturas.ListarFacturas
         private DataGridViewTextBoxColumn colImporte;
         private DataGridViewButtonColumn colVerF;
         private DataGridViewButtonColumn colEliminar;
+        private Label LBuscarF;
     }
 }

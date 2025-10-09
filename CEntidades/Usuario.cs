@@ -4,25 +4,26 @@ namespace AurenPadelStore.CEntidades
 {
     public class Usuario
     {
-        public string DNI { get; set; }
-        public string Nombre { get; set; }
-        public string Apellido { get; set; }
-        public string Contrasena { get; set; }
-        public string Rol { get; set; }
-        public bool Estado { get; set; } = true; // true = Activo, false = Inactivo
+        public int id_Usuario { get; set; }          // PK de la tabla
+        public int Dni_Usuario { get; set; }         // INT como en la BD
+        public string Nombre_Usuario { get; set; }
+        public string Apellido_Usuario { get; set; }
+        public string Contraseña_Usuario { get; set; }
+        public string Rol_Usuario { get; set; }
+        public bool Estado_Usuario { get; set; } = true;
 
-        public string NombreMostrar => $"{Nombre} {Apellido}";
+        public string NombreMostrar => $"{Nombre_Usuario} {Apellido_Usuario}";
 
         public Usuario() { }
 
-        public Usuario(string dni, string nombre, string apellido, string contrasena, string rol, bool estado = true)
+        public Usuario(int dni, string nombre, string apellido, string contrasena, string rol, bool estado = true)
         {
-            DNI = dni;
-            Nombre = nombre;
-            Apellido = apellido;
-            Contrasena = contrasena;
-            Rol = rol;
-            Estado = estado;
+            Dni_Usuario = dni;
+            Nombre_Usuario = nombre;
+            Apellido_Usuario = apellido;
+            Contraseña_Usuario = contrasena;
+            Rol_Usuario = rol;
+            Estado_Usuario = estado;
         }
     }
 }

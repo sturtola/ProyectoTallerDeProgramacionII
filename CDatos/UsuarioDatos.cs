@@ -10,167 +10,199 @@ namespace AurenPadelStore.CDatos
         private readonly string connectionString =
             "Server=DESKTOP-1HCDQL3;Database=AurenPadelBD;Encrypt=False;TrustServerCertificate=True;Trusted_Connection=True;";
 
-        public List<string> ListarUsuarios()
+        // Lista de DNIs (por si querés poblar combos)
+        public List<int> ListarUsuarios()
         {
-            var usuarios = new List<string>();
-            using (var cn = new SqlConnection(connectionString))
-            using (var cmd = new SqlCommand("SELECT DNI FROM Usuario ORDER BY DNI", cn))
-            {
-                cn.Open();
-                using (var dr = cmd.ExecuteReader())
-                    while (dr.Read())
-                        usuarios.Add(dr.GetString(0));
-            }
-            return usuarios;
+            var dnis = new List<int>();
+            using var cn = new SqlConnection(connectionString);
+            using var cmd = new SqlCommand(
+                "SELECT Dni_Usuario FROM dbo.Usuario ORDER BY Dni_Usuario;", cn);
+            cn.Open();
+            using var dr = cmd.ExecuteReader();
+            while (dr.Read())
+                dnis.Add(dr.GetInt32(0));
+            return dnis;
         }
 
         public List<Usuario> ObtenerTodos()
         {
             var lista = new List<Usuario>();
-            using (var cn = new SqlConnection(connectionString))
-            using (var cmd = new SqlCommand(
-                "SELECT DNI, Nombre, Apellido, [Contraseña], Rol, Estado FROM Usuario ORDER BY Apellido, Nombre", cn))
+            using var cn = new SqlConnection(connectionString);
+            using var cmd = new SqlCommand(@"
+                SELECT id_Usuario,
+                       Dni_Usuario,
+                       Nombre_Usuario,
+                       Apellido_Usuario,
+                       [Contraseña_Usuario],
+                       Rol_Usuario,
+                       Estado_Usuario
+                FROM dbo.Usuario
+                ORDER BY Apellido_Usuario, Nombre_Usuario;", cn);
+
+            cn.Open();
+            using var dr = cmd.ExecuteReader();
+
+            int oId = dr.GetOrdinal("id_Usuario");
+            int oDni = dr.GetOrdinal("Dni_Usuario");
+            int oNom = dr.GetOrdinal("Nombre_Usuario");
+            int oApe = dr.GetOrdinal("Apellido_Usuario");
+            int oPass = dr.GetOrdinal("Contraseña_Usuario");
+            int oRol = dr.GetOrdinal("Rol_Usuario");
+            int oEst = dr.GetOrdinal("Estado_Usuario");
+
+            while (dr.Read())
             {
-                cn.Open();
-                using (var dr = cmd.ExecuteReader())
+                lista.Add(new Usuario
                 {
-                    while (dr.Read())
-                    {
-                        lista.Add(new Usuario
-                        {
-                            DNI = dr["DNI"].ToString(),
-                            Nombre = dr["Nombre"].ToString(),
-                            Apellido = dr["Apellido"].ToString(),
-                            Contrasena = dr["Contraseña"].ToString(),
-                            Rol = dr["Rol"].ToString(),
-                            Estado = Convert.ToBoolean(dr["Estado"])
-                        });
-                    }
-                }
+                    id_Usuario = dr.GetInt32(oId),
+                    Dni_Usuario = dr.GetInt32(oDni),
+                    Nombre_Usuario = dr.GetString(oNom),
+                    Apellido_Usuario = dr.GetString(oApe),
+                    Contraseña_Usuario = dr.GetString(oPass),
+                    Rol_Usuario = dr.GetString(oRol),
+                    Estado_Usuario = dr.GetBoolean(oEst)
+                });
             }
             return lista;
         }
 
-        public Usuario ObtenerPorDni(string dni)
+        public Usuario ObtenerPorDni(int dni)
         {
-            using (var cn = new SqlConnection(connectionString))
-            using (var cmd = new SqlCommand(
-                "SELECT DNI, Nombre, Apellido, [Contraseña], Rol, Estado FROM Usuario WHERE DNI = @dni", cn))
+            using var cn = new SqlConnection(connectionString);
+            using var cmd = new SqlCommand(@"
+                SELECT id_Usuario,
+                       Dni_Usuario,
+                       Nombre_Usuario,
+                       Apellido_Usuario,
+                       [Contraseña_Usuario],
+                       Rol_Usuario,
+                       Estado_Usuario
+                FROM dbo.Usuario
+                WHERE Dni_Usuario = @dni;", cn);
+            cmd.Parameters.Add("@dni", System.Data.SqlDbType.Int).Value = dni;
+
+            cn.Open();
+            using var dr = cmd.ExecuteReader();
+            if (!dr.Read()) return null;
+
+            return new Usuario
             {
-                cmd.Parameters.AddWithValue("@dni", dni);
-                cn.Open();
-                using (var dr = cmd.ExecuteReader())
-                {
-                    if (!dr.Read()) return null;
-                    return new Usuario
-                    {
-                        DNI = dr["DNI"].ToString(),
-                        Nombre = dr["Nombre"].ToString(),
-                        Apellido = dr["Apellido"].ToString(),
-                        Contrasena = dr["Contraseña"].ToString(),
-                        Rol = dr["Rol"].ToString(),
-                        Estado = Convert.ToBoolean(dr["Estado"])
-                    };
-                }
-            }
+                id_Usuario = dr.GetInt32(dr.GetOrdinal("id_Usuario")),
+                Dni_Usuario = dr.GetInt32(dr.GetOrdinal("Dni_Usuario")),
+                Nombre_Usuario = dr.GetString(dr.GetOrdinal("Nombre_Usuario")),
+                Apellido_Usuario = dr.GetString(dr.GetOrdinal("Apellido_Usuario")),
+                Contraseña_Usuario = dr.GetString(dr.GetOrdinal("Contraseña_Usuario")),
+                Rol_Usuario = dr.GetString(dr.GetOrdinal("Rol_Usuario")),
+                Estado_Usuario = dr.GetBoolean(dr.GetOrdinal("Estado_Usuario"))
+            };
         }
 
         /// <summary>
         /// Retorna:
-        ///  - null si no existe el usuario (DNI no encontrado)
-        ///  - "" (cadena vacía) si la contraseña es incorrecta
-        ///  - "#INACTIVO" si el usuario existe pero Estado = 0 (inactivo)
-        ///  - el Rol ("Administrador", "Gerente", "Vendedor") si login correcto y activo
+        ///  - null si no existe
+        ///  - "" si la contraseña es incorrecta
+        ///  - "#INACTIVO" si Estado_Usuario = 0
+        ///  - el Rol si login correcto y activo
         /// </summary>
-        public string? ValidarUsuario(string dni, string contraseña)
+        public string? ValidarUsuario(int dni, string contraseña)
         {
-            using (var cn = new SqlConnection(connectionString))
-            using (var cmd = new SqlCommand(
-                "SELECT [Contraseña], Rol, Estado FROM Usuario WHERE DNI = @dni", cn))
-            {
-                cmd.Parameters.AddWithValue("@dni", dni);
-                cn.Open();
-                using (var dr = cmd.ExecuteReader())
-                {
-                    if (!dr.Read()) return null; // no existe
-                    string passBD = dr["Contraseña"].ToString();
-                    bool activo = Convert.ToBoolean(dr["Estado"]);
-                    if (!activo) return "#INACTIVO";
-                    if (!string.Equals(passBD, contraseña)) return "";
-                    return dr["Rol"].ToString();
-                }
-            }
+            using var cn = new SqlConnection(connectionString);
+            using var cmd = new SqlCommand(@"
+                SELECT [Contraseña_Usuario], Rol_Usuario, Estado_Usuario
+                FROM dbo.Usuario
+                WHERE Dni_Usuario = @dni;", cn);
+            cmd.Parameters.Add("@dni", System.Data.SqlDbType.Int).Value = dni;
+
+            cn.Open();
+            using var dr = cmd.ExecuteReader();
+            if (!dr.Read()) return null;
+
+            string passBD = dr.GetString(0);
+            bool activo = dr.GetBoolean(2);
+            if (!activo) return "#INACTIVO";
+            if (!string.Equals(passBD, contraseña, StringComparison.Ordinal)) return "";
+            return dr.GetString(1); // Rol_Usuario
         }
 
-        public bool ExisteDni(string dni)
+        public bool ExisteDni(int dni)
         {
-            using (var cn = new SqlConnection(connectionString))
-            using (var cmd = new SqlCommand("SELECT COUNT(*) FROM Usuario WHERE DNI = @dni", cn))
-            {
-                cmd.Parameters.AddWithValue("@dni", dni);
-                cn.Open();
-                return (int)cmd.ExecuteScalar() > 0;
-            }
+            using var cn = new SqlConnection(connectionString);
+            using var cmd = new SqlCommand(
+                "SELECT COUNT(1) FROM dbo.Usuario WHERE Dni_Usuario = @dni;", cn);
+            cmd.Parameters.Add("@dni", System.Data.SqlDbType.Int).Value = dni;
+
+            cn.Open();
+            return (int)cmd.ExecuteScalar() > 0;
         }
 
         public void Insertar(Usuario u)
         {
-            using (var cn = new SqlConnection(connectionString))
-            using (var cmd = new SqlCommand(
-                "INSERT INTO Usuario (DNI, Nombre, Apellido, [Contraseña], Rol, Estado) " +
-                "VALUES (@dni,@nombre,@apellido,@pass,@rol,@estado)", cn))
-            {
-                cmd.Parameters.AddWithValue("@dni", u.DNI);
-                cmd.Parameters.AddWithValue("@nombre", u.Nombre);
-                cmd.Parameters.AddWithValue("@apellido", u.Apellido);
-                cmd.Parameters.AddWithValue("@pass", u.Contrasena);
-                cmd.Parameters.AddWithValue("@rol", u.Rol);
-                cmd.Parameters.AddWithValue("@estado", u.Estado);
-                cn.Open();
-                cmd.ExecuteNonQuery();
-            }
+            using var cn = new SqlConnection(connectionString);
+            using var cmd = new SqlCommand(@"
+                INSERT INTO dbo.Usuario
+                    (Dni_Usuario, Nombre_Usuario, Apellido_Usuario, [Contraseña_Usuario], Rol_Usuario, Estado_Usuario)
+                VALUES
+                    (@dni, @nombre, @apellido, @pass, @rol, @estado);", cn);
+
+            cmd.Parameters.Add("@dni", System.Data.SqlDbType.Int).Value = u.Dni_Usuario;
+            cmd.Parameters.Add("@nombre", System.Data.SqlDbType.NVarChar, 100).Value = u.Nombre_Usuario;
+            cmd.Parameters.Add("@apellido", System.Data.SqlDbType.NVarChar, 100).Value = u.Apellido_Usuario;
+            cmd.Parameters.Add("@pass", System.Data.SqlDbType.NVarChar, 200).Value = u.Contraseña_Usuario;
+            cmd.Parameters.Add("@rol", System.Data.SqlDbType.NVarChar, 20).Value = u.Rol_Usuario;
+            cmd.Parameters.Add("@estado", System.Data.SqlDbType.Bit).Value = u.Estado_Usuario;
+
+            cn.Open();
+            cmd.ExecuteNonQuery();
         }
 
-        public void Actualizar(Usuario u, string dniOriginal)
+        public void Actualizar(Usuario u, int dniOriginal)
         {
-            using (var cn = new SqlConnection(connectionString))
-            using (var cmd = new SqlCommand(
-                "UPDATE Usuario SET DNI=@dni, Nombre=@nombre, Apellido=@apellido, [Contraseña]=@pass, Rol=@rol " +
-                "WHERE DNI=@dniOriginal", cn))
-            {
-                cmd.Parameters.AddWithValue("@dni", u.DNI);
-                cmd.Parameters.AddWithValue("@nombre", u.Nombre);
-                cmd.Parameters.AddWithValue("@apellido", u.Apellido);
-                cmd.Parameters.AddWithValue("@pass", u.Contrasena);
-                cmd.Parameters.AddWithValue("@rol", u.Rol);
-                cmd.Parameters.AddWithValue("@dniOriginal", dniOriginal);
-                cn.Open();
-                cmd.ExecuteNonQuery();
-            }
+            using var cn = new SqlConnection(connectionString);
+            using var cmd = new SqlCommand(@"
+                UPDATE dbo.Usuario
+                SET Dni_Usuario=@dni,
+                    Nombre_Usuario=@nombre,
+                    Apellido_Usuario=@apellido,
+                    [Contraseña_Usuario]=@pass,
+                    Rol_Usuario=@rol,
+                    Estado_Usuario=@estado
+                WHERE Dni_Usuario=@dniOriginal;", cn);
+
+            cmd.Parameters.Add("@dni", System.Data.SqlDbType.Int).Value = u.Dni_Usuario;
+            cmd.Parameters.Add("@nombre", System.Data.SqlDbType.NVarChar, 100).Value = u.Nombre_Usuario;
+            cmd.Parameters.Add("@apellido", System.Data.SqlDbType.NVarChar, 100).Value = u.Apellido_Usuario;
+            cmd.Parameters.Add("@pass", System.Data.SqlDbType.NVarChar, 200).Value = u.Contraseña_Usuario;
+            cmd.Parameters.Add("@rol", System.Data.SqlDbType.NVarChar, 20).Value = u.Rol_Usuario;
+            cmd.Parameters.Add("@estado", System.Data.SqlDbType.Bit).Value = u.Estado_Usuario;
+            cmd.Parameters.Add("@dniOriginal", System.Data.SqlDbType.Int).Value = dniOriginal;
+
+            cn.Open();
+            cmd.ExecuteNonQuery();
         }
 
-        public void CambiarEstado(string dni, bool activar)
+        public void CambiarEstado(int dni, bool activar)
         {
-            using (var cn = new SqlConnection(connectionString))
-            using (var cmd = new SqlCommand("UPDATE Usuario SET Estado = @estado WHERE DNI = @dni", cn))
-            {
-                cmd.Parameters.AddWithValue("@estado", activar);
-                cmd.Parameters.AddWithValue("@dni", dni);
-                cn.Open();
-                cmd.ExecuteNonQuery();
-            }
+            using var cn = new SqlConnection(connectionString);
+            using var cmd = new SqlCommand(
+                "UPDATE dbo.Usuario SET Estado_Usuario = @estado WHERE Dni_Usuario = @dni;", cn);
+
+            cmd.Parameters.Add("@estado", System.Data.SqlDbType.Bit).Value = activar;
+            cmd.Parameters.Add("@dni", System.Data.SqlDbType.Int).Value = dni;
+
+            cn.Open();
+            cmd.ExecuteNonQuery();
         }
 
-        // Si querés eliminación física (no recomendada para históricos)
-        public void Eliminar(string dni)
+        public void Eliminar(int dni)
         {
-            using (var cn = new SqlConnection(connectionString))
-            using (var cmd = new SqlCommand("DELETE FROM Usuario WHERE DNI=@dni", cn))
-            {
-                cmd.Parameters.AddWithValue("@dni", dni);
-                cn.Open();
-                cmd.ExecuteNonQuery();
-            }
+            using var cn = new SqlConnection(connectionString);
+            using var cmd = new SqlCommand(
+                "DELETE FROM dbo.Usuario WHERE Dni_Usuario=@dni;", cn);
+
+            cmd.Parameters.Add("@dni", System.Data.SqlDbType.Int).Value = dni;
+
+            cn.Open();
+            cmd.ExecuteNonQuery();
         }
     }
 }
