@@ -19,13 +19,15 @@ namespace AurenPadelStore.CPresentacion.Empleados.Productos
 
         private void InitializeComponent()
         {
-            DataGridViewCellStyle dataGridViewCellStyle6 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle10 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle7 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle8 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle9 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle5 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
             LListaProductos = new Label();
             PAgregarProducto = new Panel();
+            BExaminarImg = new Button();
+            PBImagenP = new PictureBox();
             CBCategoriaP = new ComboBox();
             TBPrecioP = new TextBox();
             TBStockP = new TextBox();
@@ -57,12 +59,10 @@ namespace AurenPadelStore.CPresentacion.Empleados.Productos
             colPrecio = new DataGridViewTextBoxColumn();
             colEditar = new DataGridViewButtonColumn();
             colAccion = new DataGridViewButtonColumn();
-            PBImagenP = new PictureBox();
-            BExaminarImg = new Button();
             PAgregarProducto.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)PBImagenP).BeginInit();
             PListaProductos.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)DGListaProd).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)PBImagenP).BeginInit();
             SuspendLayout();
             // 
             // LListaProductos
@@ -102,9 +102,30 @@ namespace AurenPadelStore.CPresentacion.Empleados.Productos
             PAgregarProducto.Size = new Size(274, 465);
             PAgregarProducto.TabIndex = 1;
             // 
+            // BExaminarImg
+            // 
+            BExaminarImg.Font = new Font("Century Gothic", 11.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            BExaminarImg.ForeColor = Color.DimGray;
+            BExaminarImg.Location = new Point(113, 14);
+            BExaminarImg.Name = "BExaminarImg";
+            BExaminarImg.Size = new Size(148, 30);
+            BExaminarImg.TabIndex = 17;
+            BExaminarImg.Text = "Examinar...";
+            BExaminarImg.UseVisualStyleBackColor = true;
+            // 
+            // PBImagenP
+            // 
+            PBImagenP.BackColor = Color.Transparent;
+            PBImagenP.BorderStyle = BorderStyle.FixedSingle;
+            PBImagenP.Location = new Point(25, 14);
+            PBImagenP.Name = "PBImagenP";
+            PBImagenP.Size = new Size(66, 61);
+            PBImagenP.TabIndex = 16;
+            PBImagenP.TabStop = false;
+            // 
             // CBCategoriaP
             // 
-            CBCategoriaP.DropDownStyle = ComboBoxStyle.DropDownList;
+            CBCategoriaP.BackColor = Color.LightGray;
             CBCategoriaP.Font = new Font("Century Gothic", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
             CBCategoriaP.ForeColor = Color.DimGray;
             CBCategoriaP.FormattingEnabled = true;
@@ -274,12 +295,12 @@ namespace AurenPadelStore.CPresentacion.Empleados.Productos
             PListaProductos.Size = new Size(882, 510);
             PListaProductos.TabIndex = 2;
             // 
-            // label1
+            // LBuscarP
             // 
             LBuscarP.AutoSize = true;
             LBuscarP.Font = new Font("Century Gothic", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
             LBuscarP.Location = new Point(14, 18);
-            LBuscarP.Name = "label1";
+            LBuscarP.Name = "LBuscarP";
             LBuscarP.Size = new Size(76, 22);
             LBuscarP.TabIndex = 3;
             LBuscarP.Text = "Buscar:";
@@ -330,22 +351,22 @@ namespace AurenPadelStore.CPresentacion.Empleados.Productos
             DGListaProd.BackgroundColor = Color.FromArgb(64, 64, 64);
             DGListaProd.BorderStyle = BorderStyle.None;
             DGListaProd.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single;
-            dataGridViewCellStyle6.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle6.BackColor = Color.FromArgb(64, 64, 64);
-            dataGridViewCellStyle6.Font = new Font("Century Gothic", 12F);
-            dataGridViewCellStyle6.ForeColor = Color.LightGray;
-            dataGridViewCellStyle6.WrapMode = DataGridViewTriState.True;
-            DGListaProd.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle1.BackColor = Color.FromArgb(64, 64, 64);
+            dataGridViewCellStyle1.Font = new Font("Century Gothic", 12F);
+            dataGridViewCellStyle1.ForeColor = Color.LightGray;
+            dataGridViewCellStyle1.WrapMode = DataGridViewTriState.True;
+            DGListaProd.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             DGListaProd.ColumnHeadersHeight = 25;
             DGListaProd.Columns.AddRange(new DataGridViewColumn[] { colImagen, colNombre, colMarca, colMaterial, colDesc, colEstado, colStock, colPrecio, colEditar, colAccion });
-            dataGridViewCellStyle10.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle10.BackColor = Color.FromArgb(100, 100, 100);
-            dataGridViewCellStyle10.Font = new Font("Century Gothic", 11F);
-            dataGridViewCellStyle10.ForeColor = Color.LightGray;
-            dataGridViewCellStyle10.SelectionBackColor = Color.DimGray;
-            dataGridViewCellStyle10.SelectionForeColor = Color.White;
-            dataGridViewCellStyle10.WrapMode = DataGridViewTriState.False;
-            DGListaProd.DefaultCellStyle = dataGridViewCellStyle10;
+            dataGridViewCellStyle5.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle5.BackColor = Color.FromArgb(100, 100, 100);
+            dataGridViewCellStyle5.Font = new Font("Century Gothic", 11F);
+            dataGridViewCellStyle5.ForeColor = Color.LightGray;
+            dataGridViewCellStyle5.SelectionBackColor = Color.DimGray;
+            dataGridViewCellStyle5.SelectionForeColor = Color.White;
+            dataGridViewCellStyle5.WrapMode = DataGridViewTriState.False;
+            DGListaProd.DefaultCellStyle = dataGridViewCellStyle5;
             DGListaProd.EnableHeadersVisualStyles = false;
             DGListaProd.GridColor = Color.Black;
             DGListaProd.Location = new Point(0, 59);
@@ -385,8 +406,8 @@ namespace AurenPadelStore.CPresentacion.Empleados.Productos
             // 
             // colDesc
             // 
-            dataGridViewCellStyle7.WrapMode = DataGridViewTriState.True;
-            colDesc.DefaultCellStyle = dataGridViewCellStyle7;
+            dataGridViewCellStyle2.WrapMode = DataGridViewTriState.True;
+            colDesc.DefaultCellStyle = dataGridViewCellStyle2;
             colDesc.HeaderText = "Desc.";
             colDesc.Name = "colDesc";
             colDesc.Width = 118;
@@ -410,10 +431,10 @@ namespace AurenPadelStore.CPresentacion.Empleados.Productos
             // 
             // colEditar
             // 
-            dataGridViewCellStyle8.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle8.BackColor = Color.LightGreen;
-            dataGridViewCellStyle8.ForeColor = Color.Black;
-            colEditar.DefaultCellStyle = dataGridViewCellStyle8;
+            dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle3.BackColor = Color.LightGreen;
+            dataGridViewCellStyle3.ForeColor = Color.Black;
+            colEditar.DefaultCellStyle = dataGridViewCellStyle3;
             colEditar.FlatStyle = FlatStyle.Flat;
             colEditar.HeaderText = "E";
             colEditar.Name = "colEditar";
@@ -423,33 +444,14 @@ namespace AurenPadelStore.CPresentacion.Empleados.Productos
             // 
             // colAccion
             // 
-            dataGridViewCellStyle9.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle9.BackColor = Color.LightCoral;
-            dataGridViewCellStyle9.ForeColor = Color.Black;
-            colAccion.DefaultCellStyle = dataGridViewCellStyle9;
+            dataGridViewCellStyle4.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle4.BackColor = Color.LightCoral;
+            dataGridViewCellStyle4.ForeColor = Color.Black;
+            colAccion.DefaultCellStyle = dataGridViewCellStyle4;
             colAccion.FlatStyle = FlatStyle.Flat;
             colAccion.HeaderText = "A";
             colAccion.Name = "colAccion";
             colAccion.Width = 75;
-            // 
-            // PBImagenP
-            // 
-            PBImagenP.Location = new Point(25, 14);
-            PBImagenP.Name = "PBImagenP";
-            PBImagenP.Size = new Size(66, 61);
-            PBImagenP.TabIndex = 16;
-            PBImagenP.TabStop = false;
-            // 
-            // BExaminarImg
-            // 
-            BExaminarImg.Font = new Font("Century Gothic", 11.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            BExaminarImg.ForeColor = Color.DimGray;
-            BExaminarImg.Location = new Point(113, 14);
-            BExaminarImg.Name = "BExaminarImg";
-            BExaminarImg.Size = new Size(148, 30);
-            BExaminarImg.TabIndex = 17;
-            BExaminarImg.Text = "Examinar...";
-            BExaminarImg.UseVisualStyleBackColor = true;
             // 
             // FProductos
             // 
@@ -466,10 +468,10 @@ namespace AurenPadelStore.CPresentacion.Empleados.Productos
             Text = "Lista de Productos";
             PAgregarProducto.ResumeLayout(false);
             PAgregarProducto.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)PBImagenP).EndInit();
             PListaProductos.ResumeLayout(false);
             PListaProductos.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)DGListaProd).EndInit();
-            ((System.ComponentModel.ISupportInitialize)PBImagenP).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }

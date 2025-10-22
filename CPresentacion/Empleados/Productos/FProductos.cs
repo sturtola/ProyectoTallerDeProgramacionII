@@ -23,14 +23,19 @@ namespace AurenPadelStore.CPresentacion.Empleados.Productos
 
         private readonly CultureInfo _esAR = new CultureInfo("es-AR");
 
-        // Ruta relativa guardada en BD (p.ej. "Resources\\foto.png")
         private string _imagenSeleccionadaPathRelativa = null;
+
+        // Búsqueda + filtros
+        private System.Windows.Forms.Timer _debounceTimer;
+        private string _ordenSel = "A-Z";
+        private string _categoriaSel = "Todas";
+        private string _marcaSel = "Todas";
+        private bool _reconstruyendoFiltros = false;
 
         public FProductos()
         {
             InitializeComponent();
 
-            // Eventos de grilla
             DGListaProd.CellContentClick += DGListaProd_CellContentClick;
             DGListaProd.RowsAdded += (s, e) =>
             {
@@ -42,31 +47,28 @@ namespace AurenPadelStore.CPresentacion.Empleados.Productos
             DGListaProd.CellFormatting += DGListaProd_CellFormatting;
             DGListaProd.CellToolTipTextNeeded += DGListaProd_CellToolTipTextNeeded;
 
-            // Scroll
             PrepararScrollHost();
             this.Resize += (_, __) => UpdateScrollbars();
 
-            // Carga
             this.Load += FProductos_Load;
             BAgregarProducto.Click += BAgregarProducto_Click;
 
-            // Imagen
             BExaminarImg.Click += BExaminarImg_Click;
             PBImagenP.SizeMode = PictureBoxSizeMode.Zoom;
 
-            // Botón cancelar (si existe en el diseño)
             if (this.Controls.Find("BCancelarProducto", true).Length > 0)
             {
                 var btn = (Button)this.Controls.Find("BCancelarProducto", true)[0];
                 btn.Click += (s, e) => CancelarEdicionYLimpiar();
             }
 
-            // Validaciones
             TBPrecioP.KeyPress += TBPrecio_KeyPress;
             TBStockP.KeyPress += TBStock_KeyPress;
+
+            TBBuscarProd.TextChanged += (_, __) => DebounceAplicar();
+            CBFiltrosProd.SelectedIndexChanged += (_, __) => FiltroSeleccionadoCambio();
         }
 
-        // ===== Carga inicial =====
         private void FProductos_Load(object sender, EventArgs e)
         {
             if (SesionActual.Rol != null &&
@@ -78,28 +80,73 @@ namespace AurenPadelStore.CPresentacion.Empleados.Productos
 
             CargarCategorias();
             CargarDesdeBD();
+            ConstruirOpcionesDeFiltros();
+            AplicarBusquedaYFiltros();
+
             _scrollHost.AutoScrollPosition = Point.Empty;
         }
 
-        // ===== Categorías =====
+        // ==== Categorías (combo alta/edición) ====
         private void CargarCategorias()
         {
             try
             {
                 var cats = _logica.ListarCategorias();
+
                 CBCategoriaP.DataSource = null;
+                CBCategoriaP.DropDownStyle = ComboBoxStyle.DropDown; // permite escribir nuevas
+                CBCategoriaP.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
+                CBCategoriaP.AutoCompleteSource = AutoCompleteSource.ListItems;
+
+                CBCategoriaP.DisplayMember = "Nombre";
+                CBCategoriaP.ValueMember = "Id";
                 CBCategoriaP.DataSource = cats;
+
                 if (CBCategoriaP.Items.Count > 0) CBCategoriaP.SelectedIndex = 0;
             }
             catch (Exception ex)
             {
                 MessageBox.Show("No se pudieron obtener las categorías: " + ex.Message,
                                 "Categorías", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                CBCategoriaP.DataSource = new[] { "Mujer", "Hombre", "Accesorios" };
+                CBCategoriaP.DataSource = null;
             }
         }
 
-        // ===== Scroll =====
+        private void RecargarCategoriasYSeleccionar(string nombreCategoriaPreferida = null)
+        {
+            CargarCategorias();
+
+            if (CBCategoriaP.DataSource is System.Collections.IList lista && lista.Count > 0)
+            {
+                if (!string.IsNullOrWhiteSpace(nombreCategoriaPreferida))
+                {
+                    var items = lista.Cast<object>()
+                                     .Select(o => new
+                                     {
+                                         Obj = o,
+                                         Nombre = (o as CategoriaDTO)?.Nombre
+                                     })
+                                     .ToList();
+
+                    var match = items.FirstOrDefault(x =>
+                        string.Equals(x.Nombre, nombreCategoriaPreferida, StringComparison.OrdinalIgnoreCase));
+
+                    if (match != null)
+                    {
+                        CBCategoriaP.SelectedItem = match.Obj;
+                        return;
+                    }
+                }
+
+                CBCategoriaP.SelectedIndex = 0;
+            }
+            else
+            {
+                CBCategoriaP.Text = "";
+            }
+        }
+
+        // ==== Scroll ====
         private void PrepararScrollHost()
         {
             _scrollHost = new Panel
@@ -134,7 +181,7 @@ namespace AurenPadelStore.CPresentacion.Empleados.Productos
             }
         }
 
-        // ===== Cargar productos =====
+        // ==== Cargar productos ====
         private void CargarDesdeBD()
         {
             try
@@ -152,36 +199,7 @@ namespace AurenPadelStore.CPresentacion.Empleados.Productos
                     DGListaProd.Columns.Insert(0, colId);
                 }
 
-                DGListaProd.Rows.Clear();
-
-                foreach (var p in _cache)
-                {
-                    int r = DGListaProd.Rows.Add();
-                    var row = DGListaProd.Rows[r];
-
-                    // Id oculto
-                    row.Cells["colId"].Value = p.id_Producto;
-
-                    // Imagen
-                    var rutaBD = p.Imagen_Producto;
-                    if (!string.IsNullOrWhiteSpace(rutaBD))
-                    {
-                        var full = ResolverRutaCompletaDesdeBD(rutaBD);
-                        row.Cells["colImagen"].Value = File.Exists(full) ? CargarImagenSinLock(full) : null;
-                    }
-                    else row.Cells["colImagen"].Value = null;
-
-                    // Campos visibles
-                    row.Cells["colNombre"].Value = p.Nombre_Producto;
-                    row.Cells["colMarca"].Value = p.Marca_Producto;
-                    row.Cells["colMaterial"].Value = p.Material_Producto;
-                    row.Cells["colDesc"].Value = p.Descripcion_Producto;
-                    row.Cells["colEstado"].Value = p.Estado_Producto ? "Activo" : "Inactivo";
-                    row.Cells["colStock"].Value = p.Stock_Producto;
-                    row.Cells["colPrecio"].Value = p.Precio_Unitario_Producto;
-
-                    SetAccionSegunEstado(row);
-                }
+                RefrescarGrilla(_cache);
             }
             catch (Exception ex)
             {
@@ -190,7 +208,7 @@ namespace AurenPadelStore.CPresentacion.Empleados.Productos
             }
         }
 
-        // ===== Formato de precio =====
+        // ==== Formato precio ====
         private void DGListaProd_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
             if (DGListaProd.Columns[e.ColumnIndex].Name == "colPrecio" && e.Value != null)
@@ -203,7 +221,6 @@ namespace AurenPadelStore.CPresentacion.Empleados.Productos
             }
         }
 
-        // ===== Tooltip de descripción =====
         private void DGListaProd_CellToolTipTextNeeded(object sender, DataGridViewCellToolTipTextNeededEventArgs e)
         {
             if (e.RowIndex >= 0 && e.ColumnIndex >= 0)
@@ -218,7 +235,6 @@ namespace AurenPadelStore.CPresentacion.Empleados.Productos
             }
         }
 
-        // ===== Estado / Acción =====
         private void SetAccionSegunEstado(DataGridViewRow row)
         {
             var estado = (row.Cells["colEstado"].Value?.ToString() ?? "Activo").Trim();
@@ -239,14 +255,12 @@ namespace AurenPadelStore.CPresentacion.Empleados.Productos
             }
         }
 
-        // ===== Click en grilla =====
         private void DGListaProd_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex < 0 || e.ColumnIndex < 0) return;
             var colName = DGListaProd.Columns[e.ColumnIndex].Name;
             var row = DGListaProd.Rows[e.RowIndex];
 
-            // --- Activar/Inactivar ---
             if (colName == "colAccion")
             {
                 if (!(row.Cells["colId"].Value is int id)) return;
@@ -262,14 +276,11 @@ namespace AurenPadelStore.CPresentacion.Empleados.Productos
 
                 try
                 {
-                    // Cambia en BD
                     _logica.CambiarEstado(id, !actualmenteActivo, SesionActual.Rol);
 
-                    // Actualiza cache
                     var pCache = _cache.FirstOrDefault(x => x.id_Producto == id);
                     if (pCache != null) pCache.Estado_Producto = !actualmenteActivo;
 
-                    // Actualiza grilla
                     row.Cells["colEstado"].Value = (!actualmenteActivo) ? "Activo" : "Inactivo";
                     SetAccionSegunEstado(row);
                 }
@@ -281,7 +292,6 @@ namespace AurenPadelStore.CPresentacion.Empleados.Productos
                 return;
             }
 
-            // --- Editar ---
             if (colName == "colEditar")
             {
                 if (!(row.Cells["colId"].Value is int id)) return;
@@ -295,8 +305,21 @@ namespace AurenPadelStore.CPresentacion.Empleados.Productos
                 TBDescP.Text = p.Descripcion_Producto;
                 TBStockP.Text = p.Stock_Producto.ToString();
                 TBPrecioP.Text = p.Precio_Unitario_Producto.ToString("N2", _esAR);
-                if (!string.IsNullOrWhiteSpace(p.Categoria_Producto))
-                    CBCategoriaP.SelectedItem = p.Categoria_Producto;
+
+                if (p.id_Categoria > 0 && CBCategoriaP.ValueMember == "Id")
+                {
+                    var before = CBCategoriaP.SelectedIndex;
+                    CBCategoriaP.SelectedValue = p.id_Categoria;
+                    if (!Equals(CBCategoriaP.SelectedValue, p.id_Categoria))
+                    {
+                        CBCategoriaP.SelectedIndex = before;
+                        CBCategoriaP.Text = p.Categoria_Nombre;
+                    }
+                }
+                else
+                {
+                    CBCategoriaP.Text = p.Categoria_Nombre;
+                }
 
                 _imagenSeleccionadaPathRelativa = p.Imagen_Producto;
                 MostrarEnPictureBoxDesdeBD(_imagenSeleccionadaPathRelativa);
@@ -307,38 +330,16 @@ namespace AurenPadelStore.CPresentacion.Empleados.Productos
             }
         }
 
-        // ===== Agregar / Guardar =====
+        // ==== Agregar / Guardar ====
         private void BAgregarProducto_Click(object sender, EventArgs e)
         {
-            // Validaciones mínimas
-            if (string.IsNullOrWhiteSpace(TBNombreP.Text) ||
-                string.IsNullOrWhiteSpace(TBDescP.Text) ||
-                string.IsNullOrWhiteSpace(TBMarcaP.Text) ||
-                string.IsNullOrWhiteSpace(TBMaterialP.Text) ||
-                string.IsNullOrWhiteSpace(TBPrecioP.Text) ||
-                string.IsNullOrWhiteSpace(TBStockP.Text))
+            // Validación UI única
+            if (!ValidarFormulario(out string msgValid, out decimal precio, out int stock))
             {
-                MessageBox.Show("Por favor, completá todos los campos.", "Validación",
-                                MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(msgValid, "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            if (!TryParsePrecio(TBPrecioP.Text, out decimal precio) || precio < 0)
-            {
-                MessageBox.Show("El precio debe tener formato válido.", "Validación",
-                                MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            if (!int.TryParse(TBStockP.Text, out int stock) || stock < 0)
-            {
-                MessageBox.Show("El stock debe ser un número entero.", "Validación",
-                                MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            // Texto de confirmación
-            // --- Confirmación (Yes / No / Cancel) ---
             string txtAccion = _modoEdicion ? "guardar los cambios de" : "agregar";
             var dr = MessageBox.Show(
                 $"¿Deseás {txtAccion} este producto?\n\n" +
@@ -350,28 +351,24 @@ namespace AurenPadelStore.CPresentacion.Empleados.Productos
                 MessageBoxButtons.YesNoCancel,
                 MessageBoxIcon.Question);
 
-            // Cancelar: limpiar y salir
             if (dr == DialogResult.Cancel)
             {
                 CancelarEdicionYLimpiar();
                 return;
             }
-
-            // No: simplemente salir sin hacer nada
             if (dr == DialogResult.No)
             {
                 return;
             }
 
-            // Sí: continúa con el flujo de guardar (lo que ya tenés debajo)
-
             try
             {
+                string nombreCategoriaEscrito = (CBCategoriaP.Text ?? "").Trim();
+
                 if (_modoEdicion && _idProductoEdicion.HasValue)
                 {
-                    // Tomo el existente (evita crear uno nuevo y preserva campos no editables)
-                    var p = _cache.FirstOrDefault(x => x.id_Producto == _idProductoEdicion.Value);
-                    if (p == null) p = new Producto { id_Producto = _idProductoEdicion.Value };
+                    var p = _cache.FirstOrDefault(x => x.id_Producto == _idProductoEdicion.Value)
+                            ?? new Producto { id_Producto = _idProductoEdicion.Value };
 
                     p.Nombre_Producto = TBNombreP.Text.Trim();
                     p.Descripcion_Producto = TBDescP.Text.Trim();
@@ -379,21 +376,17 @@ namespace AurenPadelStore.CPresentacion.Empleados.Productos
                     p.Material_Producto = TBMaterialP.Text.Trim();
                     p.Stock_Producto = stock;
                     p.Precio_Unitario_Producto = precio;
-                    p.Categoria_Producto = CBCategoriaP.SelectedItem?.ToString() ?? p.Categoria_Producto;
 
-                    // Si no cambiaste la imagen, queda la que tenía
                     if (!string.IsNullOrWhiteSpace(_imagenSeleccionadaPathRelativa))
                         p.Imagen_Producto = _imagenSeleccionadaPathRelativa;
 
-                    // Estado queda como está en BD
-                    // p.Estado_Producto (no lo tocamos acá)
+                    _logica.Actualizar(p, nombreCategoriaEscrito);
 
-                    _logica.Actualizar(p);
-
-                    // Actualizo la fila visible sin recargar todo si querés
+                    // Refrescar fila si querés
                     var row = DGListaProd.Rows
                         .Cast<DataGridViewRow>()
                         .FirstOrDefault(rr => (rr.Cells["colId"].Value is int id) && id == p.id_Producto);
+
                     if (row != null)
                     {
                         row.Cells["colNombre"].Value = p.Nombre_Producto;
@@ -412,10 +405,12 @@ namespace AurenPadelStore.CPresentacion.Empleados.Productos
 
                     MessageBox.Show("Producto actualizado correctamente.", "OK",
                                     MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                    ConstruirOpcionesDeFiltros();
+                    RecargarCategoriasYSeleccionar(nombreCategoriaEscrito);
                 }
                 else
                 {
-                    // Alta
                     var p = new Producto
                     {
                         Nombre_Producto = TBNombreP.Text.Trim(),
@@ -424,23 +419,27 @@ namespace AurenPadelStore.CPresentacion.Empleados.Productos
                         Material_Producto = TBMaterialP.Text.Trim(),
                         Stock_Producto = stock,
                         Precio_Unitario_Producto = precio,
-                        Categoria_Producto = CBCategoriaP.SelectedItem?.ToString() ?? "Accesorios",
                         Imagen_Producto = _imagenSeleccionadaPathRelativa,
-                        Estado_Producto = true // por defecto activo
+                        Estado_Producto = true
                     };
 
-                    _logica.Registrar(p);
+                    _logica.Registrar(p, nombreCategoriaEscrito);
+
                     MessageBox.Show("Producto agregado correctamente.", "OK",
                                     MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                    // Recargo para verlo (o podrías añadir la fila manualmente)
                     CargarDesdeBD();
+                    ConstruirOpcionesDeFiltros();
+                    RecargarCategoriasYSeleccionar(nombreCategoriaEscrito);
                 }
 
+                AplicarBusquedaYFiltros();
+                // Después de éxito NO mostramos ninguna validación
                 CancelarEdicionYLimpiar();
             }
             catch (Exception ex)
             {
+                // Un solo mensaje aquí. La UI ya validó antes.
                 MessageBox.Show("Error al guardar: " + ex.Message,
                                 "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
@@ -454,7 +453,7 @@ namespace AurenPadelStore.CPresentacion.Empleados.Productos
             LimpiarCampos();
         }
 
-        // ===== Validaciones =====
+        // ==== Validaciones de tipeo ====
         private void TBPrecio_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) &&
@@ -468,11 +467,104 @@ namespace AurenPadelStore.CPresentacion.Empleados.Productos
                 e.Handled = true;
         }
 
-        private bool TryParsePrecio(string input, out decimal value)
+        // ==== Validación Form + parser precio (única fuente de verdad en UI) ====
+
+        private bool ValidarFormulario(out string mensaje, out decimal precio, out int stock)
         {
-            input = (input ?? "").Trim();
-            var normalized = input.Replace(".", "").Replace(',', '.');
-            return decimal.TryParse(normalized, NumberStyles.Number, CultureInfo.InvariantCulture, out value);
+            mensaje = "";
+            precio = 0m;
+            stock = 0;
+
+            string nombre = (TBNombreP.Text ?? "").Trim();
+            string marca = (TBMarcaP.Text ?? "").Trim();
+            string mat = (TBMaterialP.Text ?? "").Trim();
+            string desc = (TBDescP.Text ?? "").Trim();
+            string categoria = (CBCategoriaP.Text ?? "").Trim();
+            string precioTx = (TBPrecioP.Text ?? "").Trim();
+            string stockTx = (TBStockP.Text ?? "").Trim();
+
+            if (string.IsNullOrWhiteSpace(nombre) ||
+                string.IsNullOrWhiteSpace(marca) ||
+                string.IsNullOrWhiteSpace(mat) ||
+                string.IsNullOrWhiteSpace(desc) ||
+                string.IsNullOrWhiteSpace(categoria) ||
+                string.IsNullOrWhiteSpace(precioTx) ||
+                string.IsNullOrWhiteSpace(stockTx))
+            {
+                mensaje = "Debe completar todos los campos";
+                return false;
+            }
+
+            if (string.IsNullOrWhiteSpace(_imagenSeleccionadaPathRelativa))
+            {
+                mensaje = "Debe seleccionar una imagen";
+                return false;
+            }
+
+            if (!ParsePrecioFlexible(precioTx, out precio))
+            {
+                mensaje = "El precio debe tener formato válido";
+                return false;
+            }
+            if (precio <= 0)
+            {
+                mensaje = "El precio debe ser mayor a 0";
+                return false;
+            }
+
+            if (!int.TryParse(stockTx, out stock))
+            {
+                mensaje = "El stock debe ser un número entero";
+                return false;
+            }
+            if (stock < 0) // cambia a <= 0 si querés estrictamente positivo
+            {
+                mensaje = "El stock debe ser mayor o igual a 0";
+                return false;
+            }
+
+            return true;
+        }
+
+        // Regla: el ÚLTIMO separador ('.' o ',') es DECIMAL solo si tiene EXACTAMENTE 2 dígitos a la derecha.
+        // Los demás separadores se consideran de miles y se ignoran.
+        private bool ParsePrecioFlexible(string input, out decimal value)
+        {
+            value = 0m;
+            if (string.IsNullOrWhiteSpace(input)) return false;
+
+            string s = input.Trim();
+            s = s.Replace(" ", "");
+            s = s.Replace("$", "").Replace("ARS", "", StringComparison.OrdinalIgnoreCase);
+
+            int lastDot = s.LastIndexOf('.');
+            int lastCom = s.LastIndexOf(',');
+            int lastSep = Math.Max(lastDot, lastCom);
+
+            if (lastSep >= 0)
+            {
+                int digitsRight = s.Length - lastSep - 1;
+                bool treatAsDecimal = digitsRight == 2;
+
+                if (treatAsDecimal)
+                {
+                    string left = s.Substring(0, lastSep).Replace(".", "").Replace(",", "");
+                    string right = new string(s.Substring(lastSep + 1).Where(char.IsDigit).ToArray());
+                    if (right.Length != 2) return false;
+
+                    string canonical = $"{left}.{right}";
+                    return decimal.TryParse(canonical, NumberStyles.Number, CultureInfo.InvariantCulture, out value);
+                }
+                else
+                {
+                    string canonical = s.Replace(".", "").Replace(",", "");
+                    return decimal.TryParse(canonical, NumberStyles.Number, CultureInfo.InvariantCulture, out value);
+                }
+            }
+            else
+            {
+                return decimal.TryParse(s, NumberStyles.Number, CultureInfo.InvariantCulture, out value);
+            }
         }
 
         private void LimpiarCampos()
@@ -483,14 +575,18 @@ namespace AurenPadelStore.CPresentacion.Empleados.Productos
             TBMaterialP.Clear();
             TBPrecioP.Clear();
             TBStockP.Clear();
-            if (CBCategoriaP.Items.Count > 0) CBCategoriaP.SelectedIndex = 0;
+
+            if (CBCategoriaP.DataSource != null && CBCategoriaP.Items.Count > 0)
+                CBCategoriaP.SelectedIndex = 0;
+            else
+                CBCategoriaP.Text = "";
 
             _imagenSeleccionadaPathRelativa = null;
             PBImagenP.Image?.Dispose();
             PBImagenP.Image = null;
         }
 
-        // ===== IMÁGENES =====
+        // ==== Imágenes ====
         private string GetResourcesPath()
         {
             var baseDir = Application.StartupPath;
@@ -552,7 +648,6 @@ namespace AurenPadelStore.CPresentacion.Empleados.Productos
             }
         }
 
-        // === Bloquear panel si el rol no puede editar ===
         private void BloquearInteraccionSinCambiarEstilo(Panel panel, Button botonPrincipal, string tooltip = "")
         {
             foreach (Control c in panel.Controls)
@@ -596,15 +691,230 @@ namespace AurenPadelStore.CPresentacion.Empleados.Productos
             panel.MouseDown += (s, e) => DGListaProd.Focus();
         }
 
-        // === Cursor mano sobre botón de acción ===
         private void DGListaProd_CellMouseMove(object sender, DataGridViewCellMouseEventArgs e)
         {
             if (e.RowIndex < 0 || e.ColumnIndex < 0) return;
+            DGListaProd.Cursor = (DGListaProd.Columns[e.ColumnIndex].Name == "colAccion")
+                                ? Cursors.Hand
+                                : Cursors.Default;
+        }
 
-            if (DGListaProd.Columns[e.ColumnIndex].Name == "colAccion")
-                DGListaProd.Cursor = Cursors.Hand;
-            else
-                DGListaProd.Cursor = Cursors.Default;
+        // ==== Buscar + filtrar + ordenar ====
+        private void ConstruirOpcionesDeFiltros()
+        {
+            _reconstruyendoFiltros = true;
+            try
+            {
+                var marcas = _cache
+                    ?.Select(p => p.Marca_Producto)
+                    .Where(m => !string.IsNullOrWhiteSpace(m))
+                    .Select(m => m.Trim())
+                    .Distinct(StringComparer.OrdinalIgnoreCase)
+                    .OrderBy(m => m, StringComparer.OrdinalIgnoreCase)
+                    .ToList() ?? new List<string>();
+
+                List<string> categorias;
+                try
+                {
+                    categorias = _logica.ListarCategorias()
+                                        ?.Select(c => c.Nombre)
+                                        .Where(n => !string.IsNullOrWhiteSpace(n))
+                                        .Distinct(StringComparer.OrdinalIgnoreCase)
+                                        .OrderBy(n => n, StringComparer.OrdinalIgnoreCase)
+                                        .ToList() ?? new List<string>();
+                }
+                catch
+                {
+                    categorias = new List<string>();
+                }
+
+                var old = CBFiltrosProd.SelectedItem?.ToString();
+
+                CBFiltrosProd.BeginUpdate();
+                CBFiltrosProd.Items.Clear();
+
+                CBFiltrosProd.Items.Add("Orden: A-Z");
+                CBFiltrosProd.Items.Add("Orden: Z-A");
+                CBFiltrosProd.Items.Add("Orden: Precio ↑");
+                CBFiltrosProd.Items.Add("Orden: Precio ↓");
+                CBFiltrosProd.Items.Add("Orden: Stock ↑");
+                CBFiltrosProd.Items.Add("Orden: Stock ↓");
+
+                CBFiltrosProd.Items.Add("------------------------");
+
+                CBFiltrosProd.Items.Add("Categoría: Todas");
+                foreach (var c in categorias)
+                    CBFiltrosProd.Items.Add($"Categoría: {c}");
+
+                CBFiltrosProd.Items.Add("------------------------");
+
+                CBFiltrosProd.Items.Add("Marca: Todas");
+                foreach (var m in marcas)
+                    CBFiltrosProd.Items.Add($"Marca: {m}");
+
+                CBFiltrosProd.EndUpdate();
+
+                if (CBFiltrosProd.Items.Count > 0)
+                {
+                    if (old != null && CBFiltrosProd.Items.Contains(old))
+                        CBFiltrosProd.SelectedItem = old;
+                    else
+                        CBFiltrosProd.SelectedIndex = 0;
+                }
+            }
+            finally
+            {
+                _reconstruyendoFiltros = false;
+            }
+        }
+
+        private void FiltroSeleccionadoCambio()
+        {
+            if (_reconstruyendoFiltros) return;
+
+            var sel = CBFiltrosProd.SelectedItem?.ToString() ?? "";
+            if (sel.StartsWith("Orden:"))
+                _ordenSel = sel.Replace("Orden:", "").Trim();
+            else if (sel.StartsWith("Categoría:"))
+                _categoriaSel = sel.Replace("Categoría:", "").Trim();
+            else if (sel.StartsWith("Marca:"))
+                _marcaSel = sel.Replace("Marca:", "").Trim();
+
+            AplicarBusquedaYFiltros();
+        }
+
+        private void DebounceAplicar(int ms = 160)
+        {
+            if (_debounceTimer == null)
+            {
+                _debounceTimer = new System.Windows.Forms.Timer();
+                _debounceTimer.Interval = ms;
+                _debounceTimer.Tick += (_, __) =>
+                {
+                    _debounceTimer.Stop();
+                    AplicarBusquedaYFiltros();
+                };
+            }
+            _debounceTimer.Stop();
+            _debounceTimer.Interval = ms;
+            _debounceTimer.Start();
+        }
+
+        private void AplicarBusquedaYFiltros()
+        {
+            if (_cache == null) return;
+
+            string texto = (TBBuscarProd.Text ?? "").Trim();
+            IEnumerable<Producto> q = _cache;
+
+            if (!string.IsNullOrEmpty(texto))
+            {
+                var lower = texto.ToLowerInvariant();
+
+                if (lower.StartsWith("id:"))
+                {
+                    var raw = texto.Substring(3).Trim();
+                    if (int.TryParse(raw, out int idBuscado))
+                        q = q.Where(p => p.id_Producto == idBuscado);
+                    else
+                        q = Enumerable.Empty<Producto>();
+                }
+                else if (lower.StartsWith("marca:"))
+                {
+                    var raw = texto.Substring(6).Trim();
+                    if (!string.IsNullOrEmpty(raw))
+                        q = q.Where(p => !string.IsNullOrEmpty(p.Marca_Producto) &&
+                                         p.Marca_Producto.IndexOf(raw, StringComparison.OrdinalIgnoreCase) >= 0);
+                }
+                else if (lower.StartsWith("nombre:"))
+                {
+                    var raw = texto.Substring(7).Trim();
+                    if (!string.IsNullOrEmpty(raw))
+                        q = q.Where(p => !string.IsNullOrEmpty(p.Nombre_Producto) &&
+                                         p.Nombre_Producto.IndexOf(raw, StringComparison.OrdinalIgnoreCase) >= 0);
+                }
+                else
+                {
+                    if (Regex.IsMatch(texto, @"^\d+$"))
+                    {
+                        if (int.TryParse(texto, out int id))
+                            q = q.Where(p => p.id_Producto == id);
+                        else
+                            q = Enumerable.Empty<Producto>();
+                    }
+                    else
+                    {
+                        q = q.Where(p =>
+                            (!string.IsNullOrEmpty(p.Nombre_Producto) &&
+                             p.Nombre_Producto.IndexOf(texto, StringComparison.OrdinalIgnoreCase) >= 0)
+                         || (!string.IsNullOrEmpty(p.Marca_Producto) &&
+                             p.Marca_Producto.IndexOf(texto, StringComparison.OrdinalIgnoreCase) >= 0));
+                    }
+                }
+            }
+
+            if (!string.Equals(_categoriaSel, "Todas", StringComparison.OrdinalIgnoreCase))
+                q = q.Where(p => string.Equals(p.Categoria_Nombre, _categoriaSel, StringComparison.OrdinalIgnoreCase));
+
+            if (!string.Equals(_marcaSel, "Todas", StringComparison.OrdinalIgnoreCase))
+                q = q.Where(p => string.Equals(p.Marca_Producto, _marcaSel, StringComparison.OrdinalIgnoreCase));
+
+            q = _ordenSel switch
+            {
+                "Z-A" => q.OrderByDescending(p => p.Nombre_Producto),
+                "Precio ↓" => q.OrderBy(p => p.Precio_Unitario_Producto),
+                "Precio ↑" => q.OrderByDescending(p => p.Precio_Unitario_Producto),
+                "Stock ↓" => q.OrderBy(p => p.Stock_Producto),
+                "Stock ↑" => q.OrderByDescending(p => p.Stock_Producto),
+                _ => q.OrderBy(p => p.Nombre_Producto)
+            };
+
+            RefrescarGrilla(q.ToList());
+        }
+
+        private void RefrescarGrilla(List<Producto> lista)
+        {
+            DGListaProd.Rows.Clear();
+
+            foreach (var p in lista)
+            {
+                int r = DGListaProd.Rows.Add();
+                var row = DGListaProd.Rows[r];
+
+                if (!DGListaProd.Columns.Contains("colId"))
+                {
+                    var colId = new DataGridViewTextBoxColumn
+                    {
+                        Name = "colId",
+                        HeaderText = "Id",
+                        Visible = false
+                    };
+                    DGListaProd.Columns.Insert(0, colId);
+                }
+
+                row.Cells["colId"].Value = p.id_Producto;
+
+                var rutaBD = p.Imagen_Producto;
+                if (!string.IsNullOrWhiteSpace(rutaBD))
+                {
+                    var full = ResolverRutaCompletaDesdeBD(rutaBD);
+                    row.Cells["colImagen"].Value = File.Exists(full) ? CargarImagenSinLock(full) : null;
+                }
+                else row.Cells["colImagen"].Value = null;
+
+                row.Cells["colNombre"].Value = p.Nombre_Producto;
+                row.Cells["colMarca"].Value = p.Marca_Producto;
+                row.Cells["colMaterial"].Value = p.Material_Producto;
+                row.Cells["colDesc"].Value = p.Descripcion_Producto;
+                row.Cells["colEstado"].Value = p.Estado_Producto ? "Activo" : "Inactivo";
+                row.Cells["colStock"].Value = p.Stock_Producto;
+                row.Cells["colPrecio"].Value = p.Precio_Unitario_Producto;
+
+                if (DGListaProd.Columns.Contains("colCategoria"))
+                    row.Cells["colCategoria"].Value = p.Categoria_Nombre;
+
+                SetAccionSegunEstado(row);
+            }
         }
     }
 }
