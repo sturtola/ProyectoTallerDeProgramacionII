@@ -3,7 +3,7 @@ using System.Drawing;
 using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
-using AurenPadelStore.CPresentacion.Empleados.Facturas.VerFactura;
+using AurenPadelStore.CPresentacion.Empleados.Facturas;
 
 namespace AurenPadelStore.CPresentacion.Empleados.Facturas.ListarFacturas
 {
@@ -30,7 +30,7 @@ namespace AurenPadelStore.CPresentacion.Empleados.Facturas.ListarFacturas
 
             FormatearColumnaImporte();
             CargarFacturasDeEjemplo();
-       
+
             AplicarRestriccionesPorRol();
 
             DGListaFacturas.CellContentClick += DGListaFacturas_CellContentClick;
@@ -43,7 +43,7 @@ namespace AurenPadelStore.CPresentacion.Empleados.Facturas.ListarFacturas
 
             if (DGListaFacturas.Columns[e.ColumnIndex].Name == "colVerF")
             {
-                var f = new AurenPadelStore.CPresentacion.Empleados.Facturas.VerFactura.FVerFactura();
+                var f = new AurenPadelStore.CPresentacion.Empleados.Facturas.FVerFactura();
                 f.ShowDialog();
             }
         }
@@ -53,7 +53,7 @@ namespace AurenPadelStore.CPresentacion.Empleados.Facturas.ListarFacturas
         {
             try
             {
-                return AurenPadelStore.SesionActual.Rol ?? string.Empty;
+                return CEntidades.SesionActual.Rol ?? string.Empty;
             }
             catch
             {

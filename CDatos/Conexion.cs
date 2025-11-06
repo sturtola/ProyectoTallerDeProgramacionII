@@ -10,12 +10,12 @@ namespace AurenPadelStore.CDatos
     public static class Conexion
     {
         // Ajusta la cadena según tu instancia/BD
-        private static string cadena =
+        private static string ObtenerConexioncadena =
             "Server=DESKTOP-1HCDQL3;Database=AurenPadelBD;Encrypt=False;TrustServerCertificate=True;Trusted_Connection=True;";
 
         public static SqlConnection ObtenerConexion()
         {
-            return new SqlConnection(cadena);
+            return new SqlConnection(ObtenerConexioncadena);
         }
     }
 }

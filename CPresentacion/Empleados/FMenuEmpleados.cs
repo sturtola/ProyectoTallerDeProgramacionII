@@ -1,6 +1,5 @@
 ﻿using AurenPadelStore.CPresentacion.Empleados.Productos;
 using AurenPadelStore.CPresentacion.Empleados.Clientes;
-using AurenPadelStore.CPresentacion.Empleados.Facturas.ListarFacturas;
 using AurenPadelStore.CPresentacion.Empleados.Ventas.ListarVentas;
 using AurenPadelStore.CPresentacion.Empleados.Ventas;
 using System;
@@ -20,7 +19,7 @@ namespace AurenPadelStore.CPresentacion.Empleados
         {
             InitializeComponent();
 
-            _rolActual = rolActual ?? AurenPadelStore.SesionActual.Rol;
+            _rolActual = rolActual ?? CEntidades.SesionActual.Rol;
 
             // UI: mantener MDI anclado arriba-izquierda
             this.MdiChildActivate += (s, e) => PinChildActivo();
@@ -33,7 +32,7 @@ namespace AurenPadelStore.CPresentacion.Empleados
         }
 
         // ✔️ Opción B: compatibilidad con tu ctor anterior (toma el rol de SesionActual)
-        public FMenuEmpleados() : this(AurenPadelStore.SesionActual.Rol) { }
+        public FMenuEmpleados() : this(CEntidades.SesionActual.Rol) { }
 
         // Para que se abra un solo formulario a la vez
         private void OpenSingle<T>(Func<T> factory) where T : Form
@@ -133,10 +132,7 @@ namespace AurenPadelStore.CPresentacion.Empleados
             OpenSingle(() => new FClientes());
         }
 
-        private void listaDeFacturasToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            OpenSingle(() => new FListarFacturas(AurenPadelStore.SesionActual.Rol));
-        }
+        
 
         private void generarFacturaToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -158,7 +154,7 @@ namespace AurenPadelStore.CPresentacion.Empleados
 
         private void listarVentasToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            OpenSingle(() => new FListarVentas(AurenPadelStore.SesionActual.Rol));
+            OpenSingle(() => new FListarVentas(CEntidades.SesionActual.Rol));
         }
 
         private void generarVentaToolStripMenuItem_Click(object sender, EventArgs e)

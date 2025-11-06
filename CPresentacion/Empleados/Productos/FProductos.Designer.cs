@@ -390,7 +390,7 @@ namespace AurenPadelStore.CPresentacion.Empleados.Productos
             // 
             colNombre.HeaderText = "Nombre";
             colNombre.Name = "colNombre";
-            colNombre.Width = 114;
+            colNombre.Width = 110;
             // 
             // colMarca
             // 
@@ -427,7 +427,7 @@ namespace AurenPadelStore.CPresentacion.Empleados.Productos
             // 
             colPrecio.HeaderText = "Precio";
             colPrecio.Name = "colPrecio";
-            colPrecio.Width = 90;
+            colPrecio.Width = 94;
             // 
             // colEditar
             // 

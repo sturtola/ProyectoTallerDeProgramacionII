@@ -37,6 +37,7 @@ namespace AurenPadelStore.CPresentacion.Empleados.Clientes
             BAgregarCliente = new Button();
             LAgregarCliente = new Label();
             PListaClientes = new Panel();
+            LBuscarC = new Label();
             label1 = new Label();
             CBFiltroC = new ComboBox();
             TBBuscarC = new TextBox();
@@ -50,14 +51,13 @@ namespace AurenPadelStore.CPresentacion.Empleados.Clientes
             colEstado = new DataGridViewTextBoxColumn();
             colEditar = new DataGridViewButtonColumn();
             colAccion = new DataGridViewButtonColumn();
-            LBuscarC = new Label();
             PAgregarCliente.SuspendLayout();
             PListaClientes.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)DGListaClientes).BeginInit();
             SuspendLayout();
-            // 
+            //
             // LListaClientes
-            // 
+            //
             LListaClientes.AutoSize = true;
             LListaClientes.BackColor = Color.Transparent;
             LListaClientes.Font = new Font("Century Gothic", 20.25F);
@@ -67,9 +67,9 @@ namespace AurenPadelStore.CPresentacion.Empleados.Clientes
             LListaClientes.Size = new Size(228, 33);
             LListaClientes.TabIndex = 3;
             LListaClientes.Text = "Lista de Clientes";
-            // 
+            //
             // PAgregarCliente
-            // 
+            //
             PAgregarCliente.BackColor = Color.FromArgb(64, 64, 64);
             PAgregarCliente.Controls.Add(LNombre);
             PAgregarCliente.Controls.Add(TBNombre);
@@ -88,9 +88,9 @@ namespace AurenPadelStore.CPresentacion.Empleados.Clientes
             PAgregarCliente.Name = "PAgregarCliente";
             PAgregarCliente.Size = new Size(280, 457);
             PAgregarCliente.TabIndex = 1;
-            // 
+            //
             // LNombre
-            // 
+            //
             LNombre.Font = new Font("Century Gothic", 14.25F);
             LNombre.ForeColor = Color.LightGray;
             LNombre.Location = new Point(15, 22);
@@ -98,9 +98,9 @@ namespace AurenPadelStore.CPresentacion.Empleados.Clientes
             LNombre.Size = new Size(100, 23);
             LNombre.TabIndex = 0;
             LNombre.Text = "Nombre";
-            // 
+            //
             // TBNombre
-            // 
+            //
             TBNombre.BackColor = Color.Gainsboro;
             TBNombre.Cursor = Cursors.IBeam;
             TBNombre.Font = new Font("Century Gothic", 12F);
@@ -108,9 +108,9 @@ namespace AurenPadelStore.CPresentacion.Empleados.Clientes
             TBNombre.Name = "TBNombre";
             TBNombre.Size = new Size(250, 27);
             TBNombre.TabIndex = 1;
-            // 
+            //
             // LApellido
-            // 
+            //
             LApellido.Font = new Font("Century Gothic", 14.25F);
             LApellido.ForeColor = Color.LightGray;
             LApellido.Location = new Point(15, 82);
@@ -118,9 +118,9 @@ namespace AurenPadelStore.CPresentacion.Empleados.Clientes
             LApellido.Size = new Size(100, 23);
             LApellido.TabIndex = 2;
             LApellido.Text = "Apellido";
-            // 
+            //
             // TBApellido
-            // 
+            //
             TBApellido.BackColor = Color.Gainsboro;
             TBApellido.Cursor = Cursors.IBeam;
             TBApellido.Font = new Font("Century Gothic", 12F);
@@ -128,9 +128,9 @@ namespace AurenPadelStore.CPresentacion.Empleados.Clientes
             TBApellido.Name = "TBApellido";
             TBApellido.Size = new Size(250, 27);
             TBApellido.TabIndex = 3;
-            // 
+            //
             // LDni
-            // 
+            //
             LDni.Font = new Font("Century Gothic", 14.25F);
             LDni.ForeColor = Color.LightGray;
             LDni.Location = new Point(15, 142);
@@ -138,9 +138,9 @@ namespace AurenPadelStore.CPresentacion.Empleados.Clientes
             LDni.Size = new Size(100, 23);
             LDni.TabIndex = 4;
             LDni.Text = "DNI";
-            // 
+            //
             // TBDni
-            // 
+            //
             TBDni.BackColor = Color.Gainsboro;
             TBDni.Cursor = Cursors.IBeam;
             TBDni.Font = new Font("Century Gothic", 12F);
@@ -149,9 +149,9 @@ namespace AurenPadelStore.CPresentacion.Empleados.Clientes
             TBDni.Size = new Size(250, 27);
             TBDni.TabIndex = 5;
             TBDni.KeyPress += TBNumerico_KeyPress;
-            // 
+            //
             // LDireccion
-            // 
+            //
             LDireccion.Font = new Font("Century Gothic", 14.25F);
             LDireccion.ForeColor = Color.LightGray;
             LDireccion.Location = new Point(15, 203);
@@ -159,9 +159,9 @@ namespace AurenPadelStore.CPresentacion.Empleados.Clientes
             LDireccion.Size = new Size(100, 23);
             LDireccion.TabIndex = 6;
             LDireccion.Text = "Dirección";
-            // 
+            //
             // TBDireccion
-            // 
+            //
             TBDireccion.BackColor = Color.Gainsboro;
             TBDireccion.Cursor = Cursors.IBeam;
             TBDireccion.Font = new Font("Century Gothic", 12F);
@@ -169,9 +169,9 @@ namespace AurenPadelStore.CPresentacion.Empleados.Clientes
             TBDireccion.Name = "TBDireccion";
             TBDireccion.Size = new Size(250, 27);
             TBDireccion.TabIndex = 7;
-            // 
+            //
             // LCorreo
-            // 
+            //
             LCorreo.Font = new Font("Century Gothic", 14.25F);
             LCorreo.ForeColor = Color.LightGray;
             LCorreo.Location = new Point(15, 263);
@@ -179,9 +179,9 @@ namespace AurenPadelStore.CPresentacion.Empleados.Clientes
             LCorreo.Size = new Size(100, 23);
             LCorreo.TabIndex = 8;
             LCorreo.Text = "Correo";
-            // 
+            //
             // TBCorreo
-            // 
+            //
             TBCorreo.BackColor = Color.Gainsboro;
             TBCorreo.Cursor = Cursors.IBeam;
             TBCorreo.Font = new Font("Century Gothic", 12F);
@@ -189,9 +189,9 @@ namespace AurenPadelStore.CPresentacion.Empleados.Clientes
             TBCorreo.Name = "TBCorreo";
             TBCorreo.Size = new Size(250, 27);
             TBCorreo.TabIndex = 9;
-            // 
+            //
             // LTelefono
-            // 
+            //
             LTelefono.Font = new Font("Century Gothic", 14.25F);
             LTelefono.ForeColor = Color.LightGray;
             LTelefono.Location = new Point(15, 323);
@@ -199,9 +199,9 @@ namespace AurenPadelStore.CPresentacion.Empleados.Clientes
             LTelefono.Size = new Size(100, 23);
             LTelefono.TabIndex = 10;
             LTelefono.Text = "Teléfono";
-            // 
+            //
             // TBTelefono
-            // 
+            //
             TBTelefono.BackColor = Color.Gainsboro;
             TBTelefono.Cursor = Cursors.IBeam;
             TBTelefono.Font = new Font("Century Gothic", 12F);
@@ -210,9 +210,9 @@ namespace AurenPadelStore.CPresentacion.Empleados.Clientes
             TBTelefono.Size = new Size(250, 27);
             TBTelefono.TabIndex = 11;
             TBTelefono.KeyPress += TBNumerico_KeyPress;
-            // 
+            //
             // BAgregarCliente
-            // 
+            //
             BAgregarCliente.BackColor = Color.YellowGreen;
             BAgregarCliente.Cursor = Cursors.Hand;
             BAgregarCliente.FlatStyle = FlatStyle.Popup;
@@ -225,9 +225,9 @@ namespace AurenPadelStore.CPresentacion.Empleados.Clientes
             BAgregarCliente.Text = "Agregar Cliente";
             BAgregarCliente.UseVisualStyleBackColor = false;
             BAgregarCliente.Click += BAgregarCliente_Click;
-            // 
+            //
             // LAgregarCliente
-            // 
+            //
             LAgregarCliente.AutoSize = true;
             LAgregarCliente.BackColor = Color.Transparent;
             LAgregarCliente.Font = new Font("Century Gothic", 20.25F);
@@ -237,9 +237,9 @@ namespace AurenPadelStore.CPresentacion.Empleados.Clientes
             LAgregarCliente.Size = new Size(225, 33);
             LAgregarCliente.TabIndex = 0;
             LAgregarCliente.Text = "Agregar Cliente";
-            // 
+            //
             // PListaClientes
-            // 
+            //
             PListaClientes.BackColor = Color.Transparent;
             PListaClientes.Controls.Add(LBuscarC);
             PListaClientes.Controls.Add(label1);
@@ -250,9 +250,20 @@ namespace AurenPadelStore.CPresentacion.Empleados.Clientes
             PListaClientes.Name = "PListaClientes";
             PListaClientes.Size = new Size(883, 503);
             PListaClientes.TabIndex = 2;
-            // 
+            //
+            // LBuscarC
+            //
+            LBuscarC.AutoSize = true;
+            LBuscarC.Font = new Font("Century Gothic", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            LBuscarC.ForeColor = Color.LightGray;
+            LBuscarC.Location = new Point(18, 14);
+            LBuscarC.Name = "LBuscarC";
+            LBuscarC.Size = new Size(81, 22);
+            LBuscarC.TabIndex = 7;
+            LBuscarC.Text = "Buscar: ";
+            //
             // label1
-            // 
+            //
             label1.AutoSize = true;
             label1.Font = new Font("Century Gothic", 14.25F);
             label1.ForeColor = Color.LightGray;
@@ -261,9 +272,9 @@ namespace AurenPadelStore.CPresentacion.Empleados.Clientes
             label1.Size = new Size(62, 22);
             label1.TabIndex = 6;
             label1.Text = "Filtrar:";
-            // 
+            //
             // CBFiltroC
-            // 
+            //
             CBFiltroC.BackColor = Color.LightGray;
             CBFiltroC.Cursor = Cursors.Hand;
             CBFiltroC.DropDownStyle = ComboBoxStyle.DropDownList;
@@ -273,21 +284,22 @@ namespace AurenPadelStore.CPresentacion.Empleados.Clientes
             CBFiltroC.Name = "CBFiltroC";
             CBFiltroC.Size = new Size(168, 29);
             CBFiltroC.TabIndex = 5;
-            // 
+            //
             // TBBuscarC
-            // 
+            //
             TBBuscarC.BackColor = Color.FromArgb(64, 64, 64);
             TBBuscarC.BorderStyle = BorderStyle.FixedSingle;
             TBBuscarC.Cursor = Cursors.IBeam;
             TBBuscarC.Font = new Font("Century Gothic", 12F);
+            TBBuscarC.ForeColor = Color.LightGray;
             TBBuscarC.Location = new Point(105, 11);
             TBBuscarC.Name = "TBBuscarC";
             TBBuscarC.PlaceholderText = "  Cliente...";
             TBBuscarC.Size = new Size(213, 27);
             TBBuscarC.TabIndex = 4;
-            // 
+            //
             // DGListaClientes
-            // 
+            //
             DGListaClientes.AllowUserToAddRows = false;
             DGListaClientes.BackgroundColor = Color.FromArgb(64, 64, 64);
             DGListaClientes.BorderStyle = BorderStyle.None;
@@ -315,50 +327,50 @@ namespace AurenPadelStore.CPresentacion.Empleados.Clientes
             DGListaClientes.RowTemplate.Height = 40;
             DGListaClientes.Size = new Size(883, 446);
             DGListaClientes.TabIndex = 0;
-            // 
+            //
             // colNombre
-            // 
+            //
             colNombre.HeaderText = "Nombre";
             colNombre.Name = "colNombre";
             colNombre.Width = 107;
-            // 
+            //
             // colApellido
-            // 
+            //
             colApellido.HeaderText = "Apellido";
             colApellido.Name = "colApellido";
             colApellido.Width = 107;
-            // 
+            //
             // colDni
-            // 
+            //
             colDni.HeaderText = "DNI";
             colDni.Name = "colDni";
             colDni.Width = 107;
-            // 
+            //
             // colDireccion
-            // 
+            //
             colDireccion.HeaderText = "Dirección";
             colDireccion.Name = "colDireccion";
             colDireccion.Width = 107;
-            // 
+            //
             // colCorreo
-            // 
+            //
             colCorreo.HeaderText = "Correo";
             colCorreo.Name = "colCorreo";
             colCorreo.Width = 107;
-            // 
+            //
             // colTelefono
-            // 
+            //
             colTelefono.HeaderText = "Teléfono";
             colTelefono.Name = "colTelefono";
             colTelefono.Width = 107;
-            // 
+            //
             // colEstado
-            // 
+            //
             colEstado.HeaderText = "Estado";
             colEstado.Name = "colEstado";
-            // 
+            //
             // colEditar
-            // 
+            //
             dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleCenter;
             dataGridViewCellStyle2.BackColor = Color.LightGreen;
             dataGridViewCellStyle2.ForeColor = Color.Black;
@@ -369,27 +381,16 @@ namespace AurenPadelStore.CPresentacion.Empleados.Clientes
             colEditar.Text = "Editar";
             colEditar.UseColumnTextForButtonValue = true;
             colEditar.Width = 65;
-            // 
+            //
             // colAccion
-            // 
+            //
             colAccion.FlatStyle = FlatStyle.Flat;
             colAccion.HeaderText = "Acción";
             colAccion.Name = "colAccion";
             colAccion.Width = 75;
-            // 
-            // LBuscarC
-            // 
-            LBuscarC.AutoSize = true;
-            LBuscarC.Font = new Font("Century Gothic", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            LBuscarC.ForeColor = Color.LightGray;
-            LBuscarC.Location = new Point(18, 14);
-            LBuscarC.Name = "LBuscarC";
-            LBuscarC.Size = new Size(81, 22);
-            LBuscarC.TabIndex = 7;
-            LBuscarC.Text = "Buscar: ";
-            // 
+            //
             // FClientes
-            // 
+            //
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.Black;

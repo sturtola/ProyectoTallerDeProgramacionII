@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 namespace AurenPadelStore.CEntidades
 {
     // DTO para combos/filtros de categorías
-    public class CategoriaDTO
+    public class Categoria
     {
-        public int Id { get; set; }
-        public string Nombre { get; set; }
-        public override string ToString() => Nombre;
+        public int id_Categoria { get; set; }
+        public required string Nombre_Categoria { get; set; }
+        public override string ToString() => Nombre_Categoria;
     }
 }
 

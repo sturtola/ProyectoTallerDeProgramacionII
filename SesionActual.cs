@@ -4,12 +4,21 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AurenPadelStore
+// Corregido: Movido al namespace de Entidades para consistencia
+namespace AurenPadelStore.CEntidades
 {
     public static class SesionActual
     {
-        public static string DNI { get; set; }
-        public static string Nombre { get; set; }
-        public static string Rol { get; set; }
+        public static int Id_UsuarioActual { get; set; }
+        public static string NombreCompleto { get; set; } = string.Empty;
+        public static string Rol { get; set; } = string.Empty;
+
+        // Método para limpiar la sesión al cerrar
+        public static void CerrarSesion()
+        {
+            Id_UsuarioActual = 0;
+            NombreCompleto = string.Empty;
+            Rol = string.Empty;
+        }
     }
 }

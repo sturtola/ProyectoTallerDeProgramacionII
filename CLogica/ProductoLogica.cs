@@ -12,10 +12,19 @@ namespace AurenPadelStore.CLogica
         private static bool Texto(string s) => !string.IsNullOrWhiteSpace(s);
 
         public List<Producto> Listar() => datos.ObtenerTodos();
-        public Producto Obtener(int id) => datos.ObtenerPorId(id);
+        public Producto Obtener(int id)
+        {
+            var producto = datos.ObtenerPorId(id);
+            if (producto is null)
+                throw new Exception($"No se encontró el producto con id {id}.");
+            return producto;
+        }
+
+        private readonly ProductoDatos _datos = new ProductoDatos();
+        public List<Producto> ObtenerTodosActivos() => _datos.ObtenerTodosActivos();
 
         // Para combo/filtros
-        public List<CategoriaDTO> ListarCategorias() => datos.ListarCategorias();
+        public List<Categoria> ListarCategorias() => datos.ListarCategorias();
 
         private int ResolverIdCategoriaObligatoria(string nombreCategoria)
         {

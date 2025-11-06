@@ -18,7 +18,6 @@ namespace AurenPadelStore.CPresentacion.Empleados.Ventas.ListarVentas
 
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FListarVentas));
             DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
             DataGridViewCellStyle dataGridViewCellStyle5 = new DataGridViewCellStyle();
             DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
@@ -26,7 +25,6 @@ namespace AurenPadelStore.CPresentacion.Empleados.Ventas.ListarVentas
             DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
             LTitulo = new Label();
             PListaVentas = new Panel();
-            BBuscarV = new Button();
             CBFiltroV = new ComboBox();
             LFiltrar = new Label();
             TBBuscarV = new TextBox();
@@ -58,7 +56,6 @@ namespace AurenPadelStore.CPresentacion.Empleados.Ventas.ListarVentas
             // PListaVentas
             // 
             PListaVentas.BackColor = Color.Transparent;
-            PListaVentas.Controls.Add(BBuscarV);
             PListaVentas.Controls.Add(CBFiltroV);
             PListaVentas.Controls.Add(LFiltrar);
             PListaVentas.Controls.Add(TBBuscarV);
@@ -67,19 +64,6 @@ namespace AurenPadelStore.CPresentacion.Empleados.Ventas.ListarVentas
             PListaVentas.Name = "PListaVentas";
             PListaVentas.Size = new Size(983, 503);
             PListaVentas.TabIndex = 1;
-            // 
-            // BBuscarV
-            // 
-            BBuscarV.BackColor = Color.LightGray;
-            BBuscarV.BackgroundImage = (Image)resources.GetObject("BBuscarV.BackgroundImage");
-            BBuscarV.BackgroundImageLayout = ImageLayout.Stretch;
-            BBuscarV.Cursor = Cursors.Hand;
-            BBuscarV.FlatStyle = FlatStyle.Popup;
-            BBuscarV.Location = new Point(240, 11);
-            BBuscarV.Name = "BBuscarV";
-            BBuscarV.Size = new Size(33, 29);
-            BBuscarV.TabIndex = 3;
-            BBuscarV.UseVisualStyleBackColor = false;
             // 
             // CBFiltroV
             // 
@@ -238,7 +222,6 @@ namespace AurenPadelStore.CPresentacion.Empleados.Ventas.ListarVentas
 
         private Label LTitulo;
         private Panel PListaVentas;
-        private Button BBuscarV;
         private ComboBox CBFiltroV;
         private Label LFiltrar;
         private TextBox TBBuscarV;

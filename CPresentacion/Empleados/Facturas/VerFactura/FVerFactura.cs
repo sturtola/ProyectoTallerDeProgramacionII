@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace AurenPadelStore.CPresentacion.Empleados.Facturas.VerFactura
+namespace AurenPadelStore.CPresentacion.Empleados.Facturas
 {
     public partial class FVerFactura : Form
     {

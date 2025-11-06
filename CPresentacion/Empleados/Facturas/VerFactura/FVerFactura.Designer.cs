@@ -1,4 +1,7 @@
-﻿namespace AurenPadelStore.CPresentacion.Empleados.Facturas.VerFactura
+﻿using System.Windows.Forms;
+using System.Drawing;
+
+namespace AurenPadelStore.CPresentacion.Empleados.Facturas
 {
     partial class FVerFactura
     {

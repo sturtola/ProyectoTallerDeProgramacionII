@@ -13,7 +13,8 @@ namespace AurenPadelStore.CPresentacion.Empleados.Productos
 {
     public partial class FProductos : Form
     {
-        private Panel _scrollHost;
+        // Cambia la inicialización del campo _scrollHost para que acepte nulos
+        private Panel? _scrollHost;
         private readonly Size _designContentSize = new Size(1334, 659);
 
         private readonly ProductoLogica _logica = new ProductoLogica();
@@ -23,7 +24,8 @@ namespace AurenPadelStore.CPresentacion.Empleados.Productos
 
         private readonly CultureInfo _esAR = new CultureInfo("es-AR");
 
-        private string _imagenSeleccionadaPathRelativa = null;
+        // Cambia la declaración de _imagenSeleccionadaPathRelativa para permitir valores nulos
+        private string? _imagenSeleccionadaPathRelativa = null;
 
         // Búsqueda + filtros
         private System.Windows.Forms.Timer _debounceTimer;
@@ -35,6 +37,8 @@ namespace AurenPadelStore.CPresentacion.Empleados.Productos
         public FProductos()
         {
             InitializeComponent();
+
+            _debounceTimer = new System.Windows.Forms.Timer();
 
             DGListaProd.CellContentClick += DGListaProd_CellContentClick;
             DGListaProd.RowsAdded += (s, e) =>
@@ -69,7 +73,7 @@ namespace AurenPadelStore.CPresentacion.Empleados.Productos
             CBFiltrosProd.SelectedIndexChanged += (_, __) => FiltroSeleccionadoCambio();
         }
 
-        private void FProductos_Load(object sender, EventArgs e)
+        private void FProductos_Load(object? sender, EventArgs e)
         {
             if (SesionActual.Rol != null &&
                 SesionActual.Rol.Equals("Vendedor", StringComparison.OrdinalIgnoreCase))
@@ -83,7 +87,8 @@ namespace AurenPadelStore.CPresentacion.Empleados.Productos
             ConstruirOpcionesDeFiltros();
             AplicarBusquedaYFiltros();
 
-            _scrollHost.AutoScrollPosition = Point.Empty;
+            if (_scrollHost != null)
+                _scrollHost.AutoScrollPosition = Point.Empty;
         }
 
         // ==== Categorías (combo alta/edición) ====
@@ -112,7 +117,7 @@ namespace AurenPadelStore.CPresentacion.Empleados.Productos
             }
         }
 
-        private void RecargarCategoriasYSeleccionar(string nombreCategoriaPreferida = null)
+        private void RecargarCategoriasYSeleccionar(string? nombreCategoriaPreferida = null)
         {
             CargarCategorias();
 
@@ -124,7 +129,7 @@ namespace AurenPadelStore.CPresentacion.Empleados.Productos
                                      .Select(o => new
                                      {
                                          Obj = o,
-                                         Nombre = (o as CategoriaDTO)?.Nombre
+                                         Nombre = (o as Categoria)?.Nombre_Categoria
                                      })
                                      .ToList();
 
@@ -170,6 +175,8 @@ namespace AurenPadelStore.CPresentacion.Empleados.Productos
 
         private void UpdateScrollbars()
         {
+            if (_scrollHost == null) return; // <-- Añadido para evitar desreferencia nula
+
             if (this.WindowState == FormWindowState.Maximized)
             {
                 _scrollHost.AutoScrollMinSize = Size.Empty;
@@ -209,7 +216,7 @@ namespace AurenPadelStore.CPresentacion.Empleados.Productos
         }
 
         // ==== Formato precio ====
-        private void DGListaProd_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        private void DGListaProd_CellFormatting(object? sender, DataGridViewCellFormattingEventArgs e)
         {
             if (DGListaProd.Columns[e.ColumnIndex].Name == "colPrecio" && e.Value != null)
             {
@@ -221,7 +228,7 @@ namespace AurenPadelStore.CPresentacion.Empleados.Productos
             }
         }
 
-        private void DGListaProd_CellToolTipTextNeeded(object sender, DataGridViewCellToolTipTextNeededEventArgs e)
+        private void DGListaProd_CellToolTipTextNeeded(object? sender, DataGridViewCellToolTipTextNeededEventArgs e)
         {
             if (e.RowIndex >= 0 && e.ColumnIndex >= 0)
             {
@@ -255,7 +262,7 @@ namespace AurenPadelStore.CPresentacion.Empleados.Productos
             }
         }
 
-        private void DGListaProd_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        private void DGListaProd_CellContentClick(object? sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex < 0 || e.ColumnIndex < 0) return;
             var colName = DGListaProd.Columns[e.ColumnIndex].Name;
@@ -331,7 +338,7 @@ namespace AurenPadelStore.CPresentacion.Empleados.Productos
         }
 
         // ==== Agregar / Guardar ====
-        private void BAgregarProducto_Click(object sender, EventArgs e)
+        private void BAgregarProducto_Click(object? sender, EventArgs e)
         {
             // Validación UI única
             if (!ValidarFormulario(out string msgValid, out decimal precio, out int stock))
@@ -419,7 +426,7 @@ namespace AurenPadelStore.CPresentacion.Empleados.Productos
                         Material_Producto = TBMaterialP.Text.Trim(),
                         Stock_Producto = stock,
                         Precio_Unitario_Producto = precio,
-                        Imagen_Producto = _imagenSeleccionadaPathRelativa,
+                        Imagen_Producto = _imagenSeleccionadaPathRelativa ?? string.Empty,
                         Estado_Producto = true
                     };
 
@@ -454,14 +461,15 @@ namespace AurenPadelStore.CPresentacion.Empleados.Productos
         }
 
         // ==== Validaciones de tipeo ====
-        private void TBPrecio_KeyPress(object sender, KeyPressEventArgs e)
+        private void TBPrecio_KeyPress(object? sender, KeyPressEventArgs e)
         {
             if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) &&
                 e.KeyChar != ',' && e.KeyChar != '.')
                 e.Handled = true;
         }
 
-        private void TBStock_KeyPress(object sender, KeyPressEventArgs e)
+        // Cambia la firma del método para que el parámetro sender no sea nullable
+        private void TBStock_KeyPress(object? sender, KeyPressEventArgs e)
         {
             if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
                 e.Handled = true;
@@ -621,7 +629,7 @@ namespace AurenPadelStore.CPresentacion.Empleados.Productos
                 PBImagenP.Image = CargarImagenSinLock(full);
         }
 
-        private void BExaminarImg_Click(object sender, EventArgs e)
+        private void BExaminarImg_Click(object? sender, EventArgs e)
         {
             try
             {
@@ -691,7 +699,7 @@ namespace AurenPadelStore.CPresentacion.Empleados.Productos
             panel.MouseDown += (s, e) => DGListaProd.Focus();
         }
 
-        private void DGListaProd_CellMouseMove(object sender, DataGridViewCellMouseEventArgs e)
+        private void DGListaProd_CellMouseMove(object? sender, DataGridViewCellMouseEventArgs e)
         {
             if (e.RowIndex < 0 || e.ColumnIndex < 0) return;
             DGListaProd.Cursor = (DGListaProd.Columns[e.ColumnIndex].Name == "colAccion")
@@ -717,7 +725,7 @@ namespace AurenPadelStore.CPresentacion.Empleados.Productos
                 try
                 {
                     categorias = _logica.ListarCategorias()
-                                        ?.Select(c => c.Nombre)
+                                        ?.Select(c => c.Nombre_Categoria)
                                         .Where(n => !string.IsNullOrWhiteSpace(n))
                                         .Distinct(StringComparer.OrdinalIgnoreCase)
                                         .OrderBy(n => n, StringComparer.OrdinalIgnoreCase)

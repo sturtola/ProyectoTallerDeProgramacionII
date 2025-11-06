@@ -17,5 +17,8 @@
         public string Categoria_Nombre { get; set; }  // Para mostrar (JOIN)
 
         public string NombreMostrar => $"{Nombre_Producto} - {Marca_Producto}";
+
+        public string Mostrar =>
+            $"{Nombre_Producto} ({Marca_Producto}) — Stock:{Stock_Producto} — ${Precio_Unitario_Producto:N2}";
     }
 }
