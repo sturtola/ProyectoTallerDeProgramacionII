@@ -2,6 +2,7 @@
 using AurenPadelStore.CPresentacion.Empleados.Clientes;
 using AurenPadelStore.CPresentacion.Empleados.Ventas.ListarVentas;
 using AurenPadelStore.CPresentacion.Empleados.Ventas;
+using AurenPadelStore.CPresentacion.Empleados.Facturas.ListarFacturas;
 using System;
 using System.Drawing;
 using System.Linq;
@@ -127,6 +128,11 @@ namespace AurenPadelStore.CPresentacion.Empleados
             OpenSingle(() => new FProductos());
         }
 
+        private void listaDeFacturasToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenSingle(() => new FListarFacturas());
+        }
+
         private void clientesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             OpenSingle(() => new FClientes());
@@ -141,11 +147,19 @@ namespace AurenPadelStore.CPresentacion.Empleados
 
         private void cerrarSesiónToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            // Oculta el formulario actual
             this.Hide();
+
+            // Limpia cualquier sesión activa si la estás usando
+            AurenPadelStore.CEntidades.SesionActual.Id_UsuarioActual = 0;
+            AurenPadelStore.CEntidades.SesionActual.Rol = null;
+
+            // Muestra el formulario de inicio de sesión
             var login = new AurenPadelStore.CPresentacion.InicioSesion.FInicioSesion();
+            login.FormClosed += (s, args) => this.Show(); // Opcional: si querés volver si cancela
             login.Show();
-            this.Close();
         }
+
 
         private void salirToolStripMenuItem_Click(object sender, EventArgs e)
         {

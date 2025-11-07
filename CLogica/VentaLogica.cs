@@ -17,6 +17,13 @@ namespace AurenPadelStore.CLogica
     public class VentaLogica
 
     {
+        private readonly VentaDatos _ventaDatos = new VentaDatos();
+
+        public List<VentaListado> ListadoPorUsuario(int idUsuario)
+        {
+            return _ventaDatos.ObtenerListadoPorUsuario(idUsuario);
+        }
+
 
         private readonly VentaDatos _datos = new VentaDatos();
 

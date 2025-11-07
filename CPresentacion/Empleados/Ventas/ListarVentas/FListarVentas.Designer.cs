@@ -73,9 +73,9 @@ namespace AurenPadelStore.CPresentacion.Empleados.Ventas.ListarVentas
             CBFiltroV.Font = new Font("Century Gothic", 12F);
             CBFiltroV.FormattingEnabled = true;
             CBFiltroV.Items.AddRange(new object[] { "Sin filtro", "Fecha (más reciente)", "Fecha (más antigua)", "Cliente A-Z", "Cliente Z-A" });
-            CBFiltroV.Location = new Point(818, 11);
+            CBFiltroV.Location = new Point(781, 11);
             CBFiltroV.Name = "CBFiltroV";
-            CBFiltroV.Size = new Size(162, 29);
+            CBFiltroV.Size = new Size(199, 29);
             CBFiltroV.TabIndex = 2;
             // 
             // LFiltrar
@@ -83,7 +83,7 @@ namespace AurenPadelStore.CPresentacion.Empleados.Ventas.ListarVentas
             LFiltrar.AutoSize = true;
             LFiltrar.Font = new Font("Century Gothic", 14.25F);
             LFiltrar.ForeColor = Color.LightGray;
-            LFiltrar.Location = new Point(735, 13);
+            LFiltrar.Location = new Point(713, 13);
             LFiltrar.Name = "LFiltrar";
             LFiltrar.Size = new Size(62, 22);
             LFiltrar.TabIndex = 3;

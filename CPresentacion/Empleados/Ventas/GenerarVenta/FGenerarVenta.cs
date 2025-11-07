@@ -523,7 +523,7 @@ namespace AurenPadelStore.CPresentacion.Empleados.Ventas
         {
             if (CBEfectivo.Checked) return "Efectivo";
             if (CBTransf.Checked) return "Transferencia";
-            if (CBTarjeta.Checked) return "Tarjeta";
+            if (CBTarjeta.Checked) return "Tarjeta débito/crédito";
             return null;
         }
 

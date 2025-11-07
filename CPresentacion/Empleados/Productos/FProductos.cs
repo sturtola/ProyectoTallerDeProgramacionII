@@ -13,7 +13,6 @@ namespace AurenPadelStore.CPresentacion.Empleados.Productos
 {
     public partial class FProductos : Form
     {
-        // Cambia la inicialización del campo _scrollHost para que acepte nulos
         private Panel? _scrollHost;
         private readonly Size _designContentSize = new Size(1334, 659);
 
@@ -23,8 +22,6 @@ namespace AurenPadelStore.CPresentacion.Empleados.Productos
         private int? _idProductoEdicion = null;
 
         private readonly CultureInfo _esAR = new CultureInfo("es-AR");
-
-        // Cambia la declaración de _imagenSeleccionadaPathRelativa para permitir valores nulos
         private string? _imagenSeleccionadaPathRelativa = null;
 
         // Búsqueda + filtros
@@ -34,6 +31,11 @@ namespace AurenPadelStore.CPresentacion.Empleados.Productos
         private string _marcaSel = "Todas";
         private bool _reconstruyendoFiltros = false;
 
+        // ===== NUEVO: helper de rol =====
+        private bool EsVendedor =>
+            SesionActual.Rol != null &&
+            SesionActual.Rol.Equals("Vendedor", StringComparison.OrdinalIgnoreCase);
+
         public FProductos()
         {
             InitializeComponent();
@@ -41,14 +43,20 @@ namespace AurenPadelStore.CPresentacion.Empleados.Productos
             _debounceTimer = new System.Windows.Forms.Timer();
 
             DGListaProd.CellContentClick += DGListaProd_CellContentClick;
+
             DGListaProd.RowsAdded += (s, e) =>
             {
                 for (int i = 0; i < e.RowCount; i++)
                     SetAccionSegunEstado(DGListaProd.Rows[e.RowIndex + i]);
             };
+
+            // ===== NUEVO: cursor bloqueado en colAccion si es Vendedor =====
             DGListaProd.CellMouseMove += DGListaProd_CellMouseMove;
             DGListaProd.CellMouseLeave += (s, e) => DGListaProd.Cursor = Cursors.Default;
+
             DGListaProd.CellFormatting += DGListaProd_CellFormatting;
+
+            // ===== NUEVO: tooltip en colAccion según permisos =====
             DGListaProd.CellToolTipTextNeeded += DGListaProd_CellToolTipTextNeeded;
 
             PrepararScrollHost();
@@ -75,8 +83,8 @@ namespace AurenPadelStore.CPresentacion.Empleados.Productos
 
         private void FProductos_Load(object? sender, EventArgs e)
         {
-            if (SesionActual.Rol != null &&
-                SesionActual.Rol.Equals("Vendedor", StringComparison.OrdinalIgnoreCase))
+            // Ya bloqueabas el panel de alta para Vendedor
+            if (EsVendedor)
             {
                 BloquearInteraccionSinCambiarEstilo(PAgregarProducto, BAgregarProducto,
                     "No tiene permitido realizar esta acción.");
@@ -89,6 +97,7 @@ namespace AurenPadelStore.CPresentacion.Empleados.Productos
 
             if (_scrollHost != null)
                 _scrollHost.AutoScrollPosition = Point.Empty;
+
         }
 
         // ==== Categorías (combo alta/edición) ====
@@ -99,7 +108,7 @@ namespace AurenPadelStore.CPresentacion.Empleados.Productos
                 var cats = _logica.ListarCategorias();
 
                 CBCategoriaP.DataSource = null;
-                CBCategoriaP.DropDownStyle = ComboBoxStyle.DropDown; // permite escribir nuevas
+                CBCategoriaP.DropDownStyle = ComboBoxStyle.DropDown;
                 CBCategoriaP.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
                 CBCategoriaP.AutoCompleteSource = AutoCompleteSource.ListItems;
 
@@ -175,7 +184,7 @@ namespace AurenPadelStore.CPresentacion.Empleados.Productos
 
         private void UpdateScrollbars()
         {
-            if (_scrollHost == null) return; // <-- Añadido para evitar desreferencia nula
+            if (_scrollHost == null) return;
 
             if (this.WindowState == FormWindowState.Maximized)
             {
@@ -233,11 +242,17 @@ namespace AurenPadelStore.CPresentacion.Empleados.Productos
             if (e.RowIndex >= 0 && e.ColumnIndex >= 0)
             {
                 var col = DGListaProd.Columns[e.ColumnIndex];
+
                 if (col.Name == "colDesc")
                 {
                     var value = DGListaProd.Rows[e.RowIndex].Cells[e.ColumnIndex].Value;
-                    if (value != null)
-                        e.ToolTipText = value.ToString();
+                    if (value != null) e.ToolTipText = value.ToString();
+                }
+
+                // ===== NUEVO: tooltip de permiso en colAccion =====
+                if (col.Name == "colAccion" && EsVendedor)
+                {
+                    e.ToolTipText = "No tiene permitido realizar esta acción.";
                 }
             }
         }
@@ -265,8 +280,17 @@ namespace AurenPadelStore.CPresentacion.Empleados.Productos
         private void DGListaProd_CellContentClick(object? sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex < 0 || e.ColumnIndex < 0) return;
+
             var colName = DGListaProd.Columns[e.ColumnIndex].Name;
             var row = DGListaProd.Rows[e.RowIndex];
+
+            // ===== NUEVO: bloquear acción al Vendedor =====
+            if (colName == "colAccion" && EsVendedor)
+            {
+                MessageBox.Show("El rol VENDEDOR no puede activar/inactivar productos.",
+                                "Acción bloqueada", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
 
             if (colName == "colAccion")
             {
@@ -337,10 +361,24 @@ namespace AurenPadelStore.CPresentacion.Empleados.Productos
             }
         }
 
+        // ===== NUEVO: cursor bloqueado / mano en colAccion =====
+        private void DGListaProd_CellMouseMove(object? sender, DataGridViewCellMouseEventArgs e)
+        {
+            if (e.RowIndex < 0 || e.ColumnIndex < 0) return;
+
+            var isAccion = DGListaProd.Columns[e.ColumnIndex].Name == "colAccion";
+
+            if (isAccion && EsVendedor)
+                DGListaProd.Cursor = Cursors.No;
+            else if (isAccion)
+                DGListaProd.Cursor = Cursors.Hand;
+            else
+                DGListaProd.Cursor = Cursors.Default;
+        }
+
         // ==== Agregar / Guardar ====
         private void BAgregarProducto_Click(object? sender, EventArgs e)
         {
-            // Validación UI única
             if (!ValidarFormulario(out string msgValid, out decimal precio, out int stock))
             {
                 MessageBox.Show(msgValid, "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -363,10 +401,7 @@ namespace AurenPadelStore.CPresentacion.Empleados.Productos
                 CancelarEdicionYLimpiar();
                 return;
             }
-            if (dr == DialogResult.No)
-            {
-                return;
-            }
+            if (dr == DialogResult.No) return;
 
             try
             {
@@ -389,7 +424,6 @@ namespace AurenPadelStore.CPresentacion.Empleados.Productos
 
                     _logica.Actualizar(p, nombreCategoriaEscrito);
 
-                    // Refrescar fila si querés
                     var row = DGListaProd.Rows
                         .Cast<DataGridViewRow>()
                         .FirstOrDefault(rr => (rr.Cells["colId"].Value is int id) && id == p.id_Producto);
@@ -441,12 +475,10 @@ namespace AurenPadelStore.CPresentacion.Empleados.Productos
                 }
 
                 AplicarBusquedaYFiltros();
-                // Después de éxito NO mostramos ninguna validación
                 CancelarEdicionYLimpiar();
             }
             catch (Exception ex)
             {
-                // Un solo mensaje aquí. La UI ya validó antes.
                 MessageBox.Show("Error al guardar: " + ex.Message,
                                 "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
@@ -468,15 +500,13 @@ namespace AurenPadelStore.CPresentacion.Empleados.Productos
                 e.Handled = true;
         }
 
-        // Cambia la firma del método para que el parámetro sender no sea nullable
         private void TBStock_KeyPress(object? sender, KeyPressEventArgs e)
         {
             if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
                 e.Handled = true;
         }
 
-        // ==== Validación Form + parser precio (única fuente de verdad en UI) ====
-
+        // ==== Validación Form + parser precio ====
         private bool ValidarFormulario(out string mensaje, out decimal precio, out int stock)
         {
             mensaje = "";
@@ -525,7 +555,7 @@ namespace AurenPadelStore.CPresentacion.Empleados.Productos
                 mensaje = "El stock debe ser un número entero";
                 return false;
             }
-            if (stock < 0) // cambia a <= 0 si querés estrictamente positivo
+            if (stock < 0)
             {
                 mensaje = "El stock debe ser mayor o igual a 0";
                 return false;
@@ -534,8 +564,6 @@ namespace AurenPadelStore.CPresentacion.Empleados.Productos
             return true;
         }
 
-        // Regla: el ÚLTIMO separador ('.' o ',') es DECIMAL solo si tiene EXACTAMENTE 2 dígitos a la derecha.
-        // Los demás separadores se consideran de miles y se ignoran.
         private bool ParsePrecioFlexible(string input, out decimal value)
         {
             value = 0m;
@@ -697,14 +725,6 @@ namespace AurenPadelStore.CPresentacion.Empleados.Productos
             }
 
             panel.MouseDown += (s, e) => DGListaProd.Focus();
-        }
-
-        private void DGListaProd_CellMouseMove(object? sender, DataGridViewCellMouseEventArgs e)
-        {
-            if (e.RowIndex < 0 || e.ColumnIndex < 0) return;
-            DGListaProd.Cursor = (DGListaProd.Columns[e.ColumnIndex].Name == "colAccion")
-                                ? Cursors.Hand
-                                : Cursors.Default;
         }
 
         // ==== Buscar + filtrar + ordenar ====

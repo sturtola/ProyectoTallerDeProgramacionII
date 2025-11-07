@@ -32,7 +32,7 @@ namespace AurenPadelStore.CPresentacion.Empleados.Facturas
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FVerFactura));
-            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
             PDatosFact = new Panel();
             TBFechaFact = new TextBox();
             TBNroFact = new TextBox();
@@ -50,6 +50,8 @@ namespace AurenPadelStore.CPresentacion.Empleados.Facturas
             TBNyAC = new TextBox();
             TBDirecC = new TextBox();
             PImportes = new Panel();
+            TBMetodoPago = new TextBox();
+            LMetodoPago = new Label();
             TBSubtotal = new TextBox();
             TBEnvio = new TextBox();
             TBImporteT = new TextBox();
@@ -57,6 +59,8 @@ namespace AurenPadelStore.CPresentacion.Empleados.Facturas
             LEnvio = new Label();
             LSubtotal = new Label();
             PDatosTienda = new Panel();
+            TBVendedor = new TextBox();
+            LVendedor = new Label();
             LDirecT2 = new Label();
             LTelefonoT2 = new Label();
             LCuitT2 = new Label();
@@ -73,8 +77,6 @@ namespace AurenPadelStore.CPresentacion.Empleados.Facturas
             ColCantidad = new DataGridViewTextBoxColumn();
             ColSubtotal = new DataGridViewTextBoxColumn();
             BImprimiFact = new Button();
-            LMetodoPago = new Label();
-            textBox1 = new TextBox();
             PDatosFact.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)PBLogoAuren).BeginInit();
             PDatosC.SuspendLayout();
@@ -249,7 +251,7 @@ namespace AurenPadelStore.CPresentacion.Empleados.Facturas
             // PImportes
             // 
             PImportes.BorderStyle = BorderStyle.FixedSingle;
-            PImportes.Controls.Add(textBox1);
+            PImportes.Controls.Add(TBMetodoPago);
             PImportes.Controls.Add(LMetodoPago);
             PImportes.Controls.Add(TBSubtotal);
             PImportes.Controls.Add(TBEnvio);
@@ -262,10 +264,28 @@ namespace AurenPadelStore.CPresentacion.Empleados.Facturas
             PImportes.Size = new Size(533, 115);
             PImportes.TabIndex = 0;
             // 
+            // TBMetodoPago
+            // 
+            TBMetodoPago.Font = new Font("Arial", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            TBMetodoPago.Location = new Point(115, 3);
+            TBMetodoPago.Name = "TBMetodoPago";
+            TBMetodoPago.Size = new Size(139, 21);
+            TBMetodoPago.TabIndex = 11;
+            // 
+            // LMetodoPago
+            // 
+            LMetodoPago.AutoSize = true;
+            LMetodoPago.Font = new Font("Arial", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            LMetodoPago.Location = new Point(11, 8);
+            LMetodoPago.Name = "LMetodoPago";
+            LMetodoPago.Size = new Size(98, 15);
+            LMetodoPago.TabIndex = 10;
+            LMetodoPago.Text = "Método de pago:";
+            // 
             // TBSubtotal
             // 
             TBSubtotal.Font = new Font("Arial", 9.75F);
-            TBSubtotal.Location = new Point(358, 22);
+            TBSubtotal.Location = new Point(375, 19);
             TBSubtotal.Name = "TBSubtotal";
             TBSubtotal.Size = new Size(153, 22);
             TBSubtotal.TabIndex = 9;
@@ -273,7 +293,7 @@ namespace AurenPadelStore.CPresentacion.Empleados.Facturas
             // TBEnvio
             // 
             TBEnvio.Font = new Font("Arial", 9.75F);
-            TBEnvio.Location = new Point(411, 52);
+            TBEnvio.Location = new Point(428, 49);
             TBEnvio.Name = "TBEnvio";
             TBEnvio.Size = new Size(100, 22);
             TBEnvio.TabIndex = 8;
@@ -281,7 +301,7 @@ namespace AurenPadelStore.CPresentacion.Empleados.Facturas
             // TBImporteT
             // 
             TBImporteT.Font = new Font("Arial", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            TBImporteT.Location = new Point(358, 80);
+            TBImporteT.Location = new Point(375, 77);
             TBImporteT.Name = "TBImporteT";
             TBImporteT.Size = new Size(153, 26);
             TBImporteT.TabIndex = 7;
@@ -319,6 +339,8 @@ namespace AurenPadelStore.CPresentacion.Empleados.Facturas
             // PDatosTienda
             // 
             PDatosTienda.BorderStyle = BorderStyle.FixedSingle;
+            PDatosTienda.Controls.Add(TBVendedor);
+            PDatosTienda.Controls.Add(LVendedor);
             PDatosTienda.Controls.Add(LDirecT2);
             PDatosTienda.Controls.Add(LTelefonoT2);
             PDatosTienda.Controls.Add(LCuitT2);
@@ -334,11 +356,29 @@ namespace AurenPadelStore.CPresentacion.Empleados.Facturas
             PDatosTienda.Size = new Size(533, 99);
             PDatosTienda.TabIndex = 0;
             // 
+            // TBVendedor
+            // 
+            TBVendedor.Font = new Font("Arial", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            TBVendedor.Location = new Point(369, 33);
+            TBVendedor.Name = "TBVendedor";
+            TBVendedor.Size = new Size(159, 21);
+            TBVendedor.TabIndex = 10;
+            // 
+            // LVendedor
+            // 
+            LVendedor.AutoSize = true;
+            LVendedor.Font = new Font("Arial", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            LVendedor.Location = new Point(283, 36);
+            LVendedor.Name = "LVendedor";
+            LVendedor.Size = new Size(80, 18);
+            LVendedor.TabIndex = 9;
+            LVendedor.Text = "Vendedor:";
+            // 
             // LDirecT2
             // 
             LDirecT2.AutoSize = true;
             LDirecT2.Font = new Font("Arial", 9.75F);
-            LDirecT2.Location = new Point(345, 63);
+            LDirecT2.Location = new Point(243, 65);
             LDirecT2.Name = "LDirecT2";
             LDirecT2.Size = new Size(62, 16);
             LDirecT2.TabIndex = 8;
@@ -348,7 +388,7 @@ namespace AurenPadelStore.CPresentacion.Empleados.Facturas
             // 
             LTelefonoT2.AutoSize = true;
             LTelefonoT2.Font = new Font("Arial", 9.75F);
-            LTelefonoT2.Location = new Point(404, 36);
+            LTelefonoT2.Location = new Point(401, 65);
             LTelefonoT2.Name = "LTelefonoT2";
             LTelefonoT2.Size = new Size(107, 16);
             LTelefonoT2.TabIndex = 7;
@@ -358,7 +398,7 @@ namespace AurenPadelStore.CPresentacion.Empleados.Facturas
             // 
             LCuitT2.AutoSize = true;
             LCuitT2.Font = new Font("Arial", 9.75F);
-            LCuitT2.Location = new Point(62, 65);
+            LCuitT2.Location = new Point(53, 65);
             LCuitT2.Name = "LCuitT2";
             LCuitT2.Size = new Size(92, 16);
             LCuitT2.TabIndex = 6;
@@ -368,7 +408,7 @@ namespace AurenPadelStore.CPresentacion.Empleados.Facturas
             // 
             LRazonST2.AutoSize = true;
             LRazonST2.Font = new Font("Arial", 9.75F);
-            LRazonST2.Location = new Point(118, 36);
+            LRazonST2.Location = new Point(109, 36);
             LRazonST2.Name = "LRazonST2";
             LRazonST2.Size = new Size(113, 16);
             LRazonST2.TabIndex = 5;
@@ -378,7 +418,7 @@ namespace AurenPadelStore.CPresentacion.Empleados.Facturas
             // 
             LTelefonoT.AutoSize = true;
             LTelefonoT.Font = new Font("Arial", 11.25F, FontStyle.Bold);
-            LTelefonoT.Location = new Point(330, 36);
+            LTelefonoT.Location = new Point(320, 64);
             LTelefonoT.Name = "LTelefonoT";
             LTelefonoT.Size = new Size(75, 18);
             LTelefonoT.TabIndex = 4;
@@ -388,7 +428,7 @@ namespace AurenPadelStore.CPresentacion.Empleados.Facturas
             // 
             LDirecT.AutoSize = true;
             LDirecT.Font = new Font("Arial", 11.25F, FontStyle.Bold);
-            LDirecT.Location = new Point(264, 63);
+            LDirecT.Location = new Point(157, 64);
             LDirecT.Name = "LDirecT";
             LDirecT.Size = new Size(80, 18);
             LDirecT.TabIndex = 3;
@@ -398,7 +438,7 @@ namespace AurenPadelStore.CPresentacion.Empleados.Facturas
             // 
             LCuitT.AutoSize = true;
             LCuitT.Font = new Font("Arial", 11.25F, FontStyle.Bold);
-            LCuitT.Location = new Point(15, 64);
+            LCuitT.Location = new Point(6, 64);
             LCuitT.Name = "LCuitT";
             LCuitT.Size = new Size(46, 18);
             LCuitT.TabIndex = 2;
@@ -408,7 +448,7 @@ namespace AurenPadelStore.CPresentacion.Empleados.Facturas
             // 
             LRazonST.AutoSize = true;
             LRazonST.Font = new Font("Arial", 11.25F, FontStyle.Bold);
-            LRazonST.Location = new Point(15, 36);
+            LRazonST.Location = new Point(6, 36);
             LRazonST.Name = "LRazonST";
             LRazonST.Size = new Size(104, 18);
             LRazonST.TabIndex = 1;
@@ -442,7 +482,7 @@ namespace AurenPadelStore.CPresentacion.Empleados.Facturas
             DGProdFact.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
             DGProdFact.BackgroundColor = Color.White;
             DGProdFact.BorderStyle = BorderStyle.None;
-            DGProdFact.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
+            DGProdFact.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             DGProdFact.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             DGProdFact.Columns.AddRange(new DataGridViewColumn[] { ColNombre, ColPrecioUnitario, ColCantidad, ColSubtotal });
             DGProdFact.Dock = DockStyle.Fill;
@@ -497,24 +537,6 @@ namespace AurenPadelStore.CPresentacion.Empleados.Facturas
             BImprimiFact.TabIndex = 1;
             BImprimiFact.Text = "Imprimir";
             BImprimiFact.UseVisualStyleBackColor = true;
-            // 
-            // LMetodoPago
-            // 
-            LMetodoPago.AutoSize = true;
-            LMetodoPago.Font = new Font("Arial", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            LMetodoPago.Location = new Point(11, 8);
-            LMetodoPago.Name = "LMetodoPago";
-            LMetodoPago.Size = new Size(98, 15);
-            LMetodoPago.TabIndex = 10;
-            LMetodoPago.Text = "Método de pago:";
-            // 
-            // textBox1
-            // 
-            textBox1.Font = new Font("Arial", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            textBox1.Location = new Point(115, 3);
-            textBox1.Name = "textBox1";
-            textBox1.Size = new Size(100, 21);
-            textBox1.TabIndex = 11;
             // 
             // FVerFactura
             // 
@@ -585,7 +607,9 @@ namespace AurenPadelStore.CPresentacion.Empleados.Facturas
         private DataGridViewTextBoxColumn ColPrecioUnitario;
         private DataGridViewTextBoxColumn ColCantidad;
         private DataGridViewTextBoxColumn ColSubtotal;
-        private TextBox textBox1;
+        private TextBox TBMetodoPago;
         private Label LMetodoPago;
+        private TextBox TBVendedor;
+        private Label LVendedor;
     }
 }
