@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using AurenPadelStore.CEntidades;
 using AurenPadelStore.CLogica;
 
+// El namespace debe ser el tuyo. Si es "Empleados", déjalo como "Empleados".
 namespace AurenPadelStore.CPresentacion.Empleados.Clientes
 {
     public partial class FClientes : Form
@@ -24,36 +25,114 @@ namespace AurenPadelStore.CPresentacion.Empleados.Clientes
             this.Location = new Point(0, 0);
             this.Shown += (_, __) => this.Location = new Point(0, 0);
             PrepararScrollHost();
-            this.Resize += (_, __) => UpdateScrollbars();
+            this.Resize += (_, __) =>
+            {
+                UpdateScrollbars();
+                AjustarLayoutPorRol();
+            };
             DGListaClientes.CellContentClick += DGListaClientes_CellContentClick;
             DGListaClientes.CellMouseEnter += DGListaClientes_CellMouseEnter;
             DGListaClientes.CellMouseLeave += DGListaClientes_CellMouseLeave;
             this.Load += FClientes_Load;
 
-            // Se asignan los eventos para buscar y filtrar en tiempo real
             TBBuscarC.TextChanged += (_, __) => AplicarFiltrosYBusqueda();
             CBFiltroC.SelectedIndexChanged += (_, __) => AplicarFiltrosYBusqueda();
+
+            // Conectar el botón Cancelar (si existe)
+            if (this.Controls.Find("BCancelarEdicion", true).Length > 0)
+            {
+                var btnCancel = (Button)this.Controls.Find("BCancelarEdicion", true)[0];
+                btnCancel.Click += (s, e) => CambiarModoFormulario(aModoAgregar: true);
+            }
         }
 
         private void FClientes_Load(object sender, EventArgs e)
         {
-            // Se cargan las opciones del ComboBox de filtros
             CBFiltroC.Items.AddRange(new object[] {
                 "Todos", "Activos", "Inactivos", "Más Recientes", "Más Antiguos"
             });
-            CBFiltroC.SelectedIndex = 0; // Se selecciona "Todos" por defecto
+            CBFiltroC.SelectedIndex = 0;
 
-            string rolActual = SesionActual.Rol;
-            if (rolActual.Equals("Gerente", StringComparison.OrdinalIgnoreCase))
-            {
-                BloquearInteraccionSinCambiarEstilo(PAgregarCliente, BAgregarCliente, "Solo Vendedor/es pueden agregar clientes.");
-            }
-            _bloquearEstadoPorRol = !rolActual.Equals("Gerente", StringComparison.OrdinalIgnoreCase);
+            AplicarPermisosPorRol();
 
             _scrollHost.AutoScrollPosition = Point.Empty;
             CargarClientes();
         }
 
+        private void AplicarPermisosPorRol()
+        {
+            string rolActual = SesionActual.Rol;
+            bool esGerente = rolActual.Equals("Gerente", StringComparison.OrdinalIgnoreCase);
+            bool esVendedor = rolActual.Equals("Vendedor", StringComparison.OrdinalIgnoreCase);
+
+            if (esGerente)
+            {
+                PAgregarCliente.Visible = false;
+                LAgregarCliente.Visible = false;
+                if (DGListaClientes.Columns.Contains("colEditar"))
+                {
+                    DGListaClientes.Columns["colEditar"].Visible = false;
+                }
+                if (DGListaClientes.Columns.Contains("colAccion"))
+                {
+                    DGListaClientes.Columns["colAccion"].Visible = true;
+                }
+                _bloquearEstadoPorRol = false;
+            }
+            else if (esVendedor)
+            {
+                PAgregarCliente.Visible = true;
+                LAgregarCliente.Visible = true;
+                if (DGListaClientes.Columns.Contains("colEditar"))
+                {
+                    DGListaClientes.Columns["colEditar"].Visible = true;
+                }
+                if (DGListaClientes.Columns.Contains("colAccion"))
+                {
+                    DGListaClientes.Columns["colAccion"].Visible = false;
+                }
+                _bloquearEstadoPorRol = true;
+            }
+            else
+            {
+                PAgregarCliente.Visible = false;
+                LAgregarCliente.Visible = false;
+                if (DGListaClientes.Columns.Contains("colEditar"))
+                {
+                    DGListaClientes.Columns["colEditar"].Visible = false;
+                }
+                if (DGListaClientes.Columns.Contains("colAccion"))
+                {
+                    DGListaClientes.Columns["colAccion"].Visible = false;
+                }
+                _bloquearEstadoPorRol = true;
+            }
+
+            AjustarLayoutPorRol();
+        }
+
+        private void AjustarLayoutPorRol()
+        {
+            if (!PAgregarCliente.Visible)
+            {
+                int margen = 40;
+                PListaClientes.Left = margen;
+                PListaClientes.Width = this.ClientSize.Width - (margen * 2);
+                PListaClientes.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Bottom;
+                LListaClientes.Left = (this.ClientSize.Width - LListaClientes.Width) / 2;
+                LListaClientes.Anchor = AnchorStyles.Top;
+            }
+            else
+            {
+                PListaClientes.Left = 384;
+                PListaClientes.Width = 898;
+                PListaClientes.Anchor = AnchorStyles.Top | AnchorStyles.Bottom;
+                LListaClientes.Left = 720;
+                LListaClientes.Anchor = AnchorStyles.Top;
+            }
+        }
+
+        // ---------- MÉTODO MODIFICADO (Try...Catch) ----------
         private void CargarClientes()
         {
             try
@@ -63,18 +142,22 @@ namespace AurenPadelStore.CPresentacion.Empleados.Clientes
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error al cargar los clientes: {ex.Message}", "Error de Conexión", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                // *** ¡ESTE ES EL CAMBIO! ***
+                MessageBox.Show("Ocurrió un error inesperado al cargar los clientes. Por favor, intente más tarde.",
+                                "Error de Carga",
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Error);
+                // La línea original era:
+                // MessageBox.Show($"Error al cargar los clientes: {ex.Message}", "Error de Conexión", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
-        // MÉTODO CENTRAL PARA FILTRAR Y BUSCAR
         private void AplicarFiltrosYBusqueda()
         {
             if (_listaCompletaClientes == null) return;
 
             IEnumerable<Cliente> clientesAMostrar = _listaCompletaClientes;
 
-            // 1. Aplicamos el filtro del ComboBox
             string filtro = CBFiltroC.SelectedItem?.ToString() ?? "Todos";
             switch (filtro)
             {
@@ -85,16 +168,13 @@ namespace AurenPadelStore.CPresentacion.Empleados.Clientes
                     clientesAMostrar = clientesAMostrar.Where(c => !c.Estado_Cliente);
                     break;
                 case "Más Recientes":
-                    // MODIFICADO: Ordena por ID descendente (el más alto es el más nuevo)
                     clientesAMostrar = clientesAMostrar.OrderByDescending(c => c.id_Cliente);
                     break;
                 case "Más Antiguos":
-                    // MODIFICADO: Ordena por ID ascendente (el más bajo es el más viejo)
                     clientesAMostrar = clientesAMostrar.OrderBy(c => c.id_Cliente);
                     break;
             }
 
-            // 2. Aplicamos la búsqueda del TextBox
             string busqueda = TBBuscarC.Text.Trim().ToLower();
             if (!string.IsNullOrWhiteSpace(busqueda))
             {
@@ -108,7 +188,6 @@ namespace AurenPadelStore.CPresentacion.Empleados.Clientes
                 );
             }
 
-            // 3. Finalmente, poblamos la grilla con los resultados
             DGListaClientes.Rows.Clear();
             foreach (var cliente in clientesAMostrar.ToList())
             {
@@ -122,6 +201,7 @@ namespace AurenPadelStore.CPresentacion.Empleados.Clientes
             }
         }
 
+        // ---------- MÉTODO MODIFICADO (Try...Catch) ----------
         private void BAgregarCliente_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrWhiteSpace(TBNombre.Text) || string.IsNullOrWhiteSpace(TBApellido.Text) ||
@@ -168,10 +248,18 @@ namespace AurenPadelStore.CPresentacion.Empleados.Clientes
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Ocurrió un error: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                // *** ¡ESTE ES EL CAMBIO! ***
+                // Doy un mensaje más específico, porque casi siempre es por DNI duplicado
+                MessageBox.Show("Ocurrió un error al guardar el cliente. Verifique que el DNI no esté repetido e intente nuevamente.",
+                                "Error al Guardar",
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Error);
+                // La línea original era:
+                // MessageBox.Show($"Ocurrió un error: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
+        // ---------- MÉTODO MODIFICADO (Try...Catch) ----------
         private void DGListaClientes_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex < 0 || e.ColumnIndex < 0) return;
@@ -182,6 +270,13 @@ namespace AurenPadelStore.CPresentacion.Empleados.Clientes
 
             if (colName == "colEditar")
             {
+                // Esta lógica de permisos está bien
+                if (!SesionActual.Rol.Equals("Vendedor", StringComparison.OrdinalIgnoreCase))
+                {
+                    MessageBox.Show("Solo los Vendedores pueden editar clientes.", "Acción bloqueada", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
                 TBNombre.Text = clienteSeleccionado.Nombre_Cliente;
                 TBApellido.Text = clienteSeleccionado.Apellido_Cliente;
                 TBDni.Text = clienteSeleccionado.Dni_Cliente.ToString();
@@ -193,10 +288,9 @@ namespace AurenPadelStore.CPresentacion.Empleados.Clientes
             }
             else if (colName == "colAccion")
             {
-                // MODIFICADO: Ahora no hace nada si el rol está bloqueado
                 if (_bloquearEstadoPorRol)
                 {
-                    return; // Simplemente no hace nada, sin mostrar mensaje.
+                    return; // No mostramos mensaje, solo no hace nada.
                 }
 
                 try
@@ -207,7 +301,13 @@ namespace AurenPadelStore.CPresentacion.Empleados.Clientes
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Error al cambiar el estado: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    // *** ¡ESTE ES EL CAMBIO! ***
+                    MessageBox.Show("Ocurrió un error al intentar cambiar el estado del cliente. Por favor, intente nuevamente.",
+                                    "Error de Operación",
+                                    MessageBoxButtons.OK,
+                                    MessageBoxIcon.Error);
+                    // La línea original era:
+                    // MessageBox.Show($"Error al cambiar el estado: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
@@ -278,7 +378,6 @@ namespace AurenPadelStore.CPresentacion.Empleados.Clientes
         {
             if (this.WindowState == FormWindowState.Maximized) { _scrollHost.AutoScrollMinSize = Size.Empty; }
             else { _scrollHost.AutoScrollMinSize = _designContentSize; }
-            _scrollHost.AutoScrollPosition = Point.Empty;
         }
 
         private void BloquearInteraccionSinCambiarEstilo(Panel panel, Button botonAgregar, string tooltip = "")
@@ -296,5 +395,16 @@ namespace AurenPadelStore.CPresentacion.Empleados.Clientes
             panel.MouseDown += (s, ev) => DGListaClientes.Focus();
         }
         #endregion
+
+        private void FClientes_Load_1(object sender, EventArgs e)
+        {
+
+        }
+
+        // Este es el botón "Cancelar" que agregaste
+        private void BCancelarEdicion_Click(object sender, EventArgs e)
+        {
+            CambiarModoFormulario(aModoAgregar: true);
+        }
     }
 }

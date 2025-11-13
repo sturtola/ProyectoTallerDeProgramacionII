@@ -13,10 +13,13 @@ namespace AurenPadelStore.CPresentacion.Administrador
         {
             InitializeComponent();
 
+            // Mantener tus pines/handlers existentes
             this.MdiChildActivate += (s, e) => PinChildActivo();
             this.SizeChanged += (s, e) => PinChildActivo();
-        }
 
+            // 👉 Engancho el menú "Estadísticas" al abrir FEstadisticas
+            this.estadísticasToolStripMenuItem.Click += estadísticasToolStripMenuItem_Click;
+        }
 
         private void OpenSingle<T>(Func<T> factory) where T : Form
         {
@@ -46,7 +49,6 @@ namespace AurenPadelStore.CPresentacion.Administrador
                     c.Close();
             }
 
-
             var child = factory();
             child.MdiParent = this;
             child.StartPosition = FormStartPosition.Manual;
@@ -54,7 +56,6 @@ namespace AurenPadelStore.CPresentacion.Administrador
             child.Show();
             child.Location = new Point(0, 0);
         }
-
 
         private void PinChildActivo()
         {
@@ -85,7 +86,6 @@ namespace AurenPadelStore.CPresentacion.Administrador
             login.Show();
         }
 
-
         private void salirToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Application.Exit();
@@ -94,6 +94,12 @@ namespace AurenPadelStore.CPresentacion.Administrador
         private void backupToolStripMenuItem_Click(object sender, EventArgs e)
         {
             OpenSingle(() => new FBackup());
+        }
+
+        // ✅ Nuevo: abrir estadísticas (usa tu helper OpenSingle)
+        private void estadísticasToolStripMenuItem_Click(object? sender, EventArgs e)
+        {
+            OpenSingle(() => new FEstadisticas());
         }
     }
 }

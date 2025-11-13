@@ -2,141 +2,89 @@
 {
     partial class FBackup
     {
-        /// <summary>
-        /// Required designer variable.
-        /// </summary>
         private System.ComponentModel.IContainer components = null;
+        private System.Windows.Forms.Label lblTitulo;
+        private System.Windows.Forms.TextBox txtRuta;
+        private System.Windows.Forms.Button btnExaminar;
+        private System.Windows.Forms.Button btnCrear;
+        private System.Windows.Forms.Label lblEstado;
 
-        /// <summary>
-        /// Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
-            if (disposing && (components != null))
-            {
-                components.Dispose();
-            }
+            if (disposing && (components != null)) components.Dispose();
             base.Dispose(disposing);
         }
 
-        #region Windows Form Designer generated code
-
-        /// <summary>
-        /// Required method for Designer support - do not modify
-        /// the contents of this method with the code editor.
-        /// </summary>
         private void InitializeComponent()
         {
-            panel1 = new Panel();
-            label1 = new Label();
-            label2 = new Label();
-            textBox1 = new TextBox();
-            button1 = new Button();
-            button2 = new Button();
-            button3 = new Button();
-            panel1.SuspendLayout();
-            SuspendLayout();
+            this.lblTitulo = new System.Windows.Forms.Label();
+            this.txtRuta = new System.Windows.Forms.TextBox();
+            this.btnExaminar = new System.Windows.Forms.Button();
+            this.btnCrear = new System.Windows.Forms.Button();
+            this.lblEstado = new System.Windows.Forms.Label();
+            this.SuspendLayout();
             // 
-            // panel1
+            // lblTitulo
             // 
-            panel1.Controls.Add(button2);
-            panel1.Controls.Add(button1);
-            panel1.Controls.Add(textBox1);
-            panel1.Controls.Add(label2);
-            panel1.Controls.Add(label1);
-            panel1.Location = new Point(42, 28);
-            panel1.Name = "panel1";
-            panel1.Size = new Size(383, 233);
-            panel1.TabIndex = 0;
+            this.lblTitulo.AutoSize = true;
+            this.lblTitulo.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
+            this.lblTitulo.Location = new System.Drawing.Point(12, 9);
+            this.lblTitulo.Name = "lblTitulo";
+            this.lblTitulo.Size = new System.Drawing.Size(265, 21);
+            this.lblTitulo.TabIndex = 0;
+            this.lblTitulo.Text = "Backup de base de datos (Auren)";
             // 
-            // label1
+            // txtRuta
             // 
-            label1.AutoSize = true;
-            label1.Font = new Font("Century Gothic", 15.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label1.ForeColor = Color.LightGray;
-            label1.Location = new Point(67, 20);
-            label1.Name = "label1";
-            label1.Size = new Size(265, 25);
-            label1.TabIndex = 0;
-            label1.Text = "Backup de la Aplicación";
+            this.txtRuta.Location = new System.Drawing.Point(16, 49);
+            this.txtRuta.Name = "txtRuta";
+            this.txtRuta.Size = new System.Drawing.Size(520, 23);
+            this.txtRuta.TabIndex = 1;
             // 
-            // label2
+            // btnExaminar
             // 
-            label2.AutoSize = true;
-            label2.Font = new Font("Century Gothic", 11.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            label2.ForeColor = Color.LightGray;
-            label2.Location = new Point(12, 82);
-            label2.Name = "label2";
-            label2.Size = new Size(242, 20);
-            label2.TabIndex = 1;
-            label2.Text = "Carpeta a respaldar / restaurar:";
+            this.btnExaminar.Location = new System.Drawing.Point(542, 48);
+            this.btnExaminar.Name = "btnExaminar";
+            this.btnExaminar.Size = new System.Drawing.Size(96, 25);
+            this.btnExaminar.TabIndex = 2;
+            this.btnExaminar.Text = "Examinar...";
+            this.btnExaminar.UseVisualStyleBackColor = true;
+            this.btnExaminar.Click += new System.EventHandler(this.btnExaminar_Click);
             // 
-            // textBox1
+            // btnCrear
             // 
-            textBox1.Location = new Point(12, 116);
-            textBox1.Name = "textBox1";
-            textBox1.Size = new Size(278, 23);
-            textBox1.TabIndex = 2;
+            this.btnCrear.Location = new System.Drawing.Point(16, 88);
+            this.btnCrear.Name = "btnCrear";
+            this.btnCrear.Size = new System.Drawing.Size(140, 30);
+            this.btnCrear.TabIndex = 3;
+            this.btnCrear.Text = "Crear backup";
+            this.btnCrear.UseVisualStyleBackColor = true;
+            this.btnCrear.Click += new System.EventHandler(this.btnCrear_Click);
             // 
-            // button1
+            // lblEstado
             // 
-            button1.Font = new Font("Century Gothic", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            button1.Location = new Point(296, 116);
-            button1.Name = "button1";
-            button1.Size = new Size(87, 23);
-            button1.TabIndex = 3;
-            button1.Text = "Examinar...";
-            button1.UseVisualStyleBackColor = true;
-            // 
-            // button2
-            // 
-            button2.BackColor = Color.GreenYellow;
-            button2.Cursor = Cursors.Hand;
-            button2.FlatStyle = FlatStyle.Popup;
-            button2.Font = new Font("Century Gothic", 11.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            button2.Location = new Point(108, 170);
-            button2.Name = "button2";
-            button2.Size = new Size(163, 31);
-            button2.TabIndex = 4;
-            button2.Text = "Crear Backup (.zip)";
-            button2.UseVisualStyleBackColor = false;
-            // 
-            // button3
-            // 
-            button3.BackColor = Color.LightGray;
-            button3.FlatStyle = FlatStyle.Popup;
-            button3.Font = new Font("Century Gothic", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            button3.Location = new Point(325, 260);
-            button3.Name = "button3";
-            button3.Size = new Size(131, 27);
-            button3.TabIndex = 5;
-            button3.Text = "Restaurar desde";
-            button3.UseVisualStyleBackColor = false;
+            this.lblEstado.AutoSize = true;
+            this.lblEstado.Location = new System.Drawing.Point(16, 132);
+            this.lblEstado.Name = "lblEstado";
+            this.lblEstado.Size = new System.Drawing.Size(43, 15);
+            this.lblEstado.TabIndex = 4;
+            this.lblEstado.Text = "Estado";
             // 
             // FBackup
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
-            AutoScaleMode = AutoScaleMode.Font;
-            BackColor = Color.Black;
-            ClientSize = new Size(468, 299);
-            Controls.Add(button3);
-            Controls.Add(panel1);
-            Name = "FBackup";
-            Text = "Form1";
-            panel1.ResumeLayout(false);
-            panel1.PerformLayout();
-            ResumeLayout(false);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.ClientSize = new System.Drawing.Size(654, 170);
+            this.Controls.Add(this.lblEstado);
+            this.Controls.Add(this.btnCrear);
+            this.Controls.Add(this.btnExaminar);
+            this.Controls.Add(this.txtRuta);
+            this.Controls.Add(this.lblTitulo);
+            this.Name = "FBackup";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
+            this.Text = "Backup | Auren Padel";
+            this.ResumeLayout(false);
+            this.PerformLayout();
         }
-
-        #endregion
-
-        private Panel panel1;
-        private Button button1;
-        private TextBox textBox1;
-        private Label label2;
-        private Label label1;
-        private Button button2;
-        private Button button3;
     }
 }

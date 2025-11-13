@@ -1,6 +1,7 @@
 ﻿using AurenPadelStore.CEntidades;
 using AurenPadelStore.CLogica;
 using AurenPadelStore.CPresentacion.Empleados.Productos;
+using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -19,7 +20,7 @@ namespace AurenPadelStore.CPresentacion.Empleados.Ventas
         private readonly VentaLogica _ventaLogica = new VentaLogica();
 
         private List<Cliente> _clientes = new();
-        private List<Producto> _productos = new();
+        private List<Producto> _productos = new(); // Lista de productos CON STOCK
 
         private List<ComboCliente> _comboClientesMaestro = new();
         private List<ComboProducto> _comboProductosMaestro = new();
@@ -84,32 +85,54 @@ namespace AurenPadelStore.CPresentacion.Empleados.Ventas
             CBCliente.Leave += CBCliente_Leave;
         }
 
+        // ---------- MÉTODO MODIFICADO (Try...Catch y Filtro de Stock) ----------
         private void CargarDatos()
         {
-            _clientes = _clienteLogica.ObtenerTodosActivos() ?? new List<Cliente>();
-            _comboClientesMaestro = new List<ComboCliente> { new ComboCliente { Id = -1, Texto = "Ningún cliente seleccionado" } };
-            _comboClientesMaestro.AddRange(_clientes.Select(c => new ComboCliente { Id = c.id_Cliente, Texto = $"{c.Nombre_Cliente} {c.Apellido_Cliente} | DNI: {c.Dni_Cliente} | ID: {c.id_Cliente}" }));
+            try
+            {
+                _clientes = _clienteLogica.ObtenerTodosActivos() ?? new List<Cliente>();
+                _comboClientesMaestro = new List<ComboCliente> { new ComboCliente { Id = -1, Texto = "Ningún cliente seleccionado" } };
+                _comboClientesMaestro.AddRange(_clientes.Select(c => new ComboCliente { Id = c.id_Cliente, Texto = $"{c.Nombre_Cliente} {c.Apellido_Cliente} | DNI: {c.Dni_Cliente} | ID: {c.id_Cliente}" }));
 
-            _ignorandoTextChangedCliente = true;
-            CBCliente.DisplayMember = nameof(ComboCliente.Texto);
-            CBCliente.ValueMember = nameof(ComboCliente.Id);
-            CBCliente.DataSource = new List<ComboCliente>(_comboClientesMaestro);
-            CBCliente.SelectedValue = -1;
-            _ignorandoTextChangedCliente = false;
+                _ignorandoTextChangedCliente = true;
+                CBCliente.DisplayMember = nameof(ComboCliente.Texto);
+                CBCliente.ValueMember = nameof(ComboCliente.Id);
+                CBCliente.DataSource = new List<ComboCliente>(_comboClientesMaestro);
+                CBCliente.SelectedValue = -1;
+                _ignorandoTextChangedCliente = false;
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Error fatal al cargar los clientes. La venta no es posible.", "Error de Datos", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
 
-            _productos = _productoLogica.ObtenerTodosActivos() ?? new List<Producto>();
-            _comboProductosMaestro = new List<ComboProducto> { new ComboProducto { Id = -1, Texto = "Seleccione un producto...", Precio = 0, Stock = 0 } };
-            _comboProductosMaestro.AddRange(_productos.Select(p => new ComboProducto { Id = p.id_Producto, Texto = $"{p.Nombre_Producto} | {p.Marca_Producto} | ID: {p.id_Producto}", Precio = p.Precio_Unitario_Producto, Stock = p.Stock_Producto }));
+            try
+            {
+                // ---------- ¡CAMBIO 1: FILTRAR PRODUCTOS SIN STOCK! ----------
+                _productos = _productoLogica.ObtenerTodosActivos()?
+                                            .Where(p => p.Stock_Producto > 0) // <-- Solo trae los que tienen stock
+                                            .ToList() ?? new List<Producto>();
+                // ---------- FIN DEL CAMBIO 1 ----------
 
-            var colCombo = (DataGridViewComboBoxColumn)DGItemsVenta.Columns[idxProducto];
-            colCombo.DisplayMember = nameof(ComboProducto.Texto);
-            colCombo.ValueMember = nameof(ComboProducto.Id);
-            colCombo.DataSource = _comboProductosMaestro;
+                _comboProductosMaestro = new List<ComboProducto> { new ComboProducto { Id = -1, Texto = "Seleccione un producto...", Precio = 0, Stock = 0 } };
+                _comboProductosMaestro.AddRange(_productos.Select(p => new ComboProducto { Id = p.id_Producto, Texto = $"{p.Nombre_Producto} | {p.Marca_Producto} | ID: {p.id_Producto}", Precio = p.Precio_Unitario_Producto, Stock = p.Stock_Producto }));
+
+                var colCombo = (DataGridViewComboBoxColumn)DGItemsVenta.Columns[idxProducto];
+                colCombo.DisplayMember = nameof(ComboProducto.Texto);
+                colCombo.ValueMember = nameof(ComboProducto.Id);
+                colCombo.DataSource = _comboProductosMaestro;
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Error fatal al cargar los productos. La venta no es posible.", "Error de Datos", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
+
         // ==========================================================
-        // COMBO CLIENTE
+        // COMBO CLIENTE (Sin cambios)
         // ==========================================================
+        #region Combo Cliente
         private void CBCliente_TextChanged(object? sender, EventArgs e)
         {
             if (_ignorandoTextChangedCliente || !CBCliente.Focused) return;
@@ -150,9 +173,10 @@ namespace AurenPadelStore.CPresentacion.Empleados.Ventas
                 _ignorandoTextChangedCliente = false;
             }
         }
+        #endregion
 
         // ==========================================================
-        // GRILLA PRODUCTOS
+        // GRILLA PRODUCTOS (Lógica anti-duplicados)
         // ==========================================================
         private void BAgregarProducto_Click(object? sender, EventArgs e)
         {
@@ -166,11 +190,13 @@ namespace AurenPadelStore.CPresentacion.Empleados.Ventas
 
         private void DGItemsVenta_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
         {
+            // --- Filtro de ComboBox (Lógica "No Duplicados") ---
             if (DGItemsVenta.CurrentCell.ColumnIndex == idxProducto && e.Control is ComboBox cb)
             {
                 cb.DropDownStyle = ComboBoxStyle.DropDown;
                 cb.AutoCompleteMode = AutoCompleteMode.None;
 
+                // ---------- ¡CAMBIO 2: LÓGICA ANTI-DUPLICADOS REFORZADA! ----------
                 var usados = new HashSet<int>();
                 foreach (DataGridViewRow row in DGItemsVenta.Rows)
                 {
@@ -178,7 +204,9 @@ namespace AurenPadelStore.CPresentacion.Empleados.Ventas
                     var id = GetIdProducto(row);
                     if (id.HasValue && id.Value != -1) usados.Add(id.Value);
                 }
+
                 var disponibles = _comboProductosMaestro.Where(p => p.Id == -1 || !usados.Contains(p.Id)).ToList();
+                // ---------- FIN DEL CAMBIO 2 ----------
 
                 _ignorandoTextChangedProducto = true;
                 cb.DataSource = disponibles;
@@ -191,6 +219,7 @@ namespace AurenPadelStore.CPresentacion.Empleados.Ventas
                 cb.Leave -= ProductoGrid_Leave;
                 cb.Leave += ProductoGrid_Leave;
             }
+
             if (DGItemsVenta.CurrentCell.ColumnIndex == idxCantidad && e.Control is TextBox tb)
             {
                 tb.KeyPress -= Cantidad_KeyPressSoloNumeros;
@@ -198,6 +227,7 @@ namespace AurenPadelStore.CPresentacion.Empleados.Ventas
             }
         }
 
+        #region Lógica ComboBox Grilla (Sin Cambios)
         private void ProductoGrid_TextChanged(object? sender, EventArgs e)
         {
             if (_ignorandoTextChangedProducto || sender is not ComboBox cb || !cb.Focused) return;
@@ -247,6 +277,7 @@ namespace AurenPadelStore.CPresentacion.Empleados.Ventas
                 }
             }
         }
+        #endregion
 
         private void DGItemsVenta_CellValueChanged(object? sender, DataGridViewCellEventArgs e)
         {
@@ -258,11 +289,11 @@ namespace AurenPadelStore.CPresentacion.Empleados.Ventas
                 var idVal = GetIdProducto(row);
                 if (idVal.HasValue && idVal.Value != -1)
                 {
-                    var p = _productos.FirstOrDefault(x => x.id_Producto == idVal.Value);
+                    var p = _comboProductosMaestro.FirstOrDefault(x => x.Id == idVal.Value);
                     if (p != null)
                     {
-                        row.Cells[idxPrecioUnitario].Value = p.Precio_Unitario_Producto.ToString("C2", _esAR);
-                        row.Cells[idxStockOculto].Value = p.Stock_Producto;
+                        row.Cells[idxPrecioUnitario].Value = p.Precio.ToString("C2", _esAR);
+                        row.Cells[idxStockOculto].Value = p.Stock;
                         row.Cells[idxCantidad].Value = "1";
                     }
                 }
@@ -270,7 +301,7 @@ namespace AurenPadelStore.CPresentacion.Empleados.Ventas
                 {
                     row.Cells[idxPrecioUnitario].Value = 0m.ToString("C2", _esAR);
                     row.Cells[idxStockOculto].Value = 0;
-                    row.Cells[idxSubtotal].Value = 0m.ToString("C2", _esAR);
+                    row.Cells[idxCantidad].Value = "1";
                 }
                 RecalcularFila(row);
                 ActualizarTotal();
@@ -283,6 +314,7 @@ namespace AurenPadelStore.CPresentacion.Empleados.Ventas
             }
         }
 
+
         private void ValidarStock(DataGridViewRow row)
         {
             int stock = Convert.ToInt32(row.Cells[idxStockOculto].Value ?? 0);
@@ -292,7 +324,11 @@ namespace AurenPadelStore.CPresentacion.Empleados.Ventas
             {
                 if (cant > stock)
                 {
-                    MessageBox.Show($"No hay suficiente stock. Máximo disponible: {stock}", "Stock insuficiente", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    // ---------- ¡CAMBIO 3: Mensaje amigable! ----------
+                    MessageBox.Show($"Stock insuficiente. Solo quedan {stock} unidades de este producto.",
+                                    "Stock Agotado",
+                                    MessageBoxButtons.OK,
+                                    MessageBoxIcon.Warning);
                     row.Cells[idxCantidad].Value = stock.ToString();
                 }
                 else if (cant < 1)
@@ -301,6 +337,7 @@ namespace AurenPadelStore.CPresentacion.Empleados.Ventas
                 }
             }
         }
+
 
         private void DGItemsVenta_CellContentClick(object? sender, DataGridViewCellEventArgs e)
         {
@@ -318,9 +355,7 @@ namespace AurenPadelStore.CPresentacion.Empleados.Ventas
 
                 try
                 {
-                    // Corrección: Usar el método que trae el producto completo
                     Producto productoCompleto = _productoLogica.Obtener(idVal.Value);
-
                     if (productoCompleto != null)
                     {
                         using (var fDetalle = new FDetalleProducto(productoCompleto))
@@ -333,9 +368,9 @@ namespace AurenPadelStore.CPresentacion.Empleados.Ventas
                         MessageBox.Show("No se pudo recuperar la información completa del producto.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
-                catch (Exception ex)
+                catch (Exception) // ---------- ¡CAMBIO 4: Mensaje amigable! ----------
                 {
-                    MessageBox.Show($"Error al cargar detalle: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Ocurrió un error al cargar el detalle del producto.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             else if (e.ColumnIndex == idxMas)
@@ -348,74 +383,80 @@ namespace AurenPadelStore.CPresentacion.Empleados.Ventas
                 }
                 else
                 {
-                    MessageBox.Show("No hay más stock disponible.", "Límite alcanzado", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    // ---------- ¡CAMBIO 5: Mensaje amigable! ----------
+                    MessageBox.Show($"No hay más stock. Solo quedan {stock} unidades.",
+                                    "Límite de Stock",
+                                    MessageBoxButtons.OK,
+                                    MessageBoxIcon.Information);
                 }
             }
             else if (e.ColumnIndex == idxMenos)
             {
                 int cant = GetCantidad(row);
-                if (cant > 1) row.Cells[idxCantidad].Value = (cant - 1).ToString();
-                else DGItemsVenta.Rows.RemoveAt(e.RowIndex);
-                ActualizarTotal();
+                if (cant > 1)
+                {
+                    row.Cells[idxCantidad].Value = (cant - 1).ToString();
+                }
+                else
+                {
+                    DGItemsVenta.Rows.RemoveAt(e.RowIndex);
+                }
+                ActualizarTotal(); // Recalcular solo si se borra
             }
         }
 
         // ==========================================================
-        // REALIZAR VENTA
+        // REALIZAR VENTA (Try...Catch MODIFICADO)
         // ==========================================================
         private void BRealizarVenta_Click(object? sender, EventArgs e)
         {
-            // 1. Validar Sesión de Usuario
+            // 1. Validaciones (Cliente, Pago, Envío, Grilla vacía)
             if (SesionActual.Id_UsuarioActual <= 0)
             {
                 MessageBox.Show("Error de sesión. No se puede registrar la venta. Por favor, reinicie la aplicación e inicie sesión.", "Error de Sesión", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-
-            // 2. Validar Cliente
             if (CBCliente.SelectedValue is not int idCliente || idCliente <= 0)
             {
                 MessageBox.Show("Seleccione un cliente válido.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 CBCliente.Focus();
                 return;
             }
-
-            // 3. Validar Método de Pago
             string? metodo = MetodoPagoSeleccionado();
             if (string.IsNullOrEmpty(metodo))
             {
                 MessageBox.Show("Seleccione un método de pago.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-
-            // 4. Validar Envío/Retiro
             if (!CBEnvio.Checked && !CBRetiro.Checked)
             {
                 MessageBox.Show("Seleccione un método de entrega (Envío o Retiro).", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-
-            // 5. Validar Items y Stock
-            var items = new List<ItemVenta>();
-            decimal totalCalculado = 0m;
-
             if (DGItemsVenta.Rows.Count == 0 || DGItemsVenta.Rows.Cast<DataGridViewRow>().All(r => r.IsNewRow))
             {
                 MessageBox.Show("Debe agregar al menos un producto a la venta.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
+            // 2. Validar Items y Stock (más robusto)
+            var items = new List<ItemVenta>();
+            decimal totalCalculado = 0m;
+
+            // Recargamos el stock maestro por si acaso
+            var stockMaestroActualizado = _productoLogica.ObtenerTodosActivos()
+                                            .Where(p => p.Stock_Producto > 0)
+                                            .ToDictionary(p => p.id_Producto, p => p.Stock_Producto);
+
             foreach (DataGridViewRow r in DGItemsVenta.Rows)
             {
                 if (r.IsNewRow) continue;
-
                 var idProd = GetIdProducto(r);
                 if (idProd == null || idProd.Value <= 0)
                 {
                     MessageBox.Show("Hay filas de producto sin un ítem seleccionado. Por favor, revíselas o elimínelas.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
-
                 int cant = GetCantidad(r);
                 if (cant <= 0)
                 {
@@ -423,10 +464,11 @@ namespace AurenPadelStore.CPresentacion.Empleados.Ventas
                     return;
                 }
 
-                int stock = Convert.ToInt32(r.Cells[idxStockOculto].Value ?? 0);
-                if (cant > stock)
+                // Re-chequeo final contra la BD
+                if (!stockMaestroActualizado.TryGetValue(idProd.Value, out int stockActual) || cant > stockActual)
                 {
-                    MessageBox.Show($"Stock insuficiente para el producto ID {idProd.Value}. Máximo: {stock}", "Stock insuficiente", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show($"Stock insuficiente para el producto ID {idProd.Value}. Máximo disponible: {stockActual}", "Stock insuficiente", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    CargarDatos(); // Recargar la lista de productos
                     return;
                 }
 
@@ -446,41 +488,60 @@ namespace AurenPadelStore.CPresentacion.Empleados.Ventas
                 return;
             }
 
-            if (CBEnvio.Checked) totalCalculado += 5000m; // Asumo costo fijo de 5000
+            if (CBEnvio.Checked) totalCalculado += 5000m;
 
-            // --- ARMADO DE OBJETO VENTA ---
             var venta = new Venta
             {
                 id_Cliente = idCliente,
-                id_Usuario = SesionActual.Id_UsuarioActual, // <-- CORRECCIÓN APLICADA
+                id_Usuario = SesionActual.Id_UsuarioActual,
                 Metodo_Pago = metodo,
                 Envio = CBEnvio.Checked,
                 Total = totalCalculado,
                 Fecha = DTPFecha.Value
             };
 
-            // --- EJECUCIÓN ---
+            // --- EJECUCIÓN (¡CAMBIO 6: Try...Catch Mejorado!) ---
             try
             {
-                // Asumo que tu VentaLogica tiene este método que maneja la transacción
+                // Ahora esto solo inserta y el Trigger descuenta.
                 _ventaLogica.InsertarVentaConItems(venta, items);
 
                 MessageBox.Show($"Venta registrada con éxito. \nVendedor: {SesionActual.NombreCompleto}", "Venta Exitosa",
                     MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                 LimpiarFormulario();
+                CargarDatos(); // Recargamos los productos para actualizar el stock (y sacar los de stock 0)
             }
+            // Ataja el error específico de stock del TRIGGER
+            catch (SqlException sqlEx) when (sqlEx.Number == 50002)
+            {
+                // Este es el error "La operación dejaría el stock..."
+                MessageBox.Show(
+                    $"Error de Stock: {sqlEx.Message}\n\nLa venta no se completó. Es posible que otro vendedor haya vendido el producto mientras armaba este pedido.",
+                    "Stock no Sincronizado",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning
+                );
+                CargarDatos(); // Recargamos para que el usuario vea el stock actualizado
+            }
+            // Ataja cualquier otro error
             catch (Exception ex)
             {
-                MessageBox.Show("Error al registrar la venta:\n" + ex.Message,
-                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(
+                    "Ocurrió un error desconocido al registrar la venta. Por favor, contacte a soporte.\n\n" +
+                    "Pista del error: " + ex.Message,
+                    "Error Crítico",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error
+                );
             }
         }
 
 
         // ==========================================================
-        // HELPERS
+        // HELPERS (Sin Cambios)
         // ==========================================================
+        #region Helpers
         private void RecalcularFila(DataGridViewRow row)
         {
             decimal precio = GetPrecio(row);
@@ -551,7 +612,6 @@ namespace AurenPadelStore.CPresentacion.Empleados.Ventas
         internal class ComboCliente { public int Id { get; set; } public string Texto { get; set; } = ""; public override string ToString() => Texto; }
         internal class ComboProducto { public int Id { get; set; } public string Texto { get; set; } = ""; public decimal Precio { get; set; } public int Stock { get; set; } public override string ToString() => Texto; }
 
-        // --- CLASE INTERNA DE SESIÓN ELIMINADA ---
-        // (Ahora usa la global AurenPadelStore.CEntidades.SesionActual)
+        #endregion
     }
 }

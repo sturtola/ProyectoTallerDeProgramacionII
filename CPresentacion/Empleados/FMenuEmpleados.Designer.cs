@@ -38,9 +38,6 @@
             listarVentasToolStripMenuItem = new ToolStripMenuItem();
             clientesToolStripMenuItem = new ToolStripMenuItem();
             productosToolStripMenuItem = new ToolStripMenuItem();
-            facturasToolStripMenuItem = new ToolStripMenuItem();
-            generarFacturaToolStripMenuItem = new ToolStripMenuItem();
-            listaDeFacturasToolStripMenuItem = new ToolStripMenuItem();
             MSEmpleados.SuspendLayout();
             SuspendLayout();
             // 
@@ -48,7 +45,7 @@
             // 
             MSEmpleados.BackColor = Color.LightGray;
             MSEmpleados.Font = new Font("Century Gothic", 11.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            MSEmpleados.Items.AddRange(new ToolStripItem[] { inicioToolStripMenuItem, ventasToolStripMenuItem, clientesToolStripMenuItem, productosToolStripMenuItem, facturasToolStripMenuItem });
+            MSEmpleados.Items.AddRange(new ToolStripItem[] { inicioToolStripMenuItem, ventasToolStripMenuItem, clientesToolStripMenuItem, productosToolStripMenuItem });
             MSEmpleados.Location = new Point(0, 0);
             MSEmpleados.Name = "MSEmpleados";
             MSEmpleados.Size = new Size(1012, 29);
@@ -133,33 +130,6 @@
             productosToolStripMenuItem.Text = "Productos";
             productosToolStripMenuItem.Click += productosToolStripMenuItem_Click;
             // 
-            // facturasToolStripMenuItem
-            // 
-            facturasToolStripMenuItem.BackColor = Color.LightGray;
-            facturasToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { generarFacturaToolStripMenuItem, listaDeFacturasToolStripMenuItem });
-            facturasToolStripMenuItem.Font = new Font("Century Gothic", 12F);
-            facturasToolStripMenuItem.ForeColor = Color.Black;
-            facturasToolStripMenuItem.Name = "facturasToolStripMenuItem";
-            facturasToolStripMenuItem.Size = new Size(90, 25);
-            facturasToolStripMenuItem.Text = "Facturas";
-            // 
-            // generarFacturaToolStripMenuItem
-            // 
-            generarFacturaToolStripMenuItem.BackColor = Color.LightGray;
-            generarFacturaToolStripMenuItem.ForeColor = Color.Black;
-            generarFacturaToolStripMenuItem.Name = "generarFacturaToolStripMenuItem";
-            generarFacturaToolStripMenuItem.Size = new Size(211, 26);
-            generarFacturaToolStripMenuItem.Text = "Generar Factura";
-            // 
-            // listaDeFacturasToolStripMenuItem
-            // 
-            listaDeFacturasToolStripMenuItem.BackColor = Color.LightGray;
-            listaDeFacturasToolStripMenuItem.ForeColor = Color.Black;
-            listaDeFacturasToolStripMenuItem.Name = "listaDeFacturasToolStripMenuItem";
-            listaDeFacturasToolStripMenuItem.Size = new Size(211, 26);
-            listaDeFacturasToolStripMenuItem.Text = "Lista de Facturas";
-            listaDeFacturasToolStripMenuItem.Click += listaDeFacturasToolStripMenuItem_Click;
-            // 
             // FMenuEmpleados
             // 
             AutoScaleDimensions = new SizeF(9F, 20F);
@@ -193,8 +163,5 @@
         private ToolStripMenuItem listarVentasToolStripMenuItem;
         private ToolStripMenuItem clientesToolStripMenuItem;
         private ToolStripMenuItem productosToolStripMenuItem;
-        private ToolStripMenuItem facturasToolStripMenuItem;
-        private ToolStripMenuItem generarFacturaToolStripMenuItem;
-        private ToolStripMenuItem listaDeFacturasToolStripMenuItem;
     }
 }

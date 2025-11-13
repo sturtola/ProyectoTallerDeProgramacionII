@@ -10,7 +10,7 @@ namespace AurenPadelStore.CDatos
     {
         // Usá tu propia cadena o llevala a una clase Conexion centralizada
         private readonly string cs =
-            "Server=DESKTOP-1HCDQL3;Database=AurenPadelBD;Encrypt=False;TrustServerCertificate=True;Trusted_Connection=True;";
+            "Server=DESKTOP-CBNOHGE;Database=AurenPadelBD;Encrypt=False;TrustServerCertificate=True;Trusted_Connection=True;";
 
         // =========================
         // Lecturas

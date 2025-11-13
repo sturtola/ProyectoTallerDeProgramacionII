@@ -8,7 +8,7 @@ namespace AurenPadelStore.CDatos
     public class UsuarioDatos
     {
         private readonly string connectionString =
-            "Server=DESKTOP-1HCDQL3;Database=AurenPadelBD;Encrypt=False;TrustServerCertificate=True;Trusted_Connection=True;";
+            "Server=DESKTOP-CBNOHGE;Database=AurenPadelBD;Encrypt=False;TrustServerCertificate=True;Trusted_Connection=True;";
 
         // Lista de DNIs (por si querés poblar combos)
         public List<int> ListarUsuarios()

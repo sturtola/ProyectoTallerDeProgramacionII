@@ -31,40 +31,43 @@ namespace AurenPadelStore.CPresentacion.Empleados.Productos
         private string _marcaSel = "Todas";
         private bool _reconstruyendoFiltros = false;
 
-        // ===== NUEVO: helper de rol =====
-        private bool EsVendedor =>
-            SesionActual.Rol != null &&
-            SesionActual.Rol.Equals("Vendedor", StringComparison.OrdinalIgnoreCase);
+        private bool SoloLectura =>
+            !(SesionActual.Rol?.Equals("Gerente", StringComparison.OrdinalIgnoreCase) ?? false);
 
         public FProductos()
         {
             InitializeComponent();
 
             _debounceTimer = new System.Windows.Forms.Timer();
+            _debounceTimer.Interval = 160;
+            _debounceTimer.Tick += (_, __) =>
+            {
+                _debounceTimer.Stop();
+                AplicarBusquedaYFiltros();
+            };
 
             DGListaProd.CellContentClick += DGListaProd_CellContentClick;
-
             DGListaProd.RowsAdded += (s, e) =>
             {
                 for (int i = 0; i < e.RowCount; i++)
                     SetAccionSegunEstado(DGListaProd.Rows[e.RowIndex + i]);
             };
-
-            // ===== NUEVO: cursor bloqueado en colAccion si es Vendedor =====
             DGListaProd.CellMouseMove += DGListaProd_CellMouseMove;
             DGListaProd.CellMouseLeave += (s, e) => DGListaProd.Cursor = Cursors.Default;
-
             DGListaProd.CellFormatting += DGListaProd_CellFormatting;
-
-            // ===== NUEVO: tooltip en colAccion según permisos =====
             DGListaProd.CellToolTipTextNeeded += DGListaProd_CellToolTipTextNeeded;
 
             PrepararScrollHost();
-            this.Resize += (_, __) => UpdateScrollbars();
+
+            this.Resize += (_, __) =>
+            {
+                UpdateScrollbars();
+                AjustarLayoutsSegunRol();
+            };
 
             this.Load += FProductos_Load;
-            BAgregarProducto.Click += BAgregarProducto_Click;
 
+            BAgregarProducto.Click += BAgregarProducto_Click;
             BExaminarImg.Click += BExaminarImg_Click;
             PBImagenP.SizeMode = PictureBoxSizeMode.Zoom;
 
@@ -79,16 +82,16 @@ namespace AurenPadelStore.CPresentacion.Empleados.Productos
 
             TBBuscarProd.TextChanged += (_, __) => DebounceAplicar();
             CBFiltrosProd.SelectedIndexChanged += (_, __) => FiltroSeleccionadoCambio();
+
+            this.Load += (_, __) => AjustarLayoutsSegunRol();
+            PListaProductos.Resize += (_, __) => AjustarLayoutsSegunRol();
         }
 
         private void FProductos_Load(object? sender, EventArgs e)
         {
-            // Ya bloqueabas el panel de alta para Vendedor
-            if (EsVendedor)
-            {
-                BloquearInteraccionSinCambiarEstilo(PAgregarProducto, BAgregarProducto,
-                    "No tiene permitido realizar esta acción.");
-            }
+            AjustarLayoutsSegunRol();
+
+            // (El botón cancelar se queda visible por defecto para el Gerente)
 
             CargarCategorias();
             CargarDesdeBD();
@@ -97,10 +100,132 @@ namespace AurenPadelStore.CPresentacion.Empleados.Productos
 
             if (_scrollHost != null)
                 _scrollHost.AutoScrollPosition = Point.Empty;
-
         }
 
-        // ==== Categorías (combo alta/edición) ====
+        #region Métodos de Layout (Sin Cambios)
+        private void AjustarLayoutsSegunRol()
+        {
+            if (SoloLectura)
+            {
+                AplicarLayoutSoloLectura();
+            }
+            else
+            {
+                AjustarLayoutSuperior();
+            }
+        }
+
+        private void AjustarLayoutSuperior()
+        {
+            if (LListaProductos != null)
+            {
+                LListaProductos.Top = 24;
+                LListaProductos.Left = Math.Max(16, (this.ClientSize.Width - LListaProductos.Width) / 2);
+                LListaProductos.Anchor = AnchorStyles.Top;
+            }
+
+            if (PListaProductos == null) return;
+
+            int pad = 16;
+
+            TBBuscarProd.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            LBuscarP.Anchor = AnchorStyles.Top | AnchorStyles.Left;
+            CBFiltrosProd.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            LFiltrar.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            DGListaProd.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Bottom;
+
+            int comboW = 160;
+            CBFiltrosProd.Width = comboW;
+            CBFiltrosProd.Top = pad;
+            CBFiltrosProd.Left = PListaProductos.ClientSize.Width - comboW - pad;
+
+            LFiltrar.Top = CBFiltrosProd.Top + (CBFiltrosProd.Height - LFiltrar.Height) / 2;
+            LFiltrar.Left = CBFiltrosProd.Left - LFiltrar.Width - 8;
+
+            TBBuscarProd.Top = pad;
+            LBuscarP.Left = pad;
+            LBuscarP.Top = TBBuscarProd.Top + (TBBuscarProd.Height - LBuscarP.Height) / 2;
+
+            int leftSearch = LBuscarP.Right + 8;
+            int rightLimit = LFiltrar.Left - 12;
+            int widthSearch = Math.Max(220, rightLimit - leftSearch);
+            TBBuscarProd.Left = leftSearch;
+            TBBuscarProd.Width = widthSearch;
+
+            DGListaProd.Left = pad;
+            DGListaProd.Top = TBBuscarProd.Bottom + 12;
+            DGListaProd.Width = PListaProductos.ClientSize.Width - pad * 2;
+            DGListaProd.Height = PListaProductos.ClientSize.Height - DGListaProd.Top - pad;
+            DGListaProd.ScrollBars = ScrollBars.Both;
+        }
+
+        private void AplicarLayoutSoloLectura()
+        {
+            PAgregarProducto.Visible = false;
+            LAgregarProducto.Visible = false;
+
+            if (DGListaProd.Columns.Contains("colEditar"))
+                DGListaProd.Columns["colEditar"].Visible = false;
+            if (DGListaProd.Columns.Contains("colAccion"))
+                DGListaProd.Columns["colAccion"].Visible = false;
+
+            DGListaProd.ReadOnly = true;
+
+            if (LListaProductos != null && _scrollHost != null)
+            {
+                LListaProductos.Top = 24;
+                LListaProductos.Left = (_scrollHost.ClientSize.Width - LListaProductos.Width) / 2;
+                LListaProductos.Anchor = AnchorStyles.Top;
+            }
+
+            if (PListaProductos == null) return;
+
+            int margen = 64;
+            int margenSuperior = 100;
+
+            PListaProductos.Location = new Point(margen, margenSuperior);
+            PListaProductos.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Bottom;
+
+            int nuevoAnchoPanel = _scrollHost.ClientSize.Width - (margen * 2);
+            PListaProductos.Width = Math.Max(980, nuevoAnchoPanel);
+
+            int nuevoAltoPanel = _scrollHost.ClientSize.Height - PListaProductos.Top - 40;
+            PListaProductos.Height = Math.Max(503, nuevoAltoPanel);
+
+            int pad = 16;
+            TBBuscarProd.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            LBuscarP.Anchor = AnchorStyles.Top | AnchorStyles.Left;
+            CBFiltrosProd.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            LFiltrar.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            DGListaProd.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Bottom;
+
+            int comboW = 160;
+            CBFiltrosProd.Width = comboW;
+            CBFiltrosProd.Top = pad;
+            CBFiltrosProd.Left = PListaProductos.ClientSize.Width - comboW - pad;
+
+            LFiltrar.Top = CBFiltrosProd.Top + (CBFiltrosProd.Height - LFiltrar.Height) / 2;
+            LFiltrar.Left = CBFiltrosProd.Left - LFiltrar.Width - 8;
+
+            TBBuscarProd.Top = pad;
+            LBuscarP.Left = pad;
+            LBuscarP.Top = TBBuscarProd.Top + (TBBuscarProd.Height - LBuscarP.Height) / 2;
+
+            int leftSearch = LBuscarP.Right + 8;
+            int rightLimit = LFiltrar.Left - 12;
+            int widthSearch = Math.Max(220, rightLimit - leftSearch);
+            TBBuscarProd.Left = leftSearch;
+            TBBuscarProd.Width = widthSearch;
+
+            DGListaProd.Left = pad;
+            DGListaProd.Top = TBBuscarProd.Bottom + 12;
+            DGListaProd.Width = PListaProductos.ClientSize.Width - pad * 2;
+            DGListaProd.Height = PListaProductos.ClientSize.Height - DGListaProd.Top - pad;
+            DGListaProd.ScrollBars = ScrollBars.Both;
+        }
+        #endregion
+
+        // ---------- MÉTODO MODIFICADO (Try...Catch) ----------
         private void CargarCategorias()
         {
             try
@@ -118,17 +243,19 @@ namespace AurenPadelStore.CPresentacion.Empleados.Productos
 
                 if (CBCategoriaP.Items.Count > 0) CBCategoriaP.SelectedIndex = 0;
             }
-            catch (Exception ex)
+            catch (Exception) // *** ¡CAMBIO! ***
             {
-                MessageBox.Show("No se pudieron obtener las categorías: " + ex.Message,
-                                "Categorías", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("No se pudieron obtener las categorías. Revise la conexión.",
+                                "Error de Datos", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 CBCategoriaP.DataSource = null;
             }
         }
 
+        #region Métodos de Carga y UI (Con Cambios)
+
         private void RecargarCategoriasYSeleccionar(string? nombreCategoriaPreferida = null)
         {
-            CargarCategorias();
+            CargarCategorias(); // Ya tiene try-catch
 
             if (CBCategoriaP.DataSource is System.Collections.IList lista && lista.Count > 0)
             {
@@ -160,7 +287,6 @@ namespace AurenPadelStore.CPresentacion.Empleados.Productos
             }
         }
 
-        // ==== Scroll ====
         private void PrepararScrollHost()
         {
             _scrollHost = new Panel
@@ -197,7 +323,7 @@ namespace AurenPadelStore.CPresentacion.Empleados.Productos
             }
         }
 
-        // ==== Cargar productos ====
+        // ---------- MÉTODO MODIFICADO (Try...Catch) ----------
         private void CargarDesdeBD()
         {
             try
@@ -217,14 +343,13 @@ namespace AurenPadelStore.CPresentacion.Empleados.Productos
 
                 RefrescarGrilla(_cache);
             }
-            catch (Exception ex)
+            catch (Exception) // *** ¡CAMBIO! ***
             {
-                MessageBox.Show("Error al cargar productos: " + ex.Message,
-                                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Error al cargar los productos desde la base de datos. Verifique la conexión.",
+                                "Error de Carga", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
-        // ==== Formato precio ====
         private void DGListaProd_CellFormatting(object? sender, DataGridViewCellFormattingEventArgs e)
         {
             if (DGListaProd.Columns[e.ColumnIndex].Name == "colPrecio" && e.Value != null)
@@ -249,11 +374,8 @@ namespace AurenPadelStore.CPresentacion.Empleados.Productos
                     if (value != null) e.ToolTipText = value.ToString();
                 }
 
-                // ===== NUEVO: tooltip de permiso en colAccion =====
-                if (col.Name == "colAccion" && EsVendedor)
-                {
+                if (col.Name == "colAccion" && SoloLectura)
                     e.ToolTipText = "No tiene permitido realizar esta acción.";
-                }
             }
         }
 
@@ -276,21 +398,23 @@ namespace AurenPadelStore.CPresentacion.Empleados.Productos
                 accionCell.Style.ForeColor = Color.Black;
             }
         }
+        #endregion
 
+        // ---------- MÉTODO MODIFICADO (Try...Catch) ----------
         private void DGListaProd_CellContentClick(object? sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex < 0 || e.ColumnIndex < 0) return;
 
             var colName = DGListaProd.Columns[e.ColumnIndex].Name;
-            var row = DGListaProd.Rows[e.RowIndex];
 
-            // ===== NUEVO: bloquear acción al Vendedor =====
-            if (colName == "colAccion" && EsVendedor)
+            if (SoloLectura && (colName == "colEditar" || colName == "colAccion"))
             {
-                MessageBox.Show("El rol VENDEDOR no puede activar/inactivar productos.",
-                                "Acción bloqueada", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Solo el GERENTE puede realizar esta acción.",
+                                "Permiso denegado", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
+
+            var row = DGListaProd.Rows[e.RowIndex];
 
             if (colName == "colAccion")
             {
@@ -300,9 +424,9 @@ namespace AurenPadelStore.CPresentacion.Empleados.Productos
                 string accion = actualmenteActivo ? "Inactivar" : "Activar";
 
                 var dr = MessageBox.Show($"¿Deseás {accion.ToLower()} este producto?",
-                                         "Confirmación",
-                                         MessageBoxButtons.YesNo,
-                                         MessageBoxIcon.Question);
+                                        "Confirmación",
+                                        MessageBoxButtons.YesNo,
+                                        MessageBoxIcon.Question);
                 if (dr != DialogResult.Yes) return;
 
                 try
@@ -315,9 +439,10 @@ namespace AurenPadelStore.CPresentacion.Empleados.Productos
                     row.Cells["colEstado"].Value = (!actualmenteActivo) ? "Activo" : "Inactivo";
                     SetAccionSegunEstado(row);
                 }
-                catch (Exception ex)
+                catch (Exception) // *** ¡CAMBIO! ***
                 {
-                    MessageBox.Show("No se pudo cambiar el estado: " + ex.Message, "Error",
+                    MessageBox.Show("No se pudo cambiar el estado. Es posible que este producto esté en uso en una venta activa.",
+                                    "Error al Actualizar",
                                     MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 return;
@@ -361,24 +486,32 @@ namespace AurenPadelStore.CPresentacion.Empleados.Productos
             }
         }
 
-        // ===== NUEVO: cursor bloqueado / mano en colAccion =====
+        #region Métodos de Mouse y Botones (Con Cambios)
         private void DGListaProd_CellMouseMove(object? sender, DataGridViewCellMouseEventArgs e)
         {
             if (e.RowIndex < 0 || e.ColumnIndex < 0) return;
 
             var isAccion = DGListaProd.Columns[e.ColumnIndex].Name == "colAccion";
+            var isEditar = DGListaProd.Columns[e.ColumnIndex].Name == "colEditar";
 
-            if (isAccion && EsVendedor)
+            if (SoloLectura && (isAccion || isEditar))
                 DGListaProd.Cursor = Cursors.No;
-            else if (isAccion)
+            else if (isAccion || isEditar)
                 DGListaProd.Cursor = Cursors.Hand;
             else
                 DGListaProd.Cursor = Cursors.Default;
         }
 
-        // ==== Agregar / Guardar ====
+        // ---------- MÉTODO MODIFICADO (Try...Catch) ----------
         private void BAgregarProducto_Click(object? sender, EventArgs e)
         {
+            if (SoloLectura)
+            {
+                MessageBox.Show("Solo el GERENTE puede agregar o editar productos.",
+                                "Permiso denegado", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
             if (!ValidarFormulario(out string msgValid, out decimal precio, out int stock))
             {
                 MessageBox.Show(msgValid, "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -425,8 +558,8 @@ namespace AurenPadelStore.CPresentacion.Empleados.Productos
                     _logica.Actualizar(p, nombreCategoriaEscrito);
 
                     var row = DGListaProd.Rows
-                        .Cast<DataGridViewRow>()
-                        .FirstOrDefault(rr => (rr.Cells["colId"].Value is int id) && id == p.id_Producto);
+                                         .Cast<DataGridViewRow>()
+                                         .FirstOrDefault(rr => (rr.Cells["colId"].Value is int id) && id == p.id_Producto);
 
                     if (row != null)
                     {
@@ -477,10 +610,10 @@ namespace AurenPadelStore.CPresentacion.Empleados.Productos
                 AplicarBusquedaYFiltros();
                 CancelarEdicionYLimpiar();
             }
-            catch (Exception ex)
+            catch (Exception) // *** ¡CAMBIO! ***
             {
-                MessageBox.Show("Error al guardar: " + ex.Message,
-                                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Error al guardar el producto. Verifique que no haya datos duplicados (ej: nombre) e intente nuevamente.",
+                                "Error al Guardar", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -491,8 +624,10 @@ namespace AurenPadelStore.CPresentacion.Empleados.Productos
             BAgregarProducto.Text = "Agregar Producto";
             LimpiarCampos();
         }
+        #endregion
 
-        // ==== Validaciones de tipeo ====
+        #region Métodos de Validación y Formato (Sin Cambios)
+
         private void TBPrecio_KeyPress(object? sender, KeyPressEventArgs e)
         {
             if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) &&
@@ -506,7 +641,6 @@ namespace AurenPadelStore.CPresentacion.Empleados.Productos
                 e.Handled = true;
         }
 
-        // ==== Validación Form + parser precio ====
         private bool ValidarFormulario(out string mensaje, out decimal precio, out int stock)
         {
             mensaje = "";
@@ -622,7 +756,10 @@ namespace AurenPadelStore.CPresentacion.Empleados.Productos
             PBImagenP.Image = null;
         }
 
-        // ==== Imágenes ====
+        #endregion
+
+        #region Métodos de Imagen y Filtros
+
         private string GetResourcesPath()
         {
             var baseDir = Application.StartupPath;
@@ -657,6 +794,7 @@ namespace AurenPadelStore.CPresentacion.Empleados.Productos
                 PBImagenP.Image = CargarImagenSinLock(full);
         }
 
+        // ---------- MÉTODO MODIFICADO (Try...Catch) ----------
         private void BExaminarImg_Click(object? sender, EventArgs e)
         {
             try
@@ -677,10 +815,10 @@ namespace AurenPadelStore.CPresentacion.Empleados.Productos
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception) // *** ¡CAMBIO! ***
             {
-                MessageBox.Show("No se pudo cargar la imagen: " + ex.Message,
-                                "Imagen", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("No se pudo cargar la imagen. El archivo puede estar dañado o en un formato no compatible.",
+                                "Error de Imagen", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -727,7 +865,6 @@ namespace AurenPadelStore.CPresentacion.Empleados.Productos
             panel.MouseDown += (s, e) => DGListaProd.Focus();
         }
 
-        // ==== Buscar + filtrar + ordenar ====
         private void ConstruirOpcionesDeFiltros()
         {
             _reconstruyendoFiltros = true;
@@ -744,6 +881,9 @@ namespace AurenPadelStore.CPresentacion.Empleados.Productos
                 List<string> categorias;
                 try
                 {
+                    // ---------- ¡AQUÍ ESTÁ LA CORRECCIÓN! ----------
+                    // Le agregamos el ".Select(c => c.Nombre_Categoria)"
+                    // para convertir la lista de Categorias a una lista de strings (nombres).
                     categorias = _logica.ListarCategorias()
                                         ?.Select(c => c.Nombre_Categoria)
                                         .Where(n => !string.IsNullOrWhiteSpace(n))
@@ -755,6 +895,7 @@ namespace AurenPadelStore.CPresentacion.Empleados.Productos
                 {
                     categorias = new List<string>();
                 }
+                // ---------- FIN DE LA CORRECCIÓN ----------
 
                 var old = CBFiltrosProd.SelectedItem?.ToString();
 
@@ -767,12 +908,6 @@ namespace AurenPadelStore.CPresentacion.Empleados.Productos
                 CBFiltrosProd.Items.Add("Orden: Precio ↓");
                 CBFiltrosProd.Items.Add("Orden: Stock ↑");
                 CBFiltrosProd.Items.Add("Orden: Stock ↓");
-
-                CBFiltrosProd.Items.Add("------------------------");
-
-                CBFiltrosProd.Items.Add("Categoría: Todas");
-                foreach (var c in categorias)
-                    CBFiltrosProd.Items.Add($"Categoría: {c}");
 
                 CBFiltrosProd.Items.Add("------------------------");
 
@@ -813,16 +948,6 @@ namespace AurenPadelStore.CPresentacion.Empleados.Productos
 
         private void DebounceAplicar(int ms = 160)
         {
-            if (_debounceTimer == null)
-            {
-                _debounceTimer = new System.Windows.Forms.Timer();
-                _debounceTimer.Interval = ms;
-                _debounceTimer.Tick += (_, __) =>
-                {
-                    _debounceTimer.Stop();
-                    AplicarBusquedaYFiltros();
-                };
-            }
             _debounceTimer.Stop();
             _debounceTimer.Interval = ms;
             _debounceTimer.Start();
@@ -851,33 +976,32 @@ namespace AurenPadelStore.CPresentacion.Empleados.Productos
                 {
                     var raw = texto.Substring(6).Trim();
                     if (!string.IsNullOrEmpty(raw))
-                        q = q.Where(p => !string.IsNullOrEmpty(p.Marca_Producto) &&
+                        q = q.Where(p => !string.IsNullOrWhiteSpace(p.Marca_Producto) &&
                                          p.Marca_Producto.IndexOf(raw, StringComparison.OrdinalIgnoreCase) >= 0);
                 }
                 else if (lower.StartsWith("nombre:"))
                 {
                     var raw = texto.Substring(7).Trim();
                     if (!string.IsNullOrEmpty(raw))
-                        q = q.Where(p => !string.IsNullOrEmpty(p.Nombre_Producto) &&
+                        q = q.Where(p => !string.IsNullOrWhiteSpace(p.Nombre_Producto) &&
                                          p.Nombre_Producto.IndexOf(raw, StringComparison.OrdinalIgnoreCase) >= 0);
+                }
+                else if (lower.StartsWith("material:"))
+                {
+                    var raw = texto.Substring(9).Trim();
+                    if (!string.IsNullOrEmpty(raw))
+                        q = q.Where(p => !string.IsNullOrWhiteSpace(p.Material_Producto) &&
+                                         p.Material_Producto.IndexOf(raw, StringComparison.OrdinalIgnoreCase) >= 0);
                 }
                 else
                 {
-                    if (Regex.IsMatch(texto, @"^\d+$"))
-                    {
-                        if (int.TryParse(texto, out int id))
-                            q = q.Where(p => p.id_Producto == id);
-                        else
-                            q = Enumerable.Empty<Producto>();
-                    }
-                    else
-                    {
-                        q = q.Where(p =>
-                            (!string.IsNullOrEmpty(p.Nombre_Producto) &&
-                             p.Nombre_Producto.IndexOf(texto, StringComparison.OrdinalIgnoreCase) >= 0)
-                         || (!string.IsNullOrEmpty(p.Marca_Producto) &&
-                             p.Marca_Producto.IndexOf(texto, StringComparison.OrdinalIgnoreCase) >= 0));
-                    }
+                    q = q.Where(p =>
+                        (!string.IsNullOrWhiteSpace(p.Nombre_Producto) &&
+                         p.Nombre_Producto.IndexOf(texto, StringComparison.OrdinalIgnoreCase) >= 0)
+                     || (!string.IsNullOrWhiteSpace(p.Marca_Producto) &&
+                         p.Marca_Producto.IndexOf(texto, StringComparison.OrdinalIgnoreCase) >= 0)
+                     || (!string.IsNullOrWhiteSpace(p.Material_Producto) &&
+                         p.Material_Producto.IndexOf(texto, StringComparison.OrdinalIgnoreCase) >= 0));
                 }
             }
 
@@ -890,10 +1014,10 @@ namespace AurenPadelStore.CPresentacion.Empleados.Productos
             q = _ordenSel switch
             {
                 "Z-A" => q.OrderByDescending(p => p.Nombre_Producto),
-                "Precio ↓" => q.OrderBy(p => p.Precio_Unitario_Producto),
-                "Precio ↑" => q.OrderByDescending(p => p.Precio_Unitario_Producto),
-                "Stock ↓" => q.OrderBy(p => p.Stock_Producto),
-                "Stock ↑" => q.OrderByDescending(p => p.Stock_Producto),
+                "Precio ↓" => q.OrderByDescending(p => p.Precio_Unitario_Producto),
+                "Precio ↑" => q.OrderBy(p => p.Precio_Unitario_Producto),
+                "Stock ↓" => q.OrderByDescending(p => p.Stock_Producto),
+                "Stock ↑" => q.OrderBy(p => p.Stock_Producto),
                 _ => q.OrderBy(p => p.Nombre_Producto)
             };
 
@@ -944,5 +1068,6 @@ namespace AurenPadelStore.CPresentacion.Empleados.Productos
                 SetAccionSegunEstado(row);
             }
         }
+        #endregion
     }
 }

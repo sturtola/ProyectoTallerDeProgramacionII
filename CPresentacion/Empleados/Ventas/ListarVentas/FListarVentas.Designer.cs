@@ -195,7 +195,7 @@ namespace AurenPadelStore.CPresentacion.Empleados.Ventas.ListarVentas
             colEliminar.FlatStyle = FlatStyle.Flat;
             colEliminar.HeaderText = "X";
             colEliminar.Name = "colEliminar";
-            colEliminar.Text = "Eliminar";
+            colEliminar.Text = "Anular";
             colEliminar.UseColumnTextForButtonValue = true;
             colEliminar.Width = 90;
             // 

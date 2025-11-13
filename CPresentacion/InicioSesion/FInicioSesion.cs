@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using AurenPadelStore.CDatos;
-using AurenPadelStore.CEntidades; // Aseguramos que CEntidades (donde está SesionActual) esté importado
+using AurenPadelStore.CEntidades; // SesionActual
 using AurenPadelStore.CPresentacion.Administrador;
 using AurenPadelStore.CPresentacion.Empleados;
 
@@ -18,12 +18,22 @@ namespace AurenPadelStore.CPresentacion.InicioSesion
         {
             InitializeComponent();
 
-            // Eventos básicos de UX
+            // UX
             BIngresar.Click += btnIngresar_Click;
             TBContraseña.KeyDown += (s, e) => { if (e.KeyCode == Keys.Enter) btnIngresar_Click(s, e); };
+            chkMostrarContrasena.CheckedChanged += chkMostrarContrasena_CheckedChanged;
+
+            // Enter en todo el form confirma login
+            this.AcceptButton = BIngresar;
 
             // Carga inicial
             CargarUsuarios();
+        }
+
+        private void chkMostrarContrasena_CheckedChanged(object? sender, EventArgs e)
+        {
+            // Mostrar/ocultar password
+            TBContraseña.UseSystemPasswordChar = !chkMostrarContrasena.Checked;
         }
 
         private void CargarUsuarios()
@@ -32,7 +42,7 @@ namespace AurenPadelStore.CPresentacion.InicioSesion
             {
                 _usuariosCache = _usuarioDatos.ObtenerTodos() ?? new List<Usuario>();
 
-                // Limpiar bindings previos (por si recargamos)
+                // Limpiar bindings previos
                 CBUsuarios.DataSource = null;
                 CBUsuarios.DisplayMember = null;
                 CBUsuarios.ValueMember = null;
@@ -44,7 +54,6 @@ namespace AurenPadelStore.CPresentacion.InicioSesion
                     return;
                 }
 
-                // Proyección explícita para el combo
                 var items = _usuariosCache
                     .Select(u => new
                     {
@@ -57,10 +66,7 @@ namespace AurenPadelStore.CPresentacion.InicioSesion
                 CBUsuarios.ValueMember = "Value";
                 CBUsuarios.DataSource = items;
 
-                if (CBUsuarios.Items.Count > 0)
-                    CBUsuarios.SelectedIndex = 0;
-                else
-                    CBUsuarios.SelectedIndex = -1;
+                CBUsuarios.SelectedIndex = CBUsuarios.Items.Count > 0 ? 0 : -1;
             }
             catch (Exception ex)
             {
@@ -108,7 +114,6 @@ namespace AurenPadelStore.CPresentacion.InicioSesion
                 return;
             }
 
-            // Buscar en caché por DNI
             var usuario = _usuariosCache.FirstOrDefault(u => u.Dni_Usuario == dniSeleccionado);
             if (usuario == null)
             {
@@ -124,7 +129,6 @@ namespace AurenPadelStore.CPresentacion.InicioSesion
                 return;
             }
 
-            // Validar credenciales contra la BD
             string? rol = _usuarioDatos.ValidarUsuario(dniSeleccionado, contraseña);
 
             if (rol == null)
@@ -140,19 +144,17 @@ namespace AurenPadelStore.CPresentacion.InicioSesion
                 return;
             }
 
-            // === CORRECCIÓN AQUÍ ===
-            // Guardar sesión usando las propiedades correctas de SesionActual
-            // Usamos el 'usuario' que obtuvimos del caché.
+            // Guardar sesión
             SesionActual.Id_UsuarioActual = usuario.id_Usuario;
             SesionActual.NombreCompleto = $"{usuario.Nombre_Usuario} {usuario.Apellido_Usuario}";
-            SesionActual.Rol = rol; // "Administrador" / "Gerente" / "Vendedor"
+            SesionActual.Rol = rol;
 
-            // Redirección por rol
+            // Redirigir por rol
             this.Hide();
             if (rol.Equals("Administrador", StringComparison.OrdinalIgnoreCase))
             {
                 var menuAdmin = new FMenuAdmin();
-                menuAdmin.FormClosed += (_, __) => this.Close(); // cerrar app al cerrar menú
+                menuAdmin.FormClosed += (_, __) => this.Close();
                 menuAdmin.Show();
             }
             else if (rol.Equals("Gerente", StringComparison.OrdinalIgnoreCase) ||
@@ -166,7 +168,7 @@ namespace AurenPadelStore.CPresentacion.InicioSesion
             {
                 MessageBox.Show("Rol no reconocido.",
                                 "Inicio de sesión", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                this.Show(); // Volver a mostrar login si el rol es desconocido
+                this.Show();
             }
         }
     }

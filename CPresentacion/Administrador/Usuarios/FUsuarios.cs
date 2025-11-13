@@ -32,6 +32,15 @@ namespace AurenPadelStore.CPresentacion.Administrador.Usuarios
             this.Load += FUsuarios_Load;
             BAgregarUsuario.Click += BAgregarUsuario_Click;
 
+            // --- CAMBIO 1: Conectar el botón Cancelar ---
+            // (Asegurate que tu botón naranja se llame 'BCancelar' en el diseñador)
+            if (this.Controls.Find("BCancelar", true).Length > 0)
+            {
+                var btn = (Button)this.Controls.Find("BCancelar", true)[0];
+                btn.Click += BCancelar_Click;
+            }
+            // --- FIN CAMBIO 1 ---
+
             DGListaUsuarios.CellContentClick += DGListaUsuarios_CellContentClick;
             DGListaUsuarios.CellMouseEnter += DGListaUsuarios_CellMouseEnter;
             DGListaUsuarios.CellMouseLeave += DGListaUsuarios_CellMouseLeave;
@@ -155,10 +164,10 @@ namespace AurenPadelStore.CPresentacion.Administrador.Usuarios
                     SetAccionEstadoRow(DGListaUsuarios.Rows[idx], u.Estado_Usuario);
                 }
             }
-            catch (Exception ex)
+            catch (Exception) // --- CAMBIO 2: Mensaje amigable ---
             {
-                MessageBox.Show("Error al cargar usuarios: " + ex.Message,
-                                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Ocurrió un error al cargar los usuarios. Por favor, intente más tarde.",
+                                "Error de Carga", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -239,9 +248,9 @@ namespace AurenPadelStore.CPresentacion.Administrador.Usuarios
                     MessageBox.Show("Estado actualizado correctamente.", "OK",
                                     MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
-                catch (Exception ex)
+                catch (Exception) // --- CAMBIO 3: Mensaje amigable ---
                 {
-                    MessageBox.Show("Error al cambiar estado: " + ex.Message, "Error",
+                    MessageBox.Show("Ocurrió un error al cambiar el estado del usuario. Intente nuevamente.", "Error de Operación",
                                     MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 return;
@@ -297,10 +306,8 @@ namespace AurenPadelStore.CPresentacion.Administrador.Usuarios
                                              "Confirmación", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                     if (dr != DialogResult.Yes)
                     {
-                        LimpiarPanel();
-                        _modoEdicion = false;
-                        _dniOriginalEdicion = null;
-                        BAgregarUsuario.Text = "Agregar Usuario";
+                        // Si el admin cancela la confirmación, limpiamos
+                        ResetearFormulario();
                         return;
                     }
 
@@ -325,10 +332,7 @@ namespace AurenPadelStore.CPresentacion.Administrador.Usuarios
                     MessageBox.Show("Usuario actualizado correctamente.", "OK",
                                     MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                    _modoEdicion = false;
-                    _dniOriginalEdicion = null;
-                    BAgregarUsuario.Text = "Agregar Usuario";
-                    LimpiarPanel();
+                    ResetearFormulario();
                     RefrescarGrilla();
                 }
                 else
@@ -351,12 +355,30 @@ namespace AurenPadelStore.CPresentacion.Administrador.Usuarios
                     RefrescarGrilla();
                 }
             }
-            catch (Exception ex)
+            catch (Exception) // --- CAMBIO 4: Mensaje amigable ---
             {
-                MessageBox.Show("Error al guardar: " + ex.Message, "Error",
+                MessageBox.Show("Ocurrió un error al guardar el usuario. Verifique que el DNI no esté duplicado.", "Error al Guardar",
                                 MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+        // --- CAMBIO 5: MÉTODO NUEVO para el botón Cancelar ---
+        private void BCancelar_Click(object sender, EventArgs e)
+        {
+            ResetearFormulario();
+        }
+
+        /// <summary>
+        /// Limpia los campos y resetea el modo a "Agregar".
+        /// </summary>
+        private void ResetearFormulario()
+        {
+            _modoEdicion = false;
+            _dniOriginalEdicion = null;
+            BAgregarUsuario.Text = "Agregar Usuario";
+            LimpiarPanel();
+        }
+        // --- FIN CAMBIO 5 ---
 
         private void LimpiarPanel()
         {
